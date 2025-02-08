@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dense Network Playground</title>
+
+    <link rel="stylesheet" type="text/css" href="styles/components/data_plot.css">
+</head>
+<body>
+    <div class="data-plot" id="data-plot" oncontextmenu="return false;">
+        <svg></svg>
+    </div>
+
+    <!-- UTILS -->
+    <script src="js/utils/random.js"></script>
+    <script src="js/utils/utils.js"></script>
+
+    <!-- ENTITIES -->
+    <script src="js/entities/event_emitter.js"></script>
+    <script src="js/entities/data.js"></script>
+    <script src="js/entities/compact.js"></script>
+    <script src="js/entities/view_box.js"></script>
+
+    <!-- DATA -->
+    <script src="js/data/data_generator.js"></script>
+    <script src="js/data/dataset.js"></script>
+
+    <!-- PLOT -->
+    <script src="js/view/layers/compact_layer.js"></script>
+    <script src="js/view/layers/data_layer.js"></script>
+    <script src="js/view/layers/labels_layer.js"></script>
+    <script src="js/view/data_plot.js"></script>
+
+    <script>
+        let random = new Random()
+
+        let generator = new DataGenerator()
+        configs = {
+            "spiral": {dimension: 2, dataset: "spiral", params: {h: 1.25, delta: 0.1}},
+            "gaussians3": {dataset: "gaussians", dimension: 3, params: {mean1: [-0.5, -0.4, -0.3], cov1: [[0.1, 0.05, 0], [0.05, 0.1, 0], [0, 0, 0.01]], mean2: [0.4, 0, 0], cov2: [[0.08, -0.06, 0], [-0.06, 0.15, 0], [0, 0, 0.08]]}},
+        }
+
+        let dataset = new Dataset()
+        let compact = new Compact()
+
+        let dataplot = new DataPlot(document.getElementById("data-plot"), compact)
+        dataplot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
+        dataplot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: true})
+        dataplot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: true})
+
+        dataset.on("change", (name, split) => {
+            if (name === "train")
+                compact.Initialize(split.data.dimension, split.stats)
+
+            dataplot.ChangeData(name, split)
+        })
+
+        dataset.on("clear", () => {
+            compact.Reset()
+            dataplot.ClearData()
+        })
+        compact.on("change", () => dataplot.ChangeCompact())
+
+        dataset.SetDimension(3)
+        dataset.SetData("train", generator.Generate(5000, configs.gaussians3))
+        dataset.SetData("test", generator.Generate(500, configs.gaussians3))
+        dataset.SetData("background", compact.GetData(500))
+    </script>
+</body>
+</html>
