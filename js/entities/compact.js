@@ -5,21 +5,24 @@ class Compact extends EventEmitter {
         this.dimension = null
         this.min = null
         this.max = null
+        this.minOffset = null
+        this.maxOffset = null
         this.offset = 0
     }
 
     Initialize(dimension, stats, offset = 0) {
         this.dimension = dimension
-        this.min = new Float32Array(dimension)
-        this.max = new Float32Array(dimension)
-        this.offset = offset
+        this.min = new Float64Array(dimension)
+        this.max = new Float64Array(dimension)
+        this.minOffset = new Float64Array(dimension)
+        this.maxOffset = new Float64Array(dimension)
 
-        for (let i = 0; i < dimension; i++) {
+        for (let i = 0; i < this.dimension; i++) {
             this.min[i] = stats.min[i]
             this.max[i] = stats.max[i]
         }
 
-        this.emit("change")
+        this.SetOffset(offset)
     }
 
     IsInitialized() {
@@ -30,35 +33,35 @@ class Compact extends EventEmitter {
         this.dimension = null
         this.min = null
         this.max = null
+        this.minOffset = null
+        this.maxOffset = null
         this.offset = 0
         this.emit("change")
     }
 
     SetOffset(offset) {
         this.offset = offset
+
+        for (let i = 0; i < this.dimension; i++) {
+            let delta = (this.max[i] - this.min[i]) * this.offset / 2
+
+            this.minOffset[i] = this.min[i] - delta
+            this.maxOffset[i] = this.max[i] + delta
+        }
+
         this.emit("change")
     }
 
     GetLimits(axis) {
-        let delta = (this.max[axis] - this.min[axis]) * this.offset / 2
-        return {min: this.min[axis] - delta, max: this.max[axis] + delta}
+        return {min: this.minOffset[axis], max: this.maxOffset[axis]}
     }
 
     GetData(count) {
-        let inputs = new Float32Array(count * this.dimension)
-        let outputs = new Float32Array(count)
-
-        let min = new Float32Array(this.dimension)
-        let max = new Float32Array(this.dimension)
-
-        for (let i = 0; i < this.dimension; i++) {
-            let limits = this.GetLimits(i)
-            min[i] = limits.min
-            max[i] = limits.max
-        }
+        let inputs = new Float64Array(count * this.dimension)
+        let outputs = new Float64Array(count)
 
         for (let i = 0; i < count; i++) {
-            let p = random.MultivariateUniform(min, max)
+            let p = random.MultivariateUniform(this.minOffset, this.maxOffset)
 
             for (let j = 0; j < this.dimension; j++)
                 inputs[i * this.dimension + j] = p[j]

@@ -8,8 +8,8 @@ class DataGenerator {
     }
 
     Generate(count, config) {
-        let labels = new Float32Array(count)
-        let inputs = new Float32Array(count * config.dimension)
+        let labels = new Float64Array(count)
+        let inputs = new Float64Array(count * config.dimension)
         let balance = "balance" in config ? config.balance : 0.5
         let error = "error" in config ? config.error : 0
 

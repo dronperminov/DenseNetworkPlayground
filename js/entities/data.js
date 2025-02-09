@@ -16,8 +16,8 @@ Data.prototype.Append = function(data) {
 }
 
 Data.prototype.GetMinMaxStatistic = function() {
-	let min = new Float32Array(this.dimension).fill(Infinity)
-	let max = new Float32Array(this.dimension).fill(-Infinity)
+	let min = new Float64Array(this.dimension).fill(Infinity)
+	let max = new Float64Array(this.dimension).fill(-Infinity)
 
 	for (let i = 0; i < this.length; i++) {
 		for (let j = 0; j < this.dimension; j++) {
@@ -32,8 +32,8 @@ Data.prototype.GetMinMaxStatistic = function() {
 }
 
 Data.prototype.GetMeanStdStatistic = function() {
-	let mean = new Float32Array(this.dimension).fill(0)
-	let std = new Float32Array(this.dimension).fill(0)
+	let mean = new Float64Array(this.dimension).fill(0)
+	let std = new Float64Array(this.dimension).fill(0)
 	let length = Math.max(this.length, 1)
 
 	for (let i = 0; i < this.length; i++)
@@ -76,7 +76,7 @@ Data.prototype.GetStatistic = function() {
 }
 
 Data.prototype.ConcatArrays = function(array1, array2) {
-	let array = new Float32Array(array1.length + array2.length)
+	let array = new Float64Array(array1.length + array2.length)
 	array.set(array1)
 	array.set(array2, array1.length)
 	return array
