@@ -1,0 +1,15 @@
+:root {
+    --data-table-label-color: #222222;
+    --data-table-selected-label-color: #2191fb;
+    --data-table-selected-label-border-color: #2191fb;
+
+    --data-table-header-background-color: #eeeeee;
+
+    --data-table-cell-color: #222222;
+    --data-table-border-color: #222222;
+    --data-table-cell-border-color: #dddddd;
+}
+
+* {
+    box-sizing: border-box;
+}

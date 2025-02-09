@@ -14,7 +14,8 @@ class DataLayer {
             visible: config.visible,
             points: [],
             data: null,
-            stats: null
+            stats: null,
+            mask: null
         }
     }
 
@@ -25,6 +26,10 @@ class DataLayer {
 
     ChangeData(name, split) {
         let plot = this.plots[name]
+
+        if (!plot)
+            return
+
         plot.data = split.data
         plot.stats = split.stats !== null ? split.stats : split.data.GetMinMaxStatistic()
         plot.mask = null

@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dense Network Playground</title>
 
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+
     <link rel="stylesheet" type="text/css" href="styles/components/data_plot.css">
+    <link rel="stylesheet" type="text/css" href="styles/components/data_table.css">
 </head>
 <body>
     <div class="data-plot" id="data-plot" oncontextmenu="return false;">
         <svg></svg>
     </div>
+
+    <br>
+
+    <div class="data-table" id="data-table"></div>
 
     <!-- UTILS -->
     <script src="js/utils/random.js"></script>
@@ -30,7 +37,9 @@
     <script src="js/view/layers/compact_layer.js"></script>
     <script src="js/view/layers/data_layer.js"></script>
     <script src="js/view/layers/labels_layer.js"></script>
+
     <script src="js/view/data_plot.js"></script>
+    <script src="js/view/data_table.js"></script>
 
     <script>
         let random = new Random()
@@ -44,23 +53,30 @@
         let dataset = new Dataset()
         let compact = new Compact()
 
-        let dataplot = new DataPlot(document.getElementById("data-plot"), compact)
-        dataplot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
-        dataplot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: true})
-        dataplot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: true})
+        let dataPlot = new DataPlot(document.getElementById("data-plot"), compact)
+        dataPlot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
+        dataPlot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: true})
+        dataPlot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: true})
+
+        let dataTable = new DataTable(document.getElementById("data-table"))
+        dataTable.Add("train", {title: "Обучающие данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
+        dataTable.Add("test", {title: "Тестовые данные", colors: {"-1": "#2191fb", "1": "#ba274a"}})
 
         dataset.on("change", (name, split) => {
             if (name === "train")
                 compact.Initialize(split.data.dimension, split.stats)
 
-            dataplot.ChangeData(name, split)
+            dataPlot.ChangeData(name, split)
+            dataTable.ChangeData(name, split)
         })
 
         dataset.on("clear", () => {
             compact.Reset()
-            dataplot.ClearData()
+            dataPlot.ClearData()
+            dataTable.ClearData()
         })
-        compact.on("change", () => dataplot.ChangeCompact())
+
+        compact.on("change", () => dataPlot.ChangeCompact())
 
         dataset.SetDimension(3)
         dataset.SetData("train", generator.Generate(5000, configs.gaussians3))
