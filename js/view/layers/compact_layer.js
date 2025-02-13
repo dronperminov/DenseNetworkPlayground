@@ -1,10 +1,9 @@
 class CompactLayer {
-    constructor(svg, viewBox, compact) {
-        this.svg = svg
+    constructor(viewBox, compact) {
         this.viewBox = viewBox
         this.compact = compact
 
-        this.path = MakeElement(svg, {fill: "none", "stroke": "#888888"}, "path")
+        this.path = MakeElement(viewBox.svg, {fill: "none", "stroke": "#888888"}, "path")
         this.axes = [0, 1]
     }
 
@@ -18,6 +17,8 @@ class CompactLayer {
             this.path.removeAttribute("d")
             return
         }
+
+        this.UpdateSizes(this.viewBox.GetScale())
 
         let x = this.compact.GetLimits(this.axes[0])
         let x1 = this.viewBox.XtoScreen(x.min)

@@ -1,6 +1,5 @@
 class DataLayer {
-    constructor(svg, viewBox) {
-        this.svg = svg
+    constructor(viewBox) {
         this.viewBox = viewBox
         this.plots = {}
         this.axes = [0, 1]
@@ -8,7 +7,7 @@ class DataLayer {
 
     AddPlot(name, config) {
         this.plots[name] = {
-            g: MakeElement(this.svg, {visibility: config.visible ? "visible" : "hidden"}, "g"),
+            g: MakeElement(this.viewBox.svg, {visibility: config.visible ? "visible" : "hidden"}, "g"),
             colors: config.colors,
             border: config.border,
             visible: config.visible,

@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="data-plot" id="data-plot" oncontextmenu="return false;">
-        <svg></svg>
+        <svg id="data-view"></svg>
     </div>
 
     <br>
@@ -62,7 +62,9 @@
         let dataset = new Dataset()
         let compact = new Compact()
 
-        let dataPlot = new DataPlot(document.getElementById("data-plot"), compact)
+        let viewBox = new ViewBox(document.getElementById("data-view"))
+
+        let dataPlot = new DataPlot(document.getElementById("data-plot"), viewBox, compact)
         dataPlot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
         dataPlot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: true})
         dataPlot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: true})

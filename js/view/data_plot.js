@@ -1,18 +1,16 @@
 class DataPlot {
-    constructor(div, compact) {
-        let svg = div.querySelector("svg")
-
-        this.viewBox = new ViewBox(svg)
+    constructor(div, viewBox, compact) {
+        this.viewBox = viewBox
         this.labelsLayer = new LabelsLayer(div)
-        this.compactLayer = new CompactLayer(svg, this.viewBox, compact)
-        this.dataLayer = new DataLayer(svg, this.viewBox)
+        this.compactLayer = new CompactLayer(this.viewBox, compact)
+        this.dataLayer = new DataLayer(this.viewBox)
 
         this.viewBox.on("scale", scale => this.ChangeViewScale(scale))
         this.viewBox.on("change-limits", limits => this.ChangeViewLimits(limits))
         this.viewBox.on("change-view", () => this.ChangeView())
 
-        svg.addEventListener("dblclick", e => this.ResetLimits())
-        new ResizeObserver(() => this.ResetLimits()).observe(svg)
+        viewBox.svg.addEventListener("dblclick", e => this.ResetLimits())
+        new ResizeObserver(() => this.ResetLimits()).observe(viewBox.svg)
     }
 
     AddPlot(name, config) {
