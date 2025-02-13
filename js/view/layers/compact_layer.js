@@ -39,8 +39,7 @@ class CompactLayer {
         return {xmin: x.min, ymin: y.min, xmax: x.max, ymax: y.max}
     }
 
-    UpdateSizes() {
-        let scale = this.viewBox.GetScale()
+    UpdateSizes(scale) {
         this.path.setAttribute("stroke-width", scale)
         this.path.setAttribute("stroke-dasharray", [scale * 5, scale * 5])
     }

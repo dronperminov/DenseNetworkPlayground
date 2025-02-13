@@ -3,12 +3,13 @@ class DataPlot {
         let svg = div.querySelector("svg")
 
         this.viewBox = new ViewBox(svg)
-        this.labelsLayer = new LabelsLayer(div, this.viewBox)
+        this.labelsLayer = new LabelsLayer(div)
         this.compactLayer = new CompactLayer(svg, this.viewBox, compact)
         this.dataLayer = new DataLayer(svg, this.viewBox)
 
-        this.viewBox.on("scale", () => this.UpdateSizes())
-        this.viewBox.on("change", limits => this.ChangeView(limits))
+        this.viewBox.on("scale", scale => this.ChangeViewScale(scale))
+        this.viewBox.on("change-limits", limits => this.ChangeViewLimits(limits))
+        this.viewBox.on("change-view", () => this.ChangeView())
 
         svg.addEventListener("dblclick", e => this.ResetLimits())
         new ResizeObserver(() => this.ResetLimits()).observe(svg)
@@ -48,13 +49,10 @@ class DataPlot {
             ymax = Math.max(ymax, limits.ymax)
         }
 
-        if (xmin < xmax)
+        if (xmin !== Infinity)
             this.viewBox.SetLimits(xmin, ymin, xmax - xmin, ymax - ymin, 5)
         else
             this.viewBox.SetLimits(0, 0, 1, 1)
-
-        this.dataLayer.Plot()
-        this.ChangeCompact()
     }
 
     ChangeData(name, split) {
@@ -69,12 +67,17 @@ class DataPlot {
         this.compactLayer.ChangeCompact()
     }
 
-    UpdateSizes() {
-        this.dataLayer.UpdateSizes()
-        this.compactLayer.UpdateSizes()
+    ChangeViewScale(scale) {
+        this.dataLayer.UpdateSizes(scale)
+        this.compactLayer.UpdateSizes(scale)
     }
 
-    ChangeView(limits) {
+    ChangeViewLimits(limits) {
         this.labelsLayer.UpdateLabels(limits)
+    }
+
+    ChangeView() {
+        this.dataLayer.Plot()
+        this.ChangeCompact()
     }
 }

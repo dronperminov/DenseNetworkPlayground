@@ -84,14 +84,12 @@ class DataLayer {
         return {xmin, ymin, xmax, ymax}
     }
 
-    UpdateSizes() {
+    UpdateSizes(scale) {
         for (let plot of Object.values(this.plots))
-            this.UpdatePlotSizes(plot)
+            this.UpdatePlotSizes(plot, scale)
     }
 
-    UpdatePlotSizes(plot) {
-        let scale = this.viewBox.GetScale()
-
+    UpdatePlotSizes(plot, scale) {
         for (let circle of plot.points) {
             circle.setAttribute("r", scale * 3)
             circle.setAttribute("stroke-width", scale)
@@ -106,6 +104,8 @@ class DataLayer {
 
         while (plot.points.length < plot.data.length)
             plot.points.push(MakeElement(plot.g, null, "circle"))
+
+        this.UpdatePlotSizes(plot, this.viewBox.GetScale())
     }
 
     PlotPoints(plot) {
@@ -119,15 +119,11 @@ class DataLayer {
                 cx: this.viewBox.XtoScreen(plot.data.inputs[i * plot.data.dimension + this.axes[0]]),
                 cy: this.viewBox.YtoScreen(plot.data.inputs[i * plot.data.dimension + this.axes[1]]),
                 fill: typeof(plot.colors) === "string" ? plot.colors : plot.colors[plot.data.outputs[i] + 1],
-                stroke: plot.border
+                stroke: plot.border,
+                visibility: plot.mask === null || plot.mask[i] ? "" : "hidden"
             }
-
-            if (plot.mask !== null && !plot.mask[i])
-                attributes.visibility = "hidden"
 
             SetAttributes(plot.points[i], attributes)
         }
-
-        this.UpdatePlotSizes(plot)
     }
 }

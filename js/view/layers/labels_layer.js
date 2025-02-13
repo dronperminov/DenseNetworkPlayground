@@ -1,6 +1,5 @@
 class LabelsLayer {
-    constructor(div, viewBox) {
-        this.viewBox = viewBox
+    constructor(div) {
         this.bottomLeftLabel = MakeElement(div, {"class": "data-plot-label-lb"}, "span")
         this.topRightLabel = MakeElement(div, {"class": "data-plot-label-rt"}, "span")
     }
