@@ -12,7 +12,7 @@ class ModelPlot {
         this.mode = ""
         this.SetSize(100)
 
-        this.viewBox.on("change-limits", limits => this.ChangeLimits(limits))
+        this.viewBox.on("change-limits", limits => this.Plot())
         new ResizeObserver(() => this.UpdateCanvasSize()).observe(canvas)
     }
 
@@ -23,7 +23,21 @@ class ModelPlot {
     }
 
     SetMode(mode) {
+        if (mode == this.mode)
+            return
+
+        if (this.mode == "no" && this.dimension == 2) {
+            this.UpdateInputs()
+            this.UpdateOutput()
+        }
+
         this.mode = mode
+
+        if (!this.CanPlot()) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+            return
+        }
+
         this.UpdatePixels()
     }
 
@@ -32,28 +46,34 @@ class ModelPlot {
         this.UpdateCanvasSize()
     }
 
-    Plot() {
-        let limits = this.viewBox.GetLimits()
-        this.ChangeLimits(limits)
+    CanPlot() {
+        return this.dimension == 2 && this.mode != "no"
     }
 
     ChangeDimension(dimension) {
         this.dimension = dimension
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-        if (this.dimension == 2)
-            this.Plot()
+        if (dimension != 2) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+            return
+        }
+
+        this.Plot()
     }
 
-    ChangeLimits(limits) {
-        if (this.dimension != 2)
+    Plot() {
+        if (!this.CanPlot())
             return
 
-        this.UpdateInputs(limits)
-        this.ChangeModel()
+        this.UpdateInputs()
+        this.UpdateOutput()
+        this.UpdatePixels()
     }
 
     ChangeModel() {
+        if (!this.CanPlot())
+            return
+
         this.UpdateOutput()
         this.UpdatePixels()
     }
@@ -76,7 +96,8 @@ class ModelPlot {
         this.ctx.putImageData(this.pixels, 0, 0)
     }
 
-    UpdateInputs(limits) {
+    UpdateInputs() {
+        let limits = this.viewBox.GetLimits()
         let index = 0
 
         for (let i = 0; i < this.canvas.height; i++) {

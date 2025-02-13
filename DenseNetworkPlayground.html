@@ -53,8 +53,13 @@
     <script src="js/view/data_table.js"></script>
     <script src="js/view/model_plot.js"></script>
 
+    <script src="js/visualizer.js"></script>
+    <script src="js/visualizer/events.js"></script>
+    <script src="js/visualizer/ui.js"></script>
+
     <script>
         let random = new Random()
+        let visualizer = new Visualizer()
 
         let generator = new DataGenerator()
         configs = {
@@ -62,55 +67,10 @@
             "gaussians3": {dataset: "gaussians", dimension: 3, params: {mean1: [-0.5, -0.4, -0.3], cov1: [[0.1, 0.05, 0], [0.05, 0.1, 0], [0, 0, 0.01]], mean2: [0.4, 0, 0], cov2: [[0.08, -0.06, 0], [-0.06, 0.15, 0], [0, 0, 0.08]]}},
         }
 
-        let dataset = new Dataset()
-        let compact = new Compact()
-        let thresholds = new Thresholds()
-
-        let model = new NeuralNetwork(2)
-        model.AddLayer({size: 10, activation: "abs"})
-        model.AddLayer({size: 10, activation: "abs"})
-        model.AddLayer({size: 1, activation: ""})
-
-        let viewBox = new ViewBox(document.getElementById("data-view"))
-
-        let dataPlot = new DataPlot(document.getElementById("data-plot"), viewBox, compact)
-        dataPlot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
-        dataPlot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: true})
-        dataPlot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: true})
-
-        let dataTable = new DataTable(document.getElementById("data-table"))
-        dataTable.Add("train", {title: "Обучающие данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
-        dataTable.Add("test", {title: "Тестовые данные", colors: {"-1": "#2191fb", "1": "#ba274a"}})
-
-        let modelPlot = new ModelPlot(viewBox, document.getElementById("model-view"), model, thresholds)
-
-        dataset.on("change", (name, split) => {
-            if (name === "train")
-                compact.Initialize(split.data.dimension, split.stats)
-
-            dataPlot.ChangeData(name, split)
-            dataTable.ChangeData(name, split)
-        })
-
-        dataset.on("change-dimension", dimension => {
-            modelPlot.ChangeDimension(dimension)
-        })
-
-        dataset.on("clear", () => {
-            compact.Reset()
-            dataPlot.ClearData()
-            dataTable.ClearData()
-        })
-
-        compact.on("change", () => dataPlot.ChangeCompact())
-        thresholds.on("change", (low, high) => {
-            modelPlot.UpdatePixels()
-        })
-
-        dataset.SetDimension(3)
-        dataset.SetData("train", generator.Generate(5000, configs.gaussians3))
-        dataset.SetData("test", generator.Generate(500, configs.gaussians3))
-        dataset.SetData("background", compact.GetData(500))
+        visualizer.dataset.SetDimension(3)
+        visualizer.dataset.SetData("train", generator.Generate(5000, configs.gaussians3))
+        visualizer.dataset.SetData("test", generator.Generate(500, configs.gaussians3))
+        visualizer.dataset.SetData("background", visualizer.compact.GetData(500))
     </script>
 </body>
 </html>

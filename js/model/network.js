@@ -29,8 +29,14 @@ class NeuralNetwork {
             layer.ZeroGradientParams()
     }
 
-    Predict(x, size) {
-        let result = new Float64Array(this.outputs * size)
+    Reset() {
+        for (let layer of this.layers)
+            layer.Reset()
+    }
+
+    Predict(x, size, result = null) {
+        if (result === null)
+            result = new Float64Array(this.outputs * size)
 
         for (let i = 0; i < size; i += this.maxBatchSize) {
             let j = Math.min(i + this.maxBatchSize, size)
@@ -93,6 +99,9 @@ class NeuralNetwork {
     }
 
     SetInputs(inputs) {
+        if (inputs == this.inputs)
+            return
+
         this.inputs = inputs
 
         if (this.layers.length > 0)
