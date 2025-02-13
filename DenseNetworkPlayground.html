@@ -12,6 +12,7 @@
 </head>
 <body>
     <div class="data-plot" id="data-plot" oncontextmenu="return false;">
+        <canvas id="model-view"></canvas>
         <svg id="data-view"></svg>
     </div>
 
@@ -29,6 +30,7 @@
     <script src="js/entities/event_emitter.js"></script>
     <script src="js/entities/data.js"></script>
     <script src="js/entities/compact.js"></script>
+    <script src="js/entities/thresholds.js"></script>
     <script src="js/entities/view_box.js"></script>
 
     <!-- DATA -->
@@ -49,6 +51,7 @@
 
     <script src="js/view/data_plot.js"></script>
     <script src="js/view/data_table.js"></script>
+    <script src="js/view/model_plot.js"></script>
 
     <script>
         let random = new Random()
@@ -61,6 +64,12 @@
 
         let dataset = new Dataset()
         let compact = new Compact()
+        let thresholds = new Thresholds()
+
+        let model = new NeuralNetwork(2)
+        model.AddLayer({size: 10, activation: "abs"})
+        model.AddLayer({size: 10, activation: "abs"})
+        model.AddLayer({size: 1, activation: ""})
 
         let viewBox = new ViewBox(document.getElementById("data-view"))
 
@@ -73,12 +82,18 @@
         dataTable.Add("train", {title: "Обучающие данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
         dataTable.Add("test", {title: "Тестовые данные", colors: {"-1": "#2191fb", "1": "#ba274a"}})
 
+        let modelPlot = new ModelPlot(viewBox, document.getElementById("model-view"), model, thresholds)
+
         dataset.on("change", (name, split) => {
             if (name === "train")
                 compact.Initialize(split.data.dimension, split.stats)
 
             dataPlot.ChangeData(name, split)
             dataTable.ChangeData(name, split)
+        })
+
+        dataset.on("change-dimension", dimension => {
+            modelPlot.ChangeDimension(dimension)
         })
 
         dataset.on("clear", () => {
@@ -88,6 +103,9 @@
         })
 
         compact.on("change", () => dataPlot.ChangeCompact())
+        thresholds.on("change", (low, high) => {
+            modelPlot.UpdatePixels()
+        })
 
         dataset.SetDimension(3)
         dataset.SetData("train", generator.Generate(5000, configs.gaussians3))

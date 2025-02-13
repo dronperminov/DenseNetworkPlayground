@@ -12,6 +12,7 @@ class Dataset extends EventEmitter {
 
 		this.dimension = dimension
 		this.Clear()
+		this.emit("change-dimension", dimension)
 	}
 
 	SetData(name, data, config = null) {

@@ -10,9 +10,17 @@
     overflow: hidden;
 }
 
-.data-plot svg {
+.data-plot svg, .data-plot canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
+}
+
+.data-plot canvas {
+    user-select: none;
+    pointer-events: none;
 }
 
 .data-plot svg * {
