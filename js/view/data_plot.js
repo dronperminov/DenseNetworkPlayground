@@ -8,7 +8,7 @@ class DataPlot {
         this.dataLayer = new DataLayer(svg, this.viewBox)
 
         this.viewBox.on("scale", () => this.UpdateSizes())
-        this.viewBox.on("change", () => this.labelsLayer.UpdateLabels())
+        this.viewBox.on("change", limits => this.ChangeView(limits))
 
         svg.addEventListener("dblclick", e => this.ResetLimits())
         new ResizeObserver(() => this.ResetLimits()).observe(svg)
@@ -72,5 +72,9 @@ class DataPlot {
     UpdateSizes() {
         this.dataLayer.UpdateSizes()
         this.compactLayer.UpdateSizes()
+    }
+
+    ChangeView(limits) {
+        this.labelsLayer.UpdateLabels(limits)
     }
 }

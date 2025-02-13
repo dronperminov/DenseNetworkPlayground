@@ -76,7 +76,7 @@ class ViewBox extends EventEmitter {
 
     Update() {
         this.svg.setAttribute("viewBox", `${this.x} ${this.y} ${this.width * this.scale} ${this.height * this.scale}`)
-        this.emit("change", this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height)
+        this.emit("change", this.GetLimits())
     }
 
     Move(dx, dy) {

@@ -5,13 +5,12 @@ class LabelsLayer {
         this.topRightLabel = MakeElement(div, {"class": "data-plot-label-rt"}, "span")
     }
 
-    UpdateLabels() {
-        let {xmin, xmax, ymin, ymax} = this.viewBox.GetLimits()
-        let xScale = this.GetRoundScale(xmin, xmax)
-        let yScale = this.GetRoundScale(ymin, ymax)
+    UpdateLabels(limits) {
+        let xScale = this.GetRoundScale(limits.xmin, limits.xmax)
+        let yScale = this.GetRoundScale(limits.ymin, limits.ymax)
 
-        this.bottomLeftLabel.innerText =`${Round(xmin, xScale)}, ${Round(ymin, yScale)}`
-        this.topRightLabel.innerText =`${Round(xmax, xScale)}, ${Round(ymax, yScale)}`
+        this.bottomLeftLabel.innerText =`${Round(limits.xmin, xScale)}, ${Round(limits.ymin, yScale)}`
+        this.topRightLabel.innerText =`${Round(limits.xmax, xScale)}, ${Round(limits.ymax, yScale)}`
     }
 
     GetRoundScale(a, b) {
