@@ -5,6 +5,7 @@ class Visualizer {
         this.thresholds = new Thresholds()
 
         this.InitModel()
+        this.InitTrain()
         this.InitViews()
         this.InitEventHandlers()
     }
@@ -14,6 +15,15 @@ class Visualizer {
         this.model.AddLayer({size: 10, activation: "abs"})
         this.model.AddLayer({size: 10, activation: "abs"})
         this.model.AddLayer({size: 1, activation: ""})
+
+        this.modelManager = new ModelManager(this.model)
+    }
+
+    InitTrain() {
+        this.SetCriterion("mse")
+        this.SetOptimizer("adam", {learningRate: 0.004, regularizationType: "", lambda: 0.001})
+        this.SetBatchSize(16)
+        this.SetBackgroundPart(1)
     }
 
     InitViews() {
@@ -35,6 +45,8 @@ class Visualizer {
         this.dataset.on("change", (name, split) => this.HandleChangeData(name, split))
         this.dataset.on("change-dimension", dimension => this.HandleChangeDimension(dimension))
         this.dataset.on("clear", () => this.HandleClearData())
+
+        this.modelManager.on("change", () => this.HandleChangeModel())
 
         this.thresholds.on("change", (low, high) => this.HandleChangeThresholds(low, high))
     }

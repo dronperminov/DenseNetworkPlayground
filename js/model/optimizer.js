@@ -199,3 +199,33 @@ class RMSprop extends Optimizer {
         weights[index] -= this.learningRate * grad / (Math.sqrt(vtHat) + this.eps)
     }
 }
+
+function GetOptimizer(name, config = null) {
+    if (config === null)
+        config = {}
+
+    let learningRate = config.learningRate || 0.01
+
+    if (name == "sgd")
+        return new SGD(learningRate, config)
+
+    if (name == "momentum-sgd")
+        return new MomentumSGD(learningRate, config)
+
+    if (name == "adam")
+        return new Adam(learningRate, config)
+
+    if (name == "adamax")
+        return new Adamax(learningRate, config)
+
+    if (name == "adadelta")
+        return new Adadelta(learningRate, config)
+
+    if (name == "adagrad")
+        return new Adagrad(learningRate, config)
+
+    if (name == "rmsprop")
+        return new RMSprop(learningRate, config)
+
+    throw new Error(`Unknown optimizer name "${name}"`)
+}

@@ -154,7 +154,7 @@ class FullyConnectedLayer {
     }
 
     ToggleNeuron(neuron) {
-        this.disabled[neuron] ^= true
+        this.disabled[neuron] = !this.disabled[neuron]
     }
 
     LoadWeights(config) {

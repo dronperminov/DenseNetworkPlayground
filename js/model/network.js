@@ -107,4 +107,8 @@ class NeuralNetwork {
         if (this.layers.length > 0)
             this.layers[0].Resize(inputs, this.layers[0].outputs)
     }
+
+    ToggleNeuron(layer, neuron) {
+        this.layers[layer].ToggleNeuron(neuron)
+    }
 }

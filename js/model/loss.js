@@ -112,3 +112,16 @@ class HuberLoss extends Loss {
         return this.reduction(size)
     }
 }
+
+function GetLoss(name, reduction = "mean", maxSize = MAX_BATCH_SIZE) {
+    if (name == "mse")
+        return new MSELoss(reduction, maxSize)
+
+    if (name == "mae")
+        return new MAELoss(reduction, maxSize)
+
+    if (name == "huber")
+        return new HuberLoss(1.0, reduction, maxSize)
+
+    throw new Error(`Unknown loss "${name}"`)
+}

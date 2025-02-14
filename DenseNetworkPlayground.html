@@ -32,6 +32,7 @@
     <script src="js/entities/compact.js"></script>
     <script src="js/entities/thresholds.js"></script>
     <script src="js/entities/view_box.js"></script>
+    <script src="js/entities/model_manager.js"></script>
 
     <!-- DATA -->
     <script src="js/data/data_generator.js"></script>
@@ -56,6 +57,7 @@
     <script src="js/visualizer.js"></script>
     <script src="js/visualizer/events.js"></script>
     <script src="js/visualizer/ui.js"></script>
+    <script src="js/visualizer/train.js"></script>
 
     <script>
         let random = new Random()
@@ -67,10 +69,12 @@
             "gaussians3": {dataset: "gaussians", dimension: 3, params: {mean1: [-0.5, -0.4, -0.3], cov1: [[0.1, 0.05, 0], [0.05, 0.1, 0], [0, 0, 0.01]], mean2: [0.4, 0, 0], cov2: [[0.08, -0.06, 0], [-0.06, 0.15, 0], [0, 0, 0.08]]}},
         }
 
-        visualizer.dataset.SetDimension(3)
-        visualizer.dataset.SetData("train", generator.Generate(5000, configs.gaussians3))
-        visualizer.dataset.SetData("test", generator.Generate(500, configs.gaussians3))
-        visualizer.dataset.SetData("background", visualizer.compact.GetData(500))
+        visualizer.dataset.SetDimension(2)
+        visualizer.dataset.SetData("train", generator.Generate(5000, configs.spiral))
+        visualizer.dataset.SetData("test", generator.Generate(500, configs.spiral))
+
+        visualizer.SetDataVisibility("test", false)
+        visualizer.SetCompactOffset(0.5)
     </script>
 </body>
 </html>

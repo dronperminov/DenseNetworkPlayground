@@ -16,6 +16,12 @@ class Thresholds extends EventEmitter {
         this.emit("change", this.low, this.high)
     }
 
+    Set(low, high) {
+        this.low = low
+        this.high = high
+        this.emit("change", this.low, this.high)
+    }
+
     IsInside(value) {
         return this.low <= value && value < this.high
     }

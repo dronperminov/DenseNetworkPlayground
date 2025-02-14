@@ -1,5 +1,5 @@
 Visualizer.prototype.HandleChangeDimension = function(dimension) {
-    this.modelPlot.ChangeDimension(dimension)
+    this.modelManager.SetInputs(dimension)
 }
 
 Visualizer.prototype.HandleChangeData = function(name, split) {

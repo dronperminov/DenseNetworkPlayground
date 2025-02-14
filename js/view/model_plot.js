@@ -7,7 +7,6 @@ class ModelPlot {
 
         this.ctx = canvas.getContext("2d")
         this.axes = [0, 1]
-        this.dimension = null
 
         this.mode = ""
         this.SetSize(100)
@@ -26,7 +25,7 @@ class ModelPlot {
         if (mode == this.mode)
             return
 
-        if (this.mode == "no" && this.dimension == 2) {
+        if (this.mode == "no" && this.model.inputs == 2) {
             this.UpdateInputs()
             this.UpdateOutput()
         }
@@ -47,18 +46,7 @@ class ModelPlot {
     }
 
     CanPlot() {
-        return this.dimension == 2 && this.mode != "no"
-    }
-
-    ChangeDimension(dimension) {
-        this.dimension = dimension
-
-        if (dimension != 2) {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-            return
-        }
-
-        this.Plot()
+        return this.model.inputs == 2 && this.mode != "no"
     }
 
     Plot() {
@@ -71,6 +59,11 @@ class ModelPlot {
     }
 
     ChangeModel() {
+        if (this.model.inputs != 2) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+            return
+        }
+
         if (!this.CanPlot())
             return
 
