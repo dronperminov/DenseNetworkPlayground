@@ -7,6 +7,8 @@ function SetAttributes(element, attributes) {
             element.innerText = value
         else if (name == "innerHTML")
             element.innerHTML = value
+        else if (name == "textContent")
+            element.textContent = value
         else
             element.setAttribute(name, value)
     }
@@ -28,6 +30,13 @@ function MakeElement(parent = null, attributes = null, tagName = "div") {
         parent.appendChild(element)
 
     return element
+}
+
+function AddClassName(element, className, condition) {
+    if (condition)
+        element.classList.add(className)
+    else
+        element.classList.remove(className)
 }
 
 function Round(value, scale = 100) {

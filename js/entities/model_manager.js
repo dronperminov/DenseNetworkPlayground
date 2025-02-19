@@ -10,6 +10,7 @@ class ModelManager extends EventEmitter {
             return
 
         this.model.SetInputs(inputs)
+        this.emit("change-architecture")
         this.emit("change")
     }
 

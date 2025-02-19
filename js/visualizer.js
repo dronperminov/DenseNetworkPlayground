@@ -47,6 +47,9 @@ class Visualizer {
         this.dataset.on("clear", () => this.HandleClearData())
 
         this.modelManager.on("change", () => this.HandleChangeModel())
+        this.modelManager.on("change-architecture", () => this.HandleChangeModelArchitecture())
+
+        this.modelPlot.on("click-neuron", (layer, neuron, e) => this.HandleClickNeuron(layer, neuron, e))
 
         this.thresholds.on("change", (low, high) => this.HandleChangeThresholds(low, high))
     }

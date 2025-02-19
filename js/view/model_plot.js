@@ -1,8 +1,12 @@
-class ModelPlot {
+class ModelPlot extends EventEmitter {
     constructor(viewBox, canvas, div, model, thresholds) {
+        super()
         this.viewBox = viewBox
 
         this.outputLayer = new ModelOutputLayer(viewBox, canvas, model, thresholds)
+        this.architectureLayer = new ModelArchitectureLayer(div.querySelector("svg"), model)
+
+        this.architectureLayer.on("click-neuron", (layer, neuron, e) => this.emit("click-neuron", layer, neuron, e))
     }
 
     SetAxes(xAxis, yAxis) {
@@ -15,14 +19,24 @@ class ModelPlot {
 
     SetShow(layer, neuron) {
         this.outputLayer.SetShow(layer, neuron)
+        this.architectureLayer.SetShow(layer, neuron)
     }
 
-    SetMode(mode) {
+    SetOutputMode(mode) {
         this.outputLayer.SetMode(mode)
+    }
+
+    SetWeightsMode(mode) {
+        this.architectureLayer.SetWeightsMode(mode)
     }
 
     ChangeModel() {
         this.outputLayer.Plot()
+        this.architectureLayer.Update()
+    }
+
+    ChangeModelArchitecture() {
+        this.architectureLayer.Init()
     }
 
     ChangeThresholds() {

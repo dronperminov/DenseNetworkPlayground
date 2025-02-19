@@ -63,7 +63,7 @@ class NeuralNetwork {
             this.Forward(data, batchSize)
 
             for (let j = 0; j < batchSize; j++)
-                result[i + j] = this.layers[layer].output[j * this.layers[layer].outputs + neuron]
+                result[i + j] = this.layers[layer].value[j * this.layers[layer].outputs + neuron]
         }
 
         return result

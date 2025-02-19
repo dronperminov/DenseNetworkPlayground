@@ -20,12 +20,20 @@ Visualizer.prototype.SetDataVisibility = function(name, visible) {
     this.dataPlot.SetVisibility(name, visible)
 }
 
-Visualizer.prototype.SetModelPlotSize = function(size) {
+Visualizer.prototype.SetModelOutputSize = function(size) {
     this.modelPlot.SetSize(size)
 }
 
-Visualizer.prototype.SetModelPlotMode = function(mode) {
-    this.modelPlot.SetMode(mode)
+Visualizer.prototype.SetModelOutputMode = function(mode) {
+    this.modelPlot.SetOutputMode(mode)
+}
+
+Visualizer.prototype.SetModelWeightsMode = function(mode) {
+    this.modelPlot.SetWeightsMode(mode)
+}
+
+Visualizer.prototype.SetModelShowNeuron = function(layer, neuron) {
+    this.modelPlot.SetShow(layer, neuron)
 }
 
 Visualizer.prototype.SetCriterion = function(name) {
@@ -54,4 +62,8 @@ Visualizer.prototype.SetBatchSize = function(batchSize) {
 
 Visualizer.prototype.SetBackgroundPart = function(backgroundPart) {
     this.backgroundPart = backgroundPart
+}
+
+Visualizer.prototype.ToggleNeuron = function(layer, neuron) {
+    this.modelManager.ToggleNeuron(layer, neuron)
 }

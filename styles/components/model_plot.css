@@ -17,3 +17,44 @@
     width: 100%;
     height: 100%;
 }
+
+.neuron {
+    fill: #ffffff;
+    stroke: #222222;
+}
+
+.neuron + text {
+    user-select: none;
+    pointer-events: none;
+}
+
+.neuron:hover {
+    stroke: #4caf50;
+    cursor: pointer;
+}
+
+.neuron:hover + text {
+    fill: #4caf50;
+}
+
+.neuron-disabled {
+    fill: #000000;
+}
+
+.neuron-disabled + text {
+    fill: #888888;
+}
+
+.neuron-active, .neuron-active:hover {
+    fill: #4caf50;
+    stroke: #4caf50;
+    cursor: default;
+}
+
+.neuron-active + text, .neuron-active:hover + text {
+    fill: #ffffff;
+}
+
+.neuron-disabled.neuron-active {
+    fill: #aaaaaa;
+}
