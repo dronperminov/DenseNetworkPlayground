@@ -48,7 +48,7 @@ class ModelOutputLayer {
     }
 
     Plot(config = null) {
-        if (!this.CanPlot() || !this.IsVisible()) {
+        if (!this.IsVisible()) {
             this.Clear()
             return
         }
@@ -92,12 +92,15 @@ class ModelOutputLayer {
         this.canvas.width = width
         this.canvas.height = height
 
-        this.inputs = new Float64Array(width * height * 2)
+        this.inputs = new Float64Array(width * height * this.model.inputs)
         this.outputs = new Float64Array(width * height)
         this.pixels = this.ctx.createImageData(width, height)
     }
 
     UpdateInputs() {
+        if (this.inputs.length != this.canvas.width * this.canvas.height * this.model.inputs)
+            this.inputs = new Float64Array(this.canvas.width * this.canvas.height * this.model.inputs)
+
         let limits = this.viewBox.GetLimits()
         let dj = (limits.xmax - limits.xmin) / (this.canvas.width - 1)
         let di = (limits.ymax - limits.ymin) / (this.canvas.height - 1)
@@ -105,9 +108,12 @@ class ModelOutputLayer {
 
         for (let i = 0; i < this.canvas.height; i++) {
             for (let j = 0; j < this.canvas.width; j++) {
+                for (let d = 0; d < this.model.inputs; d++)
+                    this.inputs[index + d] = 0
+
                 this.inputs[index + this.axes[0]] = limits.xmin + dj * j
                 this.inputs[index + this.axes[1]] = limits.ymax - di * i
-                index += 2
+                index += this.model.inputs
             }
         }
     }
@@ -141,10 +147,6 @@ class ModelOutputLayer {
 
     IsVisible() {
         return this.mode != "no"
-    }
-
-    CanPlot() {
-        return this.model.inputs == 2
     }
 
     GetOutputColor(output) {
