@@ -35,7 +35,6 @@ class Compact extends EventEmitter {
         this.max = null
         this.minOffset = null
         this.maxOffset = null
-        this.offset = 0
         this.emit("change")
     }
 

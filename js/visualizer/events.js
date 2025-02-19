@@ -4,7 +4,7 @@ Visualizer.prototype.HandleChangeDimension = function(dimension) {
 
 Visualizer.prototype.HandleChangeData = function(name, split) {
     if (name === "train")
-        this.compact.Initialize(split.data.dimension, split.stats)
+        this.compact.Initialize(split.data.dimension, split.stats, this.compact.offset)
 
     this.dataPlot.ChangeData(name, split)
     this.dataTable.ChangeData(name, split)
