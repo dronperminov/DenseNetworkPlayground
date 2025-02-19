@@ -10,6 +10,7 @@ class ViewBox extends EventEmitter {
         this.svg.addEventListener("mouseup", e => this.MouseUp(e))
         this.svg.addEventListener("mouseleave", e => this.MouseUp(e))
         this.svg.addEventListener("wheel", e => this.Wheel(e))
+        new ResizeObserver(() => this.Resize()).observe(this.svg)
 
         this.SetLimits(x, y, width, height)
     }
@@ -38,6 +39,21 @@ class ViewBox extends EventEmitter {
         this.x = 0
         this.y = 0
         this.scale = 1
+        this.width = this.svg.clientWidth
+        this.height = this.svg.clientHeight
+
+        this.emit("change-view")
+        this.Update()
+    }
+
+    Resize() {
+        let dw = (this.svg.clientWidth / this.width - 1) * this.bbox.width
+        let dh = (this.svg.clientHeight / this.height - 1) * this.bbox.height
+
+        this.bbox.y -= dh
+        this.bbox.width += dw
+        this.bbox.height += dh
+
         this.width = this.svg.clientWidth
         this.height = this.svg.clientHeight
 

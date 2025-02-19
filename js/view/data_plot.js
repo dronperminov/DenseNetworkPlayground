@@ -11,7 +11,6 @@ class DataPlot {
 
         compact.on("change", () => this.ChangeCompact())
         viewBox.svg.addEventListener("dblclick", e => this.ResetLimits())
-        new ResizeObserver(() => this.ResetLimits()).observe(viewBox.svg)
     }
 
     AddPlot(name, config) {
