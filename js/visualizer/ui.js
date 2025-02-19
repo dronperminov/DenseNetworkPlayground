@@ -67,3 +67,7 @@ Visualizer.prototype.SetBackgroundPart = function(backgroundPart) {
 Visualizer.prototype.ToggleNeuron = function(layer, neuron) {
     this.modelManager.ToggleNeuron(layer, neuron)
 }
+
+Visualizer.prototype.SetActivation = function(activation) {
+    this.modelManager.SetActivation(activation)
+}

@@ -42,4 +42,9 @@ class ModelManager extends EventEmitter {
         this.model.ToggleNeuron(layer, neuron)
         this.emit("change")
     }
+
+    SetActivation(activation) {
+        this.model.SetActivation(activation)
+        this.emit("change")
+    }
 }
