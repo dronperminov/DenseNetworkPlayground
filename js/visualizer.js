@@ -38,7 +38,7 @@ class Visualizer {
         this.dataTable.Add("train", {title: "Обучающие данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
         this.dataTable.Add("test", {title: "Тестовые данные", colors: {"-1": "#2191fb", "1": "#ba274a"}})
 
-        this.modelPlot = new ModelPlot(viewBox, document.getElementById("model-view"), this.model, this.thresholds)
+        this.modelPlot = new ModelPlot(viewBox, document.getElementById("model-view"), document.getElementById("model-plot"), this.model, this.thresholds)
     }
 
     InitEventHandlers() {

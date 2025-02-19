@@ -51,6 +51,24 @@ class NeuralNetwork {
         return result
     }
 
+    PredictAt(layer, neuron, x, size, result = null) {
+        if (result === null)
+            result = new Float64Array(size)
+
+        for (let i = 0; i < size; i += this.maxBatchSize) {
+            let end = Math.min(i + this.maxBatchSize, size)
+            let batchSize = end - i
+
+            let data = x.subarray(i * this.inputs, end * this.inputs)
+            this.Forward(data, batchSize)
+
+            for (let j = 0; j < batchSize; j++)
+                result[i + j] = this.layers[layer].output[j * this.layers[layer].outputs + neuron]
+        }
+
+        return result
+    }
+
     Forward(x, batchSize) {
         this.layers[0].Forward(x, batchSize)
 

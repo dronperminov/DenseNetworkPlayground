@@ -17,7 +17,7 @@ Visualizer.prototype.HandleClearData = function() {
 }
 
 Visualizer.prototype.HandleChangeThresholds = function(low, high) {
-    this.modelPlot.UpdatePixels()
+    this.modelPlot.ChangeThresholds()
 }
 
 Visualizer.prototype.HandleChangeModel = function() {
