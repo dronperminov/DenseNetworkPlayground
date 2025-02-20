@@ -11,6 +11,7 @@ class DataLayer {
             colors: config.colors,
             border: config.border,
             visible: config.visible,
+            rendered: false,
             points: [],
             data: null,
             stats: null,
@@ -40,6 +41,7 @@ class DataLayer {
         for (let plot of Object.values(this.plots)) {
             plot.g.innerHTML = ""
             plot.points = []
+            plot.rendered = false
             plot.data = null
             plot.stats = null
             plot.mask = null
@@ -57,6 +59,9 @@ class DataLayer {
 
         this.plots[name].visible = visible
         this.plots[name].g.setAttribute("visibility", visible ? "visible" : "hidden")
+
+        if (!this.plots[name].rendered)
+            this.PlotPoints(this.plots[name])
     }
 
     SetMask(name, mask) {
@@ -108,7 +113,9 @@ class DataLayer {
     }
 
     PlotPoints(plot) {
-        if (!plot.data)
+        plot.rendered = plot.data && plot.visible
+
+        if (!plot.rendered)
             return
 
         this.InitPoints(plot)
