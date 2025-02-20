@@ -3,6 +3,7 @@ class ModelManager extends EventEmitter {
         super()
 
         this.model = model
+        this.predictions = {}
     }
 
     SetInputs(inputs) {
@@ -36,6 +37,16 @@ class ModelManager extends EventEmitter {
 
         this.emit("change")
         return totalLoss / data.length
+    }
+
+    Predict(name, data) {
+        this.predictions[name] = this.model.Predict(data.inputs, data.length)
+        this.emit("change-prediction", name)
+    }
+
+    ClearPredictions() {
+        this.predictions = {}
+        this.emit("clear-predictions")
     }
 
     ToggleNeuron(layer, neuron) {

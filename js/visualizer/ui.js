@@ -38,6 +38,7 @@ Visualizer.prototype.SetModelShowNeuron = function(layer, neuron) {
 
 Visualizer.prototype.SetCriterion = function(name) {
     this.criterion = GetLoss(name)
+    this.UpdateMetrics()
 }
 
 Visualizer.prototype.SetOptimizer = function(name, config = null) {

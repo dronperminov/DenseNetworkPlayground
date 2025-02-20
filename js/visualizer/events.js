@@ -8,20 +8,27 @@ Visualizer.prototype.HandleChangeData = function(name, split) {
 
     this.dataPlot.ChangeData(name, split)
     this.dataTable.ChangeData(name, split)
+
+    if (name != "background")
+        this.modelManager.Predict(name, split.data)
 }
 
 Visualizer.prototype.HandleClearData = function() {
     this.compact.Reset()
     this.dataPlot.ClearData()
     this.dataTable.ClearData()
+    this.modelManager.ClearPredictions()
+    // TODO: reset metrics?
 }
 
 Visualizer.prototype.HandleChangeThresholds = function(low, high) {
     this.modelPlot.ChangeThresholds()
+    this.UpdateMetrics()
 }
 
 Visualizer.prototype.HandleChangeModel = function() {
     this.modelPlot.ChangeModel()
+    this.UpdatePredictions()
 }
 
 Visualizer.prototype.HandleChangeModelArchitecture = function() {
@@ -35,4 +42,16 @@ Visualizer.prototype.HandleClickNeuron = function(layer, neuron, e) {
     else if (e.button == 2) {
         this.ToggleNeuron(layer, neuron)
     }
+}
+
+Visualizer.prototype.HandleChangePredictions = function(name) {
+    this.HandleChangeMetrics(name)
+}
+
+Visualizer.prototype.HandleChangeMetrics = function(name) {
+    let data = this.dataset.splits[name].data
+    let predictions = this.modelManager.predictions[name]
+    let metrics = this.EvaluateMetricsOnData(data, predictions)
+
+    console.log(this.epoch, name, metrics)
 }

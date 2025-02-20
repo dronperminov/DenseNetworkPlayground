@@ -25,4 +25,14 @@ class Thresholds extends EventEmitter {
     IsInside(value) {
         return this.low <= value && value < this.high
     }
+
+    GetLabel(value) {
+        if (value < this.low)
+            return -1
+
+        if (value >= this.high)
+            return 1
+
+        return 0
+    }
 }

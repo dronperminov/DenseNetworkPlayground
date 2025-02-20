@@ -20,10 +20,13 @@ class Visualizer {
     }
 
     InitTrain() {
-        this.SetCriterion("mse")
-        this.SetOptimizer("adam", {learningRate: 0.004, regularizationType: "", lambda: 0.001})
-        this.SetBatchSize(16)
-        this.SetBackgroundPart(1)
+        this.epoch = 0
+        this.predictions = {}
+
+        this.criterion = GetLoss("mse")
+        this.optimizer = GetOptimizer("adam", {learningRate: 0.01, regularizationType: "", lambda: 0.001})
+        this.batchSize = 16
+        this.backgroundPart = 1
     }
 
     InitViews() {
@@ -32,7 +35,7 @@ class Visualizer {
         this.dataPlot = new DataPlot(document.getElementById("data-plot"), viewBox, this.compact)
         this.dataPlot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
         this.dataPlot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: true})
-        this.dataPlot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: true})
+        this.dataPlot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: false})
 
         this.dataTable = new DataTable(document.getElementById("data-table"))
         this.dataTable.Add("train", {title: "Обучающие данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
@@ -48,6 +51,7 @@ class Visualizer {
 
         this.modelManager.on("change", () => this.HandleChangeModel())
         this.modelManager.on("change-architecture", () => this.HandleChangeModelArchitecture())
+        this.modelManager.on("change-prediction", name => this.HandleChangePredictions(name))
 
         this.modelPlot.on("click-neuron", (layer, neuron, e) => this.HandleClickNeuron(layer, neuron, e))
 
