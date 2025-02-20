@@ -21,7 +21,10 @@ class Visualizer {
 
     InitTrain() {
         this.epoch = 0
-        this.predictions = {}
+        this.metrics = new Metrics()
+        this.metrics.Add("loss", ["train", "test", "background"])
+        this.metrics.Add("refuse", ["train", "test"])
+        this.metrics.Add("accuracy", ["train", "test"])
 
         this.criterion = GetLoss("mse")
         this.optimizer = GetOptimizer("adam", {learningRate: 0.01, regularizationType: "", lambda: 0.001})

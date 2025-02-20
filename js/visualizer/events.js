@@ -17,6 +17,7 @@ Visualizer.prototype.HandleClearData = function() {
     this.compact.Reset()
     this.dataPlot.ClearData()
     this.dataTable.ClearData()
+    this.metrics.Reset()
     this.modelManager.ClearPredictions()
     // TODO: reset metrics?
 }
@@ -53,5 +54,10 @@ Visualizer.prototype.HandleChangeMetrics = function(name) {
     let predictions = this.modelManager.predictions[name]
     let metrics = this.EvaluateMetricsOnData(data, predictions)
 
-    console.log(this.epoch, name, metrics)
+    this.metrics.Set("loss", name, this.epoch, metrics.loss)
+
+    if (name != "background") {
+        this.metrics.Set("accuracy", name, this.epoch, metrics.accuracy)
+        this.metrics.Set("refuse", name, this.epoch, metrics.refuse)
+    }
 }
