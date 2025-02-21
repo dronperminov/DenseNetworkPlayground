@@ -17,7 +17,7 @@ function SetAttributes(element, attributes) {
 function MakeElement(parent = null, attributes = null, tagName = "div") {
     let element = null
 
-    if (["svg", "path", "g", "circle", "text"].indexOf(tagName) > -1) {
+    if (["svg", "path", "g", "circle", "rect", "text"].indexOf(tagName) > -1) {
         element = document.createElementNS("http://www.w3.org/2000/svg", tagName)
     }
     else {

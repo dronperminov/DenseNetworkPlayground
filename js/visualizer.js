@@ -24,10 +24,10 @@ class Visualizer {
         this.metrics = new Metrics()
         this.metrics.Add("loss", ["train", "test", "background"])
         this.metrics.Add("refuse", ["train", "test"])
-        this.metrics.Add("accuracy", ["train", "test"])
+        this.metrics.Add("error", ["train", "test"])
 
         this.criterion = GetLoss("mse")
-        this.optimizer = GetOptimizer("adam", {learningRate: 0.01, regularizationType: "", lambda: 0.001})
+        this.optimizer = GetOptimizer("adam", {learningRate: 0.004, regularizationType: "l2", lambda: 0.001})
         this.batchSize = 16
         this.backgroundPart = 1
     }
@@ -45,6 +45,23 @@ class Visualizer {
         this.dataTable.Add("test", {title: "Тестовые данные", colors: {"-1": "#2191fb", "1": "#ba274a"}})
 
         this.modelPlot = new ModelPlot(viewBox, document.getElementById("model-view"), document.getElementById("model-plot"), this.model, this.thresholds)
+
+        this.metricsPlot = new MetricsPlot(document.getElementById("metrics-plot"), this.metrics)
+        this.metricsPlot.Add("loss", [
+            {label: "train", title: "train", color: "#dd7373", background: "#dd737330"},
+            {label: "test", title: "test", color: "#7699d4", background: "#7699d430"},
+            {label: "background", title: "bkgr", color: "#89dd73", background: "#89dd7330"}
+        ], {title: "Ошибка регрессии", percent: false})
+
+        this.metricsPlot.Add("error", [
+            {label: "train", title: "train", color: "#dd7373", background: "#dd737330"},
+            {label: "test", title: "test", color: "#7699d4", background: "#7699d430"}
+        ], {title: "Ошибка классификации", percent: true})
+
+        this.metricsPlot.Add("refuse", [
+            {label: "train", title: "train", color: "#dd7373", background: "#dd737330"},
+            {label: "test", title: "test", color: "#7699d4", background: "#7699d430"}
+        ], {title: "Отказ от распознавания", percent: true})
     }
 
     InitEventHandlers() {

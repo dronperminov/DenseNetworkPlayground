@@ -9,17 +9,25 @@ Visualizer.prototype.HandleChangeData = function(name, split) {
     this.dataPlot.ChangeData(name, split)
     this.dataTable.ChangeData(name, split)
 
-    if (name != "background")
-        this.modelManager.Predict(name, split.data)
+    if (name == "background")
+        return
+
+    this.modelManager.Predict(name, split.data)
+    this.PlotMetrics()
 }
 
 Visualizer.prototype.HandleClearData = function() {
     this.compact.Reset()
     this.dataPlot.ClearData()
     this.dataTable.ClearData()
+
+    this.epoch = 0
+    this.optimizer.Reset()
     this.metrics.Reset()
+
     this.modelManager.ClearPredictions()
-    // TODO: reset metrics?
+
+    this.PlotMetrics()
 }
 
 Visualizer.prototype.HandleChangeThresholds = function(low, high) {
@@ -51,13 +59,16 @@ Visualizer.prototype.HandleChangePredictions = function(name) {
 
 Visualizer.prototype.HandleChangeMetrics = function(name) {
     let data = this.dataset.splits[name].data
+    if (data.length == 0)
+        return
+
     let predictions = this.modelManager.predictions[name]
     let metrics = this.EvaluateMetricsOnData(data, predictions)
 
     this.metrics.Set("loss", name, this.epoch, metrics.loss)
 
     if (name != "background") {
-        this.metrics.Set("accuracy", name, this.epoch, metrics.accuracy)
+        this.metrics.Set("error", name, this.epoch, metrics.error)
         this.metrics.Set("refuse", name, this.epoch, metrics.refuse)
     }
 }

@@ -1,6 +1,7 @@
 Visualizer.prototype.Reset = function() {
     this.epoch = 0
     this.optimizer.Reset()
+    this.metrics.Reset()
     this.modelManager.Reset()
 }
 
@@ -48,7 +49,7 @@ Visualizer.prototype.TrainStep = function() {
 }
 
 Visualizer.prototype.EvaluateMetricsOnData = function(data, predictions) {
-    let correct = 0
+    let error = 0
     let refuse = 0
     let total = 0
 
@@ -61,13 +62,13 @@ Visualizer.prototype.EvaluateMetricsOnData = function(data, predictions) {
         }
 
         total++
-        correct += prediction == this.thresholds.GetLabel(data.outputs[i])
+        error += prediction != this.thresholds.GetLabel(data.outputs[i])
     }
 
     return {
         loss: this.criterion.Evaluate(predictions, data.outputs, data.length) / Math.max(data.length, 1),
         refuse: refuse / Math.max(data.length, 1),
-        accuracy: correct / Math.max(total, 1)
+        error: error / Math.max(total, 1)
     }
 }
 
@@ -75,10 +76,18 @@ Visualizer.prototype.UpdatePredictions = function() {
     for (let name of ["train", "test", "background"])
         if (name in this.dataset.splits)
             this.modelManager.Predict(name, this.dataset.splits[name].data)
+
+    this.PlotMetrics()
 }
 
 Visualizer.prototype.UpdateMetrics = function() {
     for (let name of ["train", "test", "background"])
         if (name in this.dataset.splits)
             this.HandleChangeMetrics(name)
+
+    this.PlotMetrics()
+}
+
+Visualizer.prototype.PlotMetrics = function() {
+    this.metricsPlot.Plot()
 }

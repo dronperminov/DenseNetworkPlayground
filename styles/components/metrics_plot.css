@@ -1,0 +1,60 @@
+.metrics-plot {
+    display: grid;
+    grid-gap: 5px;
+    grid-auto-flow: column;
+    height: 250px;
+    resize: both;
+}
+
+.metrics-plot svg {
+    width: 100%;
+    height: 100%;
+    user-select: none;
+}
+
+.metric-axes {
+    stroke: #222222;
+    fill: none;
+}
+
+.metric-title {
+    fill: #222222;
+    dominant-baseline: text-before-edge;
+    text-anchor: start;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.metric-epoch {
+    fill: #222222;
+    dominant-baseline: text-after-edge;
+    text-anchor: end;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.metric-start-epoch {
+    fill: #222222;
+    dominant-baseline: text-after-edge;
+    text-anchor: start;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.metric-label {
+    dominant-baseline: text-before-edge;
+    text-anchor: start;
+    font-size: 12px;
+}
+
+.metric-rect {
+    stroke: #ffffff;
+    fill: #ffffffbf;
+}
+
+.metric-max-value {
+    dominant-baseline: text-before-edge;
+    text-anchor: start;
+    font-weight: bold;
+    font-size: 10px;
+}
