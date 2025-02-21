@@ -16,13 +16,13 @@ class FullyConnectedLayer {
     }
 
     InitWeights() {
-        let std = Math.sqrt(2 / this.inputs)
+        let std = Math.sqrt(1 / this.inputs)
 
         for (let i = 0; i < this.w.length; i++)
             this.w[i] = random.Normal(0, std)
 
         for (let i = 0; i < this.b.length; i++)
-            this.b[i] = random.Normal(0, std)
+            this.b[i] = 0
     }
 
     ZeroGradients() {
