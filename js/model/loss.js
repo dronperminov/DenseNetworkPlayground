@@ -113,6 +113,29 @@ class HuberLoss extends Loss {
     }
 }
 
+class LogCoshLoss extends Loss {
+    Evaluate(y, t, size) {
+        let loss = 0
+
+        for (let i = 0; i < size; i++)
+            loss += Math.log(Math.cosh(y[i] - t[i]))
+
+        return loss
+    }
+
+    Backward(y, t, size) {
+        this.loss = 0
+
+        for (let i = 0; i < size; i++) {
+            let delta = y[i] - t[i]
+            this.grads[i] = Math.tanh(delta)
+            this.loss += Math.log(Math.cosh(delta))
+        }
+
+        return this.reduction(size)
+    }
+}
+
 function GetLoss(name, reduction = "mean", maxSize = MAX_BATCH_SIZE) {
     if (name == "mse")
         return new MSELoss(reduction, maxSize)
@@ -122,6 +145,9 @@ function GetLoss(name, reduction = "mean", maxSize = MAX_BATCH_SIZE) {
 
     if (name == "huber")
         return new HuberLoss(1.0, reduction, maxSize)
+
+    if (name == "logcosh")
+        return new LogCoshLoss(reduction, maxSize)
 
     throw new Error(`Unknown loss "${name}"`)
 }
