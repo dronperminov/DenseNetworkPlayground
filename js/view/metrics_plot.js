@@ -133,8 +133,8 @@ class MetricsPlot {
 
             let {stroke, fill} = this.GetPathPoints(values, bottom)
 
-            SetAttributes(plot.paths[label].stroke, {d: `${stroke.join(" ")}`})
-            SetAttributes(plot.paths[label].fill, {d: `${fill.join(" ")} L${values[values.length - 1].x} ${bottom} z`})
+            SetAttributes(plot.paths[label].stroke, {d: stroke})
+            SetAttributes(plot.paths[label].fill, {d: fill})
         }
     }
 
@@ -153,7 +153,7 @@ class MetricsPlot {
 
         for (let value of values) {
             if (!prev || value.epoch - prev.epoch != 1) {
-                stroke.push(`M${value.x} ${value.y} m -1, 0 a 1,1 0 1,0 2,0 a 1,1 0 1,0 -2,0`)
+                stroke.push(`M${value.x} ${value.y}`)
 
                 if (prev)
                     fill.push(`L${prev.x} ${bottom}`)
@@ -161,14 +161,16 @@ class MetricsPlot {
                 fill.push(`M${value.x} ${bottom} L${value.x} ${value.y}`)
             }
             else {
-                stroke.push(`L${value.x} ${value.y} m -1, 0 a 1,1 0 1,0 2,0 a 1,1 0 1,0 -2,0`)
+                stroke.push(`L${value.x} ${value.y}`)
                 fill.push(`L${value.x} ${value.y}`)
             }
 
             prev = value
         }
 
-        return {stroke, fill}
+        stroke.push(`m -1, 0 a 1,1 0 1,0 2,0 a 1,1 0 1,0 -2,0`)
+        fill.push(`L${values[values.length - 1].x} ${bottom} z`)
+        return {stroke: stroke.join(""), fill: fill.join("")}
     }
 
     Value2Text(value, percent) {
@@ -187,7 +189,7 @@ class MetricsPlot {
         }
         else {
             x = Math.min(Math.max(x, left), right)
-            plot.start = Math.round((x - left) / (right - left) * maxEpoch)
+            plot.start = Math.max(0, Math.min(maxEpoch - 1, Math.round((x - left) / (right - left) * maxEpoch)))
         }
 
         this.PlotMetric(metric)
@@ -200,7 +202,7 @@ class MetricsPlot {
         let plot = this.plots[metric]
         let step = Math.sign(e.deltaY) * (e.shiftKey ? 10 : 1)
 
-        plot.start = Math.max(0, Math.min(maxEpoch - 5, plot.start + step))
+        plot.start = Math.max(0, Math.min(maxEpoch - 1, plot.start + step))
         this.PlotMetric(metric)
     }
 }
