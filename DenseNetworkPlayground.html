@@ -87,10 +87,22 @@
 
         visualizer.dataset.SetDimension(2)
         visualizer.dataset.SetData("train", generator.Generate(5000, configs.spiral))
-        visualizer.dataset.SetData("test", generator.Generate(500, configs.spiral))
+        visualizer.dataset.SetData("test", generator.Generate(5000, configs.spiral))
 
         visualizer.SetDataVisibility("test", false)
         visualizer.SetCompactOffset(0.5)
+
+        let training = false
+
+        function Run() {
+            if (training) {
+                visualizer.TrainStep()
+            }
+
+            window.requestAnimationFrame(Run)
+        }
+
+        Run()
     </script>
 </body>
 </html>

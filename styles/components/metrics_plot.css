@@ -3,7 +3,6 @@
     grid-gap: 5px;
     grid-auto-flow: column;
     height: 250px;
-    resize: both;
 }
 
 .metrics-plot svg {

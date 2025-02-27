@@ -75,6 +75,7 @@ class Visualizer {
 
         this.modelPlot.on("click-neuron", (layer, neuron, e) => this.HandleClickNeuron(layer, neuron, e))
 
+        this.metrics.on("change", (metric, name, epoch, value) => this.metricsPlot.Set(metric, name, epoch, value))
         this.thresholds.on("change", (low, high) => this.HandleChangeThresholds(low, high))
     }
 }
