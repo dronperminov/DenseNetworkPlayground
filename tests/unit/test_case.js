@@ -14,7 +14,7 @@ class TestCase {
             maxDelta = Math.max(maxDelta, Math.abs(grads[i] - targetGrads[i]))
 
         let success = maxDelta < eps
-        let status = success ? `OK (delta: ${maxDelta})` : `FAILED (the values of the loss gradients differ: ${grads} vs ${targetGrads}, delta: ${maxDelta})`
+        let status = success ? `OK (delta: ${maxDelta})` : `FAILED (the values differ: ${grads} vs ${targetGrads}, delta: ${maxDelta})`
         console.log(`%c${message}: ${status}`, success ? "color:green" : "color:red")
     }
 }

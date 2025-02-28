@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unit test</title>
+</head>
+<body>
+    <p>Open console for check tests results</p>
+
+    <script src="../js/constants.js"></script>
+    <script src="../js/utils/random.js"></script>
+    <script src="../js/entities/data.js"></script>
+
+    <!-- MODEL -->
+    <script src="../js/model/fully_connected_layer.js"></script>
+    <script src="../js/model/loss.js"></script>
+    <script src="../js/model/optimizer.js"></script>
+    <script src="../js/model/network.js"></script>
+
+    <script src="unit/test_case.js"></script>
+    <script src="unit/test_loss.js"></script>
+    <script src="unit/test_optimizer.js"></script>
+    <script src="unit/test_network.js"></script>
+
+    <script>
+        let random = new Random()
+
+        let tests = [
+            new TestLoss(),
+            new TestOptimizer(),
+            new TestNetwork()
+        ]
+
+        for (let test of tests)
+            test.Run()
+    </script>
+</body>
+</html>
