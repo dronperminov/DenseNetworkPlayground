@@ -7,14 +7,19 @@ class TestCase {
         console.log(`%c${message}: ${status}`, success ? "color:green" : "color:red")
     }
 
-    CheckEqualValues(message, grads, targetGrads, eps = 1e-14) {
+    CheckEqualValues(message, values, targetValues, eps = 1e-14) {
+        let maxDelta = this.GetMaxDelta(values, targetValues)
+        let success = maxDelta < eps
+        let status = success ? `OK (delta: ${maxDelta})` : `FAILED (the values differ: ${values} vs ${targetValues}, delta: ${maxDelta})`
+        console.log(`%c${message}: ${status}`, success ? "color:green" : "color:red")
+    }
+
+    GetMaxDelta(values, targetValues) {
         let maxDelta = 0
 
-        for (let i = 0; i < targetGrads.length; i++)
-            maxDelta = Math.max(maxDelta, Math.abs(grads[i] - targetGrads[i]))
+        for (let i = 0; i < targetValues.length; i++)
+            maxDelta = Math.max(maxDelta, Math.abs(values[i] - targetValues[i]))
 
-        let success = maxDelta < eps
-        let status = success ? `OK (delta: ${maxDelta})` : `FAILED (the values differ: ${grads} vs ${targetGrads}, delta: ${maxDelta})`
-        console.log(`%c${message}: ${status}`, success ? "color:green" : "color:red")
+        return maxDelta
     }
 }

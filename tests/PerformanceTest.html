@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Performance test</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        td, th {
+            border: 1px solid #000;
+            padding: 2px 5px;
+            text-align: center;
+        }
+
+        .main-row {
+            border-top: 2px solid #000;
+        }
+
+        .main-column {
+            border-left: 2px solid #000;
+        }
+
+        .speedup {
+            background: #a7dfa7;
+        }
+
+        .high-speedup {
+            background: #82ff92;
+        }
+
+        .speeddown {
+            background: #f0b9a4;
+        }
+
+        .high-speeddown {
+            background: #f0a4a4;
+        }
+    </style>
+</head>
+<body>
+    <div id="results"></div>
+
+    <script src="../js/constants.js"></script>
+
+    <!-- UTILS -->
+    <script src="../js/utils/random.js"></script>
+    <script src="../js/utils/utils.js"></script>
+
+    <!-- ENTITIES -->
+    <script src="../js/entities/data.js"></script>
+
+    <!-- DATA -->
+    <script src="../js/data/data_generator.js"></script>
+
+    <!-- MODEL -->
+    <script src="../js/model/fully_connected_layer.js"></script>
+    <script src="../js/model/loss.js"></script>
+    <script src="../js/model/optimizer.js"></script>
+    <script src="../js/model/network.js"></script>
+
+    <script src="performance/test_performance.js"></script>
+    <script src="performance/test_fully_connected_layer.js"></script>
+
+    <script>
+        let results = document.getElementById("results")
+
+        let tests = [
+            new TestFullyConnectedLayer(results)
+        ]
+
+        for (let test of tests)
+            test.Run()
+    </script>
+</body>
+</html>

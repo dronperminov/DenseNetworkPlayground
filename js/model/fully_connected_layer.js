@@ -247,4 +247,166 @@ class FullyConnectedLayer {
         this.output[index] = Math.abs(value)
         this.df[index] = Math.sign(value)
     }
+
+    /* UNROLLED VERSIONS */
+    ForwardUnrolled(x, batchSize) {
+        const end = (this.outputs >> 2) << 2
+
+        for (let batch = 0; batch < batchSize; batch++) {
+            const inputsOffset = batch * this.inputs
+            const outputsOffset = batch * this.outputs
+
+            for (let i = 0; i < end; i += 4) {
+                const index1 = outputsOffset + i
+                const index2 = outputsOffset + i + 1
+                const index3 = outputsOffset + i + 2
+                const index4 = outputsOffset + i + 3
+
+                let value1 = this.b[i]
+                let value2 = this.b[i + 1]
+                let value3 = this.b[i + 2]
+                let value4 = this.b[i + 3]
+
+                let wOffset = i * this.inputs
+
+                for (let j = 0; j < this.inputs; j++) {
+                    const xj = x[inputsOffset + j]
+                    const wIdx = wOffset + j
+
+                    value1 += this.w[wIdx] * xj
+                    value2 += this.w[wIdx + this.inputs] * xj
+                    value3 += this.w[wIdx + this.inputs * 2] * xj
+                    value4 += this.w[wIdx + this.inputs * 3] * xj
+                }
+
+                if (this.disabled[i])
+                    this.output[index1] = this.value[index1] = this.df[index1] = 0
+                else
+                    this.activate(index1, value1)
+
+                if (this.disabled[i + 1])
+                    this.output[index2] = this.value[index2] = this.df[index2] = 0
+                else
+                    this.activate(index2, value2)
+
+                if (this.disabled[i + 2])
+                    this.output[index3] = this.value[index3] = this.df[index3] = 0
+                else
+                    this.activate(index3, value3)
+
+                if (this.disabled[i + 3])
+                    this.output[index4] = this.value[index4] = this.df[index4] = 0
+                else
+                    this.activate(index4, value4)
+            }
+
+            for (let i = end; i < this.outputs; i++) {
+                let index = outputsOffset + i
+
+                if (this.disabled[i]) {
+                    this.output[index] = this.value[index] = this.df[index] = 0
+                }
+                else {
+                    let value = this.b[i]
+                    let wOffset = i * this.inputs
+
+                    for (let j = 0; j < this.inputs; j++)
+                        value += this.w[wOffset + j] * x[inputsOffset + j]
+
+                    this.activate(index, value)
+                }
+            }
+        }
+    }
+
+    BackwardUnrolled(dout, x, batchSize, needDx) {
+        const total = ((batchSize * this.outputs) >> 2) << 2
+        const end = (this.outputs >> 2) << 2
+
+        for (let i = 0; i < total; i += 4) {
+            this.df[i] *= dout[i]
+            this.df[i + 1] *= dout[i + 1]
+            this.df[i + 2] *= dout[i + 2]
+            this.df[i + 3] *= dout[i + 3]
+        }
+
+        for (let i = total; i < batchSize * this.outputs; i++)
+            this.df[i] *= dout[i]
+
+        for (let batch = 0; batch < batchSize; batch++) {
+            const inputsOffset = batch * this.inputs
+            const outputsOffset = batch * this.outputs
+
+            for (let i = 0; i < end; i += 4) {
+                const delta1 = this.df[outputsOffset + i]
+                const delta2 = this.df[outputsOffset + i + 1]
+                const delta3 = this.df[outputsOffset + i + 2]
+                const delta4 = this.df[outputsOffset + i + 3]
+
+                const wOffset = i * this.inputs
+
+                for (let j = 0; j < this.inputs; j++) {
+                    const xj = x[inputsOffset + j]
+                    const wIdx = wOffset + j
+
+                    this.dw[wIdx] += delta1 * xj
+                    this.dw[wIdx + this.inputs] += delta2 * xj
+                    this.dw[wIdx + this.inputs * 2] += delta3 * xj
+                    this.dw[wIdx + this.inputs * 3] += delta4 * xj
+                }
+
+                this.db[i] += delta1
+                this.db[i + 1] += delta2
+                this.db[i + 2] += delta3
+                this.db[i + 3] += delta4
+            }
+
+            for (let i = end; i < this.outputs; i++) {
+                const delta = this.df[outputsOffset + i]
+                const wOffset = i * this.inputs
+
+                for (let j = 0; j < this.inputs; j++)
+                    this.dw[wOffset + j] += delta * x[inputsOffset + j]
+
+                this.db[i] += delta
+            }
+        }
+
+        if (!needDx)
+            return
+
+        this.dx.fill(0, 0, batchSize * this.inputs)
+
+        for (let batch = 0; batch < batchSize; batch++) {
+            const inputsOffset = batch * this.inputs
+            const outputsOffset = batch * this.outputs
+
+            for (let i = 0; i < end; i += 4) {
+                const delta1 = this.df[outputsOffset + i]
+                const delta2 = this.df[outputsOffset + i + 1]
+                const delta3 = this.df[outputsOffset + i + 2]
+                const delta4 = this.df[outputsOffset + i + 3]
+                const wOffset = i * this.inputs
+
+                for (let j = 0; j < this.inputs; j++) {
+                    const wIdx = wOffset + j
+
+                    const w1 = this.w[wIdx]
+                    const w2 = this.w[wIdx + this.inputs]
+                    const w3 = this.w[wIdx + this.inputs * 2]
+                    const w4 = this.w[wIdx + this.inputs * 3]
+
+                    this.dx[inputsOffset + j] += w1 * delta1 + w2 * delta2 + w3 * delta3 + w4 * delta4
+                }
+            }
+
+            for (let i = end; i < this.outputs; i++) {
+                const delta = this.df[outputsOffset + i]
+                const wOffset = i * this.inputs
+
+                for (let j = 0; j < this.inputs; j++)
+                    this.dx[inputsOffset + j] += this.w[wOffset + j] * delta
+            }
+        }
+    }
 }

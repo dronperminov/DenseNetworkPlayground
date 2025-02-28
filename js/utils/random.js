@@ -78,4 +78,17 @@ class Random {
             array[j] = tmp
         }
     }
+
+    static UniformArrays(length, count, min = 0, max = 1) {
+        let arrays = []
+
+        for (let i = 0; i < count; i++) {
+            arrays[i] = new Float64Array(length)
+
+            for (let j = 0; j < length; j++)
+                arrays[i][j] = Random.Uniform(min, max)
+        }
+
+        return arrays
+    }
 }
