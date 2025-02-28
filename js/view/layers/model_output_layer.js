@@ -4,6 +4,7 @@ class ModelOutputLayer {
         this.canvas = canvas
         this.model = model
         this.thresholds = thresholds
+        this.point = new Float64Array(model.inputs).fill(0)
 
         this.ctx = canvas.getContext("2d")
         this.axes = [0, 1]
@@ -45,6 +46,13 @@ class ModelOutputLayer {
 
         this.mode = mode
         this.Plot(config)
+    }
+
+    SetPoint(point) {
+        for (let i = 0; i < this.model.inputs; i++)
+            this.point[i] = point[i]
+
+        this.Plot()
     }
 
     Plot(config = null) {
@@ -109,7 +117,7 @@ class ModelOutputLayer {
         for (let i = 0; i < this.canvas.height; i++) {
             for (let j = 0; j < this.canvas.width; j++) {
                 for (let d = 0; d < this.model.inputs; d++)
-                    this.inputs[index + d] = 0
+                    this.inputs[index + d] = this.point[d]
 
                 this.inputs[index + this.axes[0]] = limits.xmin + dj * j
                 this.inputs[index + this.axes[1]] = limits.ymax - di * i
@@ -134,6 +142,13 @@ class ModelOutputLayer {
         }
 
         this.ctx.putImageData(this.pixels, 0, 0)
+    }
+
+    UpdatePoint() {
+        if (this.point.length == this.model.inputs)
+            return
+
+        this.point = new Float64Array(this.model.inputs).fill(0)
     }
 
     Resize() {

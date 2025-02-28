@@ -36,6 +36,10 @@ Visualizer.prototype.SetModelShowNeuron = function(layer, neuron) {
     this.modelPlot.SetShow(layer, neuron)
 }
 
+Visualizer.prototype.SetModelOutputPoint = function(point) {
+    this.modelPlot.SetPoint(point)
+}
+
 Visualizer.prototype.SetCriterion = function(name) {
     this.criterion = GetLoss(name)
     this.UpdateMetrics()

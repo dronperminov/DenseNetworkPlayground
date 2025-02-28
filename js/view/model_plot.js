@@ -30,12 +30,17 @@ class ModelPlot extends EventEmitter {
         this.architectureLayer.SetWeightsMode(mode)
     }
 
+    SetPoint(point) {
+        this.outputLayer.SetPoint(point)
+    }
+
     ChangeModel() {
         this.outputLayer.Plot()
         this.architectureLayer.Update()
     }
 
     ChangeModelArchitecture() {
+        this.outputLayer.UpdatePoint()
         this.architectureLayer.Init()
     }
 
