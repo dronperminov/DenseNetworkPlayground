@@ -129,4 +129,77 @@ class NeuralNetwork {
     ToggleNeuron(layer, neuron) {
         this.layers[layer].ToggleNeuron(neuron)
     }
+
+    /* UNROLLED VERSIONS */
+    PredictUnrolled(x, size, result = null) {
+        if (result === null)
+            result = new Float64Array(this.outputs * size)
+
+        for (let i = 0; i < size; i += this.maxBatchSize) {
+            let j = Math.min(i + this.maxBatchSize, size)
+            let batchSize = j - i
+
+            let data = x.subarray(i * this.inputs, j * this.inputs)
+            let output = this.ForwardUnrolled(data, batchSize)
+
+            result.set(output.subarray(0, batchSize * this.outputs), i * this.outputs)
+        }
+
+        return result
+    }
+
+    PredictAtUnrolled(layer, neuron, x, size, result = null) {
+        if (result === null)
+            result = new Float64Array(size)
+
+        for (let i = 0; i < size; i += this.maxBatchSize) {
+            let end = Math.min(i + this.maxBatchSize, size)
+            let batchSize = end - i
+
+            let data = x.subarray(i * this.inputs, end * this.inputs)
+            this.ForwardUnrolled(data, batchSize)
+
+            for (let j = 0; j < batchSize; j++)
+                result[i + j] = this.layers[layer].value[j * this.layers[layer].outputs + neuron]
+        }
+
+        return result
+    }
+
+    ForwardUnrolled(x, batchSize) {
+        this.layers[0].ForwardUnrolled(x, batchSize)
+
+        for (let i = 1; i < this.layers.length; i++)
+            this.layers[i].ForwardUnrolled(this.layers[i - 1].output, batchSize)
+
+        return this.layers[this.layers.length - 1].output
+    }
+
+    BackwardUnrolled(x, dout, batchSize) {
+        let last = this.layers.length - 1
+
+        if (last == 0) {
+            this.layers[last].BackwardUnrolled(dout, x, batchSize, false)
+        }
+        else {
+            this.layers[last].BackwardUnrolled(dout, this.layers[last - 1].output, batchSize, true)
+
+            for (let i = last - 1; i > 0; i--)
+                this.layers[i].BackwardUnrolled(this.layers[i + 1].dx, this.layers[i - 1].output, batchSize, true)
+
+            this.layers[0].BackwardUnrolled(this.layers[1].dx, x, batchSize, false)
+        }
+    }
+
+    TrainOnBatchUnrolled(x, y, batchSize, optimizer, criterion) {
+        let output = this.ForwardUnrolled(x, batchSize)
+        let loss = criterion.Backward(output, y, batchSize * this.outputs)
+
+        this.ZeroGradients()
+        this.BackwardUnrolled(x, criterion.grads, batchSize)
+        this.UpdateWeights(optimizer)
+        optimizer.UpdateEpoch()
+
+        return loss
+    }
 }

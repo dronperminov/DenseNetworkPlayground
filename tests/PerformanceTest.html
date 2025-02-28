@@ -68,12 +68,14 @@
 
     <script src="performance/test_performance.js"></script>
     <script src="performance/test_fully_connected_layer.js"></script>
+    <script src="performance/test_network.js"></script>
 
     <script>
         let results = document.getElementById("results")
 
         let tests = [
-            new TestFullyConnectedLayer(results)
+            new TestFullyConnectedLayer(results),
+            new TestNetwork(results)
         ]
 
         for (let test of tests)
