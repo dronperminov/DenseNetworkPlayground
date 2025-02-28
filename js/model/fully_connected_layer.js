@@ -19,7 +19,7 @@ class FullyConnectedLayer {
         let std = Math.sqrt(1 / this.inputs)
 
         for (let i = 0; i < this.w.length; i++)
-            this.w[i] = random.Normal(0, std)
+            this.w[i] = Random.Normal(0, std)
 
         for (let i = 0; i < this.b.length; i++)
             this.b[i] = 0

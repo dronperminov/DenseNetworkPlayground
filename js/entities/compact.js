@@ -60,7 +60,7 @@ class Compact extends EventEmitter {
         let outputs = new Float64Array(count)
 
         for (let i = 0; i < count; i++) {
-            let p = random.MultivariateUniform(this.minOffset, this.maxOffset)
+            let p = Random.MultivariateUniform(this.minOffset, this.maxOffset)
 
             for (let j = 0; j < this.dimension; j++)
                 inputs[i * this.dimension + j] = p[j]

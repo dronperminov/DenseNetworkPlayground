@@ -14,10 +14,10 @@ class DataGenerator {
         let error = "error" in config ? config.error : 0
 
         for (let i = 0; i < count; i++) {
-            let label = random.Uniform() < balance ? 1 : -1
+            let label = Random.Uniform() < balance ? 1 : -1
             let point = this.datasets[config.dataset].generate(config.params, label)
 
-            if (random.Uniform() < error)
+            if (Random.Uniform() < error)
                 label = -label
 
             for (let j = 0; j < config.dimension; j++)
@@ -30,8 +30,8 @@ class DataGenerator {
     }
 
     SpiralPoint(params, label) {
-        let angle = random.Uniform()
-        let r = angle + random.Uniform(-params.delta, params.delta)
+        let angle = Random.Uniform()
+        let r = angle + Random.Uniform(-params.delta, params.delta)
         let t = params.h * angle * 2 * Math.PI
 
         if (label == 1)
@@ -43,9 +43,9 @@ class DataGenerator {
     MoonsPoint = function(params, label) {
         let x0 = label == 1 ? params.x1 : params.x2
         let y0 = label == 1 ? params.y1 : params.y2
-        let rx = random.Uniform(params.rx1, params.rx2)
-        let ry = random.Uniform(params.ry1, params.ry2)
-        let t = random.Uniform(-Math.PI / 2, Math.PI / 2)
+        let rx = Random.Uniform(params.rx1, params.rx2)
+        let ry = Random.Uniform(params.ry1, params.ry2)
+        let t = Random.Uniform(-Math.PI / 2, Math.PI / 2)
 
         if (label == 1)
             t += Math.PI
@@ -56,6 +56,6 @@ class DataGenerator {
     GaussiansPoint(params, label) {
         let mean = label == -1 ? params.mean1 : params.mean2
         let cov = label == -1 ? params.cov1 : params.cov2
-        return random.MultivariateNormal(mean, cov)
+        return Random.MultivariateNormal(mean, cov)
     }
 }

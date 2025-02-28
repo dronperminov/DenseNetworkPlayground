@@ -1,9 +1,9 @@
 class Random {
-    Uniform(a = 0, b = 1) {
+    static Uniform(a = 0, b = 1) {
         return a + Math.random() * (b - a)
     }
 
-    Normal(mean = 0, std = 1) {
+    static Normal(mean = 0, std = 1) {
         let x = 1 - Math.random()
         let y = Math.random()
         let z = Math.sqrt(-2 * Math.log(x)) * Math.cos(2 * Math.PI * y)
@@ -11,21 +11,21 @@ class Random {
         return mean + std * z
     }
 
-    MultivariateUniform(min, max) {
+    static MultivariateUniform(min, max) {
         let p = []
 
         for (let i = 0; i < min.length; i++)
-            p[i] = this.Uniform(min[i], max[i])
+            p[i] = Random.Uniform(min[i], max[i])
 
         return p
     }
 
-    MultivariateNormal(mean, cov) {
-        let a = this.Cholesky(cov)
+    static MultivariateNormal(mean, cov) {
+        let a = Random.Cholesky(cov)
         let z = []
 
         for (let i = 0; i < mean.length; i++)
-            z[i] = this.Normal(0, 1)
+            z[i] = Random.Normal(0, 1)
 
         let values = []
 
@@ -39,7 +39,7 @@ class Random {
         return values
     }
 
-    Cholesky(matrix) {
+    static Cholesky(matrix) {
         let L = []
 
         for (let i = 0; i < matrix.length; i++)
@@ -69,7 +69,7 @@ class Random {
         return L
     }
 
-    Shuffle(array) {
+    static Shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1))
 

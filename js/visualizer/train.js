@@ -20,7 +20,7 @@ Visualizer.prototype.GetTrainData = function() {
         for (let i = 0; i < datas[index].length; i++)
             indices.push([index, i])
 
-    random.Shuffle(indices)
+    Random.Shuffle(indices)
 
     for (let i = 0; i < length; i++) {
         let data = datas[indices[i][0]]
