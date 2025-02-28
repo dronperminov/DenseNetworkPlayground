@@ -174,8 +174,8 @@ class TestNetwork extends TestCase {
         let optimizer = new Adam(learningRate, {regularizationType: "l2", lambda: 0.02})
 
         for (let step = 0; step < steps; step++) {
-            let loss = network.TrainOnBatch(data.inputs, data.outputs, data.length, optimizer, criterion)
-            let output = network.Predict(data.inputs, data.length)
+            let loss = network.TrainOnBatchUnrolled(data.inputs, data.outputs, data.length, optimizer, criterion)
+            let output = network.PredictUnrolled(data.inputs, data.length)
 
             if (!targetResults[step])
                 continue

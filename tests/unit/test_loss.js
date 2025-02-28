@@ -28,13 +28,13 @@ class TestLoss extends TestCase {
     }
 
     TestEvaluate(criterion, input, target, targetLoss) {
-        let loss = criterion.Evaluate(input, target, input.length)
+        let loss = criterion.EvaluateUnrolled(input, target, input.length)
 
         console.log(`- Evaluate test (different input and target)`)
         this.CheckEqualFloat("  - check loss", loss, targetLoss)
 
         console.log(`- Evaluate test (equal input and target)`)
-        loss = criterion.Evaluate(target, target, input.length)
+        loss = criterion.EvaluateUnrolled(target, target, input.length)
         this.CheckEqualFloat("  - check loss", loss, 0)
     }
 

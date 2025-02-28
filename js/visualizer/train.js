@@ -64,7 +64,7 @@ Visualizer.prototype.EvaluateMetricsOnData = function(data, predictions) {
     }
 
     return {
-        loss: this.criterion.Evaluate(predictions, data.outputs, data.length) / Math.max(data.length, 1),
+        loss: this.criterion.EvaluateUnrolled(predictions, data.outputs, data.length) / Math.max(data.length, 1),
         refuse: refuse / Math.max(data.length, 1),
         error: error / Math.max(total, 1)
     }
