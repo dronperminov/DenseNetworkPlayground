@@ -16,11 +16,9 @@ Visualizer.prototype.GetTrainData = function() {
 
     let indices = []
 
-    for (let i = 0; i < backgroundData.length; i++)
-        indices.push([1, i])
-
-    for (let i = 0; i < trainData.length; i++)
-        indices.push([0, i])
+    for (let index = 0; index < datas.length; index++)
+        for (let i = 0; i < datas[index].length; i++)
+            indices.push([index, i])
 
     random.Shuffle(indices)
 
@@ -78,6 +76,7 @@ Visualizer.prototype.UpdatePredictions = function() {
             this.modelManager.Predict(name, this.dataset.splits[name].data)
 
     this.PlotMetrics()
+    this.PlotHistograms()
 }
 
 Visualizer.prototype.UpdateMetrics = function() {
@@ -86,6 +85,17 @@ Visualizer.prototype.UpdateMetrics = function() {
             this.HandleChangeMetrics(name)
 
     this.PlotMetrics()
+    this.PlotHistograms()
+}
+
+Visualizer.prototype.PlotHistograms = function() {
+    this.histogramsPlot.Reset()
+
+    for (let name of ["train", "background"])
+        if (name in this.dataset.splits)
+            this.histogramsPlot.Update(this.dataset.splits[name].data.outputs, this.modelManager.predictions[name])
+
+    this.histogramsPlot.Plot()
 }
 
 Visualizer.prototype.PlotMetrics = function() {

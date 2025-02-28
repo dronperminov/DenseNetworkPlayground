@@ -14,6 +14,7 @@ Visualizer.prototype.HandleChangeData = function(name, split) {
 
     this.modelManager.Predict(name, split.data)
     this.PlotMetrics()
+    this.PlotHistograms()
 }
 
 Visualizer.prototype.HandleClearData = function() {
@@ -28,11 +29,13 @@ Visualizer.prototype.HandleClearData = function() {
     this.modelManager.ClearPredictions()
 
     this.PlotMetrics()
+    this.PlotHistograms()
 }
 
 Visualizer.prototype.HandleChangeThresholds = function(low, high) {
     this.modelPlot.ChangeThresholds()
     this.UpdateMetrics()
+    this.PlotHistograms()
 }
 
 Visualizer.prototype.HandleChangeModel = function() {

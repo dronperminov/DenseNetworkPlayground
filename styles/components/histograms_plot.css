@@ -1,0 +1,45 @@
+.histograms-plot {
+    height: 700px;
+    width: 800px;
+    min-height: 250px;
+    user-select: none;
+    overflow: hidden;
+    resize: both;
+}
+
+.histograms-plot svg {
+    width: 100%;
+    height: 100%;
+}
+
+.histograms-plot-hover {
+    cursor: pointer;
+}
+
+.histogram-label {
+    fill: #222222;
+    font-size: 11px;
+    writing-mode: tb;
+}
+
+.histogram-bin {
+    fill: #222222;
+    font-size: 10px;
+    text-anchor: start;
+    writing-mode: tb;
+}
+
+.histogram-threshold-label {
+    text-anchor: middle;
+    font-size: 12px;
+}
+
+.histogram-threshold {
+    fill: none;
+    stroke: #aaaaaa;
+    stroke-dasharray: 5 5;
+}
+
+.histogram-threshold-hover {
+    stroke: #222222;
+}

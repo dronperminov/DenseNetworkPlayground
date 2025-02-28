@@ -2,7 +2,7 @@ class Visualizer {
     constructor() {
         this.dataset = new Dataset()
         this.compact = new Compact()
-        this.thresholds = new Thresholds()
+        this.thresholds = new Thresholds(-0.1, 0.1)
 
         this.InitModel()
         this.InitTrain()
@@ -62,6 +62,12 @@ class Visualizer {
             {label: "train", title: "train", color: "#dd7373", background: "#dd737330"},
             {label: "test", title: "test", color: "#7699d4", background: "#7699d430"}
         ], {title: "Отказ от распознавания", percent: true})
+
+        this.histogramsPlot = new HistogramsPlot(document.getElementById("histograms-plot"))
+        this.histogramsPlot.Add(1, {color: "#dd7373"})
+        this.histogramsPlot.Add(-1, {color: "#7699d4"})
+        this.histogramsPlot.Add(0, {color: "#89dd73"})
+        this.histogramsPlot.SetThresholds(this.thresholds)
     }
 
     InitEventHandlers() {
