@@ -31,7 +31,7 @@ class ModelManager extends EventEmitter {
             let x = data.inputs.subarray(start * data.dimension, end * data.dimension)
             let y = data.outputs.subarray(start, end)
 
-            let loss = this.model.TrainOnBatch(x, y, size, optimizer, criterion)
+            let loss = this.model.TrainOnBatchUnrolled(x, y, size, optimizer, criterion)
             totalLoss += loss * size
         }
 
@@ -40,7 +40,7 @@ class ModelManager extends EventEmitter {
     }
 
     Predict(name, data) {
-        this.predictions[name] = this.model.Predict(data.inputs, data.length)
+        this.predictions[name] = this.model.PredictUnrolled(data.inputs, data.length)
         this.emit("change-prediction", name)
     }
 

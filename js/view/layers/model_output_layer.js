@@ -119,7 +119,7 @@ class ModelOutputLayer {
     }
 
     UpdateOutputs() {
-        this.model.PredictAt(this.show.layer, this.show.neuron, this.inputs, this.outputs.length, this.outputs)
+        this.model.PredictAtUnrolled(this.show.layer, this.show.neuron, this.inputs, this.outputs.length, this.outputs)
     }
 
     UpdatePixels() {
