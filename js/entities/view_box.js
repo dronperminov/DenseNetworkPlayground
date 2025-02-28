@@ -136,7 +136,16 @@ class ViewBox extends EventEmitter {
     }
 
     MouseDown(e) {
-        this.point = this.GetPoint(e)
+        let point = this.GetPoint(e)
+
+        if (e.ctrlKey || e.shiftKey) {
+            let x = this.ScreenToX(point.x)
+            let y = this.ScreenToY(point.y)
+            this.emit("click", e, x, y)
+            return
+        }
+
+        this.point = point
     }
 
     MouseMove(e) {

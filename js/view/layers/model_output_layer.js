@@ -74,6 +74,17 @@ class ModelOutputLayer {
             this.UpdatePixels()
     }
 
+    GetPoint(x, y) {
+        let point = new Float64Array(this.model.inputs)
+
+        for (let i = 0; i < this.model.inputs; i++)
+            point[i] = this.point[i]
+
+        point[this.axes[0]] = x
+        point[this.axes[1]] = y
+        return point
+    }
+
     UpdateCanvasSize() {
         let width = this.canvas.clientWidth
         let height = this.canvas.clientHeight

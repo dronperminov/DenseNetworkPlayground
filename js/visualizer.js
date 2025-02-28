@@ -80,6 +80,7 @@ class Visualizer {
         this.modelManager.on("change-prediction", name => this.HandleChangePredictions(name))
 
         this.modelPlot.on("click-neuron", (layer, neuron, e) => this.HandleClickNeuron(layer, neuron, e))
+        this.modelPlot.on("view-click", (e, point) => this.HandleCtrlClickView(e, point))
 
         this.metrics.on("change", (metric, name, epoch, value) => this.metricsPlot.Set(metric, name, epoch, value))
         this.thresholds.on("change", (low, high) => this.HandleChangeThresholds(low, high))

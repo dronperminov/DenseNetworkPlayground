@@ -7,6 +7,7 @@ class ModelPlot extends EventEmitter {
         this.architectureLayer = new ModelArchitectureLayer(div.querySelector("svg"), model)
 
         this.architectureLayer.on("click-neuron", (layer, neuron, e) => this.emit("click-neuron", layer, neuron, e))
+        this.viewBox.on("click", (e, x, y) => this.emit("view-click", e, this.outputLayer.GetPoint(x, y)))
     }
 
     SetAxes(xAxis, yAxis) {

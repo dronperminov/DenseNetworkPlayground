@@ -56,6 +56,18 @@ Visualizer.prototype.HandleClickNeuron = function(layer, neuron, e) {
     }
 }
 
+Visualizer.prototype.HandleCtrlClickView = function(e, point) {
+    let label = e.button == 0 ? -1 : 1
+    let outputs = new Float64Array(1).fill(label)
+    let data = new Data(point, outputs, point.length)
+
+    if (e.ctrlKey)
+        this.dataset.AddData("train", data)
+
+    if (e.shiftKey)
+        this.dataset.AddData("test", data)
+}
+
 Visualizer.prototype.HandleChangePredictions = function(name) {
     this.HandleChangeMetrics(name)
 }
