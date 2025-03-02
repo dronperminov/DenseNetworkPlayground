@@ -1,3 +1,7 @@
+Visualizer.prototype.SetDimension = function(dimension) {
+    this.dataset.SetDimension(dimension)
+}
+
 Visualizer.prototype.SetAxes = function(xAxis, yAxis) {
     this.dataPlot.SetAxes(xAxis, yAxis)
     this.modelPlot.SetAxes(xAxis, yAxis)

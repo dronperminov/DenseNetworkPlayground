@@ -1,8 +1,8 @@
-Visualizer.prototype.Reset = function() {
+Visualizer.prototype.Reset = function(disabled) {
     this.epoch = 0
     this.optimizer.Reset()
     this.metrics.Reset()
-    this.modelManager.Reset()
+    this.modelManager.Reset(disabled)
 }
 
 Visualizer.prototype.GetTrainData = function() {

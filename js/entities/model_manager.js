@@ -15,8 +15,8 @@ class ModelManager extends EventEmitter {
         this.emit("change")
     }
 
-    Reset() {
-        this.model.Reset()
+    Reset(disabled) {
+        this.model.Reset(disabled)
         this.emit("change")
     }
 

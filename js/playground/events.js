@@ -39,3 +39,8 @@ Playground.prototype.UpdateTrainButtons = function(disabled) {
         else
             button.removeAttribute("disabled")
 }
+
+Playground.prototype.HandleChangeThresholds = function(low, high) {
+    this.thresholdLow.value = low
+    this.thresholdHigh.value = high
+}

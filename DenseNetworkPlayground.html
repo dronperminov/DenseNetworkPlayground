@@ -54,6 +54,47 @@
 
             <div class="main-menu">
                 <details class="menu-section" open>
+                    <summary>Параметры модели</summary>
+
+                    <div class="menu-block" title="Размерность входного пространства, с которой работает нейронная сеть">
+                        <label>Количество входов
+                            <input class="basic-input" id="model-inputs-count" type="number" min="1" step="1" value="2">
+                        </label>
+                    </div>
+
+                    <div class="menu-block" title="Функция, используемая в качестве активационной в каждом слое кроме последнего">
+                        <label>Функция активации
+                            <select class="basic-input" id="activation">
+                                <option value="relu">ReLU</option>
+                                <option value="leaky-relu">Leaky ReLU</option>
+                                <option value="abs" selected>Abs</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="menu-block" title="Размерность входного пространства, с которой работает нейронная сеть">
+                        <label>Пороги доверия</label>
+
+                        <div class="menu-block-grid">
+                            <label>
+                                <input class="basic-input" id="threshold-low" type="number" min="-1" max="0" step="0.05" value="-0.1">
+                            </label>
+
+                            <label>
+                                <input class="basic-input" id="threshold-high" type="number" min="0" max="1" step="0.05" value="0.1">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="menu-block" title="При использовании этого параметры во время сброса отключенные нейроны восстанавливаются">
+                        <label class="switch-checkbox">
+                            <input type="checkbox" id="reset-disabled-neurons" checked>
+                            <span class="switch-checkbox-text">Сброс отключ. нейронов</span>
+                        </label>
+                    </div>
+                </details>
+
+                <details class="menu-section" open>
                     <summary>Параметры обучения</summary>
 
                     <div class="menu-block">

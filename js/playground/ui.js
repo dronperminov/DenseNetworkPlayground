@@ -1,3 +1,14 @@
+Playground.prototype.SetModelInputsCount = function(inputs) {
+    if (!confirm("Вы уверены, что хотите изменить размерность входа модели?"))
+        return
+
+    this.visualizer.SetDimension(inputs)
+}
+
+Playground.prototype.SetModelActivation = function(activation) {
+    this.visualizer.SetActivation(activation)
+}
+
 Playground.prototype.SetLearningRate = function(learningRate) {
     this.visualizer.SetLearningRate(learningRate)
     this.UpdateLearningRateIcon()

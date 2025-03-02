@@ -29,9 +29,9 @@ class NeuralNetwork {
             layer.ZeroGradientParams()
     }
 
-    Reset() {
+    Reset(disabled) {
         for (let layer of this.layers)
-            layer.Reset()
+            layer.Reset(disabled)
     }
 
     Predict(x, size, result = null) {

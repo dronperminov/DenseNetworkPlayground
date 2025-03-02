@@ -29,6 +29,6 @@ class NumberInput extends EventEmitter {
     }
 
     Input() {
-        this.emit("change", this.GetValue())
+        this.emit("input", this.GetValue())
     }
 }

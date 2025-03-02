@@ -13,8 +13,29 @@ class Playground {
         this.stopBtn = document.getElementById("stop-btn")
         this.stepBtn = document.getElementById("step-btn")
 
+        this.InitModelMenu()
         this.InitTrainMenu()
         this.InitViewMenu()
+    }
+
+    InitModelMenu() {
+        let modelInputsCount = new NumberInput(document.getElementById("model-inputs-count"))
+        modelInputsCount.on("change", value => this.SetModelInputsCount(value))
+
+        let activation = document.getElementById("activation")
+        activation.addEventListener("change", () => this.SetModelActivation(activation.value))
+
+        this.thresholdLow = document.getElementById("threshold-low")
+        this.thresholdHigh = document.getElementById("threshold-high")
+
+        let thresholdLow = new NumberInput(this.thresholdLow)
+        let thresholdHigh = new NumberInput(this.thresholdHigh)
+        thresholdLow.on("input", value => this.visualizer.thresholds.SetLow(value))
+        thresholdHigh.on("input", value => this.visualizer.thresholds.SetHigh(value))
+
+        this.resetDisabledNeurons = document.getElementById("reset-disabled-neurons")
+
+        this.visualizer.thresholds.on("change", (low, high) => this.HandleChangeThresholds(low, high))
     }
 
     InitTrainMenu() {
@@ -29,6 +50,7 @@ class Playground {
         this.regularization = document.getElementById("regularization")
 
         let learningRate = new NumberInput(document.getElementById("learning-rate"))
+        learningRate.on("input", value => this.SetLearningRate(value))
         learningRate.on("change", value => this.SetLearningRate(value))
 
         let batchSize = new RangeInput(document.getElementById("batch-size"), document.getElementById("batch-size-label"))
@@ -47,6 +69,7 @@ class Playground {
         regularizationType.addEventListener("change", () => this.SetRegularizationType(regularizationType.value))
 
         let regularization = new NumberInput(this.regularization)
+        regularization.on("input", value => this.SetRegularization(value))
         regularization.on("change", value => this.SetRegularization(value))
 
         this.UpdateTrainIcons()
@@ -110,7 +133,7 @@ class Playground {
 
     Reset() {
         this.Stop()
-        this.visualizer.Reset()
+        this.visualizer.Reset(this.resetDisabledNeurons.checked)
     }
 
     OpenMenu() {
