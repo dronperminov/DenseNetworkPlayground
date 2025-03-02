@@ -45,8 +45,10 @@ Visualizer.prototype.SetCriterion = function(name) {
     this.UpdateMetrics()
 }
 
-Visualizer.prototype.SetOptimizer = function(name, config = null) {
+Visualizer.prototype.SetOptimizer = function(name) {
+    let config = this.optimizer.GetConfig()
     this.optimizer = GetOptimizer(name, config)
+    this.model.ZeroGradientParams()
 }
 
 Visualizer.prototype.SetLearningRate = function(learningRate) {

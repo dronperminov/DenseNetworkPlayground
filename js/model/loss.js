@@ -25,6 +25,8 @@ class Loss {
 }
 
 class MSELoss extends Loss {
+    name = "MSE"
+
     Evaluate(y, t, size) {
         let loss = 0
 
@@ -74,6 +76,8 @@ class MSELoss extends Loss {
 }
 
 class MAELoss extends Loss {
+    name = "MAE"
+
     Evaluate(y, t, size) {
         let loss = 0
 
@@ -115,6 +119,8 @@ class MAELoss extends Loss {
 }
 
 class HuberLoss extends Loss {
+    name = "Huber"
+
     constructor(delta = 1.0, reduction = "mean", maxBatchSize = MAX_BATCH_SIZE) {
         super(reduction, maxBatchSize)
         this.delta = delta
@@ -204,6 +210,8 @@ class HuberLoss extends Loss {
 }
 
 class LogCoshLoss extends Loss {
+    name = "LogCosh"
+
     Evaluate(y, t, size) {
         let loss = 0
 

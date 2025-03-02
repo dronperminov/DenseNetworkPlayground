@@ -43,9 +43,19 @@ class Optimizer {
 
         return name in config ? config[name] : defaultValue
     }
+
+    GetConfig() {
+        return {
+            learningRate: this.learningRate,
+            regularizationType: this.regularizationType,
+            lambda: this.lambda
+        }
+    }
 }
 
 class SGD extends Optimizer {
+    name = "SGD"
+
     Step(weights, grads, params1, params2, index) {
         let grad = this.GetGradient(weights, grads, index)
         weights[index] -= this.learningRate * grad
@@ -53,6 +63,8 @@ class SGD extends Optimizer {
 }
 
 class MomentumSGD extends Optimizer {
+    name = "SGDm"
+
     constructor(learningRate, config = null) {
         super(learningRate, config)
 
@@ -73,6 +85,8 @@ class MomentumSGD extends Optimizer {
 }
 
 class Adam extends Optimizer {
+    name = "Adam"
+
     constructor(learningRate, config = null) {
         super(learningRate, config)
 
@@ -110,6 +124,8 @@ class Adam extends Optimizer {
 }
 
 class Adamax extends Optimizer {
+    name = "Adamax"
+
     constructor(learningRate, config = null) {
         super(learningRate, config)
 
@@ -141,6 +157,8 @@ class Adamax extends Optimizer {
 }
 
 class Adadelta extends Optimizer {
+    name = "Adadelta"
+
     constructor(learningRate, config = null) {
         super(learningRate, config)
 
@@ -160,6 +178,8 @@ class Adadelta extends Optimizer {
 }
 
 class Adagrad extends Optimizer {
+    name = "Adagrad"
+
     constructor(learningRate, config = null) {
         super(learningRate, config)
 
@@ -177,6 +197,8 @@ class Adagrad extends Optimizer {
 }
 
 class RMSprop extends Optimizer {
+    name = "RMSprop"
+
     constructor(learningRate, config = null) {
         super(learningRate, config)
 

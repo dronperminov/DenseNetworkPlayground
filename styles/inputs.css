@@ -1,0 +1,25 @@
+.basic-input {
+    width: 100%;
+
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: 1px solid var(--input-border-color);
+    color: var(--input-color);
+    padding: 0;
+    background: transparent;
+    font-size: 0.9rem;
+    font-family: Roboto;
+}
+
+.basic-input:hover, .basic-input:focus {
+    outline: none;
+    color: var(--input-hover-color);
+    border-color: var(--input-hover-border-color);
+}
+
+.range-label {
+    display: block;
+    text-align: center;
+    font-size: 0.8em;
+}

@@ -1,0 +1,21 @@
+.menu-section {
+    border-top: 1px solid var(--menu-border-color);
+}
+
+.menu-section summary {
+    padding: 5px 5px 0 5px;
+    font-weight: bold;
+    font-size: 1.15em;
+    cursor: pointer;
+}
+
+.menu-block {
+    margin-top: 5px;
+    padding: 5px;
+    text-align: left;
+}
+
+.menu-block label {
+    font-weight: bold;
+    display: block;
+}

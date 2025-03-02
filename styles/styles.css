@@ -1,12 +1,21 @@
 :root {
     --background-color: #ffffff;
     --text-color: #222222;
+    --main-color: #2191fb;
 
     /* MENU */
+    --menu-border-color: #222222;
     --menu-background-color: #ffffff;
 
     --menu-toggle-border-color: #222222;
     --menu-toggle-background-color: #f0f0f0;
+
+    /* INPUT */
+    --input-color: var(--text-color);
+    --input-border-color: var(--text-color);
+
+    --input-hover-color: var(--text-color);
+    --input-hover-border-color: var(--main-color);
 
     /* BUTTON */
     --button-color: #222222;

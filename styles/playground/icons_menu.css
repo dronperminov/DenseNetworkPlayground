@@ -1,0 +1,19 @@
+.icons-block {
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 5px;
+    padding: 0 5px;
+}
+
+.parameter-icon {
+    font-size: 0.7em;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.parameter-icon-label {
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 1.4em;
+    padding-bottom: 1px;
+}

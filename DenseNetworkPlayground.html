@@ -6,7 +6,11 @@
     <title>Dense Network Playground</title>
 
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="styles/inputs.css">
+
     <link rel="stylesheet" type="text/css" href="styles/playground/menu.css">
+    <link rel="stylesheet" type="text/css" href="styles/playground/main_menu.css">
+    <link rel="stylesheet" type="text/css" href="styles/playground/icons_menu.css">
 
     <link rel="stylesheet" type="text/css" href="styles/components/data_plot.css">
     <link rel="stylesheet" type="text/css" href="styles/components/data_table.css">
@@ -49,11 +53,109 @@
             </div>
 
             <div class="main-menu">
+                <details class="menu-section" open>
+                    <summary>Параметры обучения</summary>
 
+                    <div class="menu-block">
+                        <label>Скорость обучения
+                            <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.001">
+                        </label>
+                    </div>
+
+                    <div class="menu-block">
+                        <label>Размер батча
+                            <input class="basic-input" type="range" id="batch-size" step="1" min="1" max="32" value="16">
+                        </label>
+                        <div id="batch-size-label" class="range-label">16</div>
+                    </div>
+
+                    <div class="menu-block">
+                        <label>Доля фоновых точек
+                            <input class="basic-input" type="range" id="background-part" step="5" min="0" max="500" value="100">
+                        </label>
+                        <div class="range-label"><span id="background-part-label">100</span>%</div>
+                    </div>
+
+                    <div class="menu-block">
+                        <label>Функция потерь
+                            <select class="basic-input" id="criterion">
+                                <option value="mse" selected="">MSE</option>
+                                <option value="mae">MAE</option>
+                                <option value="logcosh">Logcosh</option>
+                                <option value="huber">Huber</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="menu-block">
+                        <label>Оптимизатор
+                            <select class="basic-input" id="optimizer">
+                                <option value="sgd">SGD</option>
+                                <option value="momentum-sgd">SGDm</option>
+                                <option value="adam" selected="">Adam</option>
+                                <option value="adamax">Adamax</option>
+                                <option value="adadelta">Adadelta</option>
+                                <option value="adagrad">Adagrad</option>
+                                <option value="rmsprop">RMSprop</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="menu-block">
+                        <label>Регуляризация
+                            <select class="basic-input" id="regularization-type">
+                                <option value="">не используется</option>
+                                <option value="l1">L1</option>
+                                <option value="l2" selected="">L2</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="menu-block">
+                        <label>Коэффициент регуляризации
+                            <input class="basic-input" type="number" id="regularization" step="0.001" min="0" max="10" value="0.001">
+                        </label>
+                    </div>
+                </details>
             </div>
 
             <div class="icons-menu">
+                <div class="icons-block">
+                    <div class="parameter-icon" title="Скорость обучения">
+                        <div class="parameter-icon-label">η</div>
+                        <span id="learning-rate-value">0.001</span>
+                    </div>
 
+                    <div class="parameter-icon" title="Размер батча">
+                        <div class="parameter-icon-label"><img src="icons/batch.svg"></div>
+                        <span id="batch-size-value">16</span>
+                    </div>
+
+                    <div class="parameter-icon" title="Доля фоновых точек">
+                        <div class="parameter-icon-label"><img src="icons/background.svg"></div>
+                        <span id="background-part-value">100%</span>
+                    </div>
+
+                    <div class="parameter-icon" title="Функция потерь">
+                        <div class="parameter-icon-label">L</div>
+                        <span id="criterion-value">MSE</span>
+                    </div>
+
+                    <div class="parameter-icon" title="Оптимизатор (алгоритм градиентного спуска)">
+                        <div class="parameter-icon-label"><img src="icons/optimizer.svg"></div>
+                        <span id="optimizer-value">Adam</span>
+                    </div>
+
+                    <div class="parameter-icon hidden" title="L1 регуляризация">
+                        <div class="parameter-icon-label"><img src="icons/l1.svg"></div>
+                        <span id="regularization-l1-value">0.001</span>
+                    </div>
+
+                    <div class="parameter-icon" title="L2 регуляризация">
+                        <div class="parameter-icon-label"><img src="icons/l2.svg"></div>
+                        <span id="regularization-l2-value">0.001</span>
+                    </div>
+                </div>
             </div>
 
             <div class="toggle-menu" onclick="playground.ToggleMenu()">
@@ -131,12 +233,19 @@
     <script src="js/view/metrics_plot.js"></script>
     <script src="js/view/histograms_plot.js"></script>
 
+    <!-- VISUALIZER -->
     <script src="js/visualizer.js"></script>
     <script src="js/visualizer/events.js"></script>
     <script src="js/visualizer/ui.js"></script>
     <script src="js/visualizer/train.js"></script>
 
+    <!-- INPUTS -->
+    <script src="js/inputs/number_input.js"></script>
+    <script src="js/inputs/range_input.js"></script>
+
+    <!-- PLAYGROUND -->
     <script src="js/playground.js"></script>
+    <script src="js/playground/ui.js"></script>
 
     <script>
         let playground = new Playground()
