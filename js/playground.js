@@ -11,8 +11,10 @@ class Playground {
 
         this.startBtn = document.getElementById("start-btn")
         this.stopBtn = document.getElementById("stop-btn")
+        this.stepBtn = document.getElementById("step-btn")
 
         this.InitTrainMenu()
+        this.InitViewMenu()
     }
 
     InitTrainMenu() {
@@ -48,6 +50,36 @@ class Playground {
         regularization.on("change", value => this.SetRegularization(value))
 
         this.UpdateTrainIcons()
+    }
+
+    InitViewMenu() {
+        this.modelOutputBlock = document.getElementById("model-output-block")
+
+        let modelOutputMode = document.getElementById("model-output-mode")
+        modelOutputMode.addEventListener("change", () => this.SetModelOutputMode(modelOutputMode.value))
+
+        let modelOutputSize = document.getElementById("model-output-size")
+        modelOutputSize.addEventListener("change", () => this.SetModelOutputSize(modelOutputSize.value))
+
+        let modelWeightsMode = document.getElementById("model-weights-mode")
+        modelWeightsMode.addEventListener("change", () => this.SetModelWeightsMode(modelWeightsMode.value))
+
+        this.dataBlock = document.getElementById("data-block")
+
+        for (let name of ["train", "test", "background"]) {
+            let plotData = document.getElementById(`plot-${name}-data`)
+            plotData.addEventListener("change", () => this.visualizer.SetDataVisibility(name, plotData.checked))
+        }
+
+        this.axisX = document.getElementById("axis-x")
+        this.axisY = document.getElementById("axis-y")
+
+        this.axisX.addEventListener("change", () => this.SetAxes())
+        this.axisY.addEventListener("change", () => this.SetAxes())
+
+        this.visualizer.dataset.on("change-dimension", dimension => this.HandleChangeDimension(dimension))
+        this.visualizer.dataset.on("change", (name, split) => this.HandleChangeData(name, split))
+        this.visualizer.dataset.on("clear", () => this.HandleClearData())
     }
 
     Start() {

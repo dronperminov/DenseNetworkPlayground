@@ -1,21 +1,45 @@
 .menu-section {
     border-top: 1px solid var(--menu-border-color);
+    padding-bottom: 5px;
 }
 
 .menu-section summary {
-    padding: 5px 5px 0 5px;
+    padding: 5px;
     font-weight: bold;
     font-size: 1.15em;
     cursor: pointer;
 }
 
+.menu-section[open] summary {
+    background: var(--menu-section-background-color);
+}
+
 .menu-block {
-    margin-top: 5px;
-    padding: 5px;
+    margin-left: 10px;
+    border-left: 2px solid var(--menu-section-border-color);
+    padding: 5px 5px 10px 10px;
     text-align: left;
+    background: var(--menu-section-background-color);
 }
 
 .menu-block label {
     font-weight: bold;
     display: block;
+}
+
+.menu-multiple-block {
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 4px;
+}
+
+.menu-block-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 5px;
+}
+
+.menu-block-grid label {
+    margin-top: 5px;
+    font-size: 0.85em;
 }

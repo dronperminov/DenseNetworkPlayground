@@ -7,12 +7,15 @@
     --menu-border-color: #222222;
     --menu-background-color: #ffffff;
 
+    --menu-section-border-color: var(--menu-border-color);
+    --menu-section-background-color: #f0f0f0;
+
     --menu-toggle-border-color: #222222;
-    --menu-toggle-background-color: #f0f0f0;
+    --menu-toggle-background-color: #f6f6f6;
 
     /* INPUT */
     --input-color: var(--text-color);
-    --input-border-color: var(--text-color);
+    --input-border-color: #aaa;
 
     --input-hover-color: var(--text-color);
     --input-hover-border-color: var(--main-color);
@@ -25,6 +28,10 @@
     --button-hover-color: #ffffff;
     --button-hover-border-color: #2191fb;
     --button-hover-background-color: #2191fb;
+
+    --button-disabled-color: #aaaaaa;
+    --button-disabled-border-color: #aaaaaa;
+    --button-disabled-background-color: #ffffff;
 
     /* DATA-TABLE */
     --data-table-label-color: #222222;

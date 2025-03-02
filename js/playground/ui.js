@@ -33,6 +33,29 @@ Playground.prototype.SetRegularization = function(lambda) {
     this.UpdateRegularizationIcon()
 }
 
+Playground.prototype.SetModelOutputMode = function(mode) {
+    this.visualizer.SetModelOutputMode(mode)
+
+    if (mode == "no")
+        this.modelOutputBlock.classList.add("hidden")
+    else
+        this.modelOutputBlock.classList.remove("hidden")
+}
+
+Playground.prototype.SetModelOutputSize = function(size) {
+    this.visualizer.SetModelOutputSize(size)
+}
+
+Playground.prototype.SetModelWeightsMode = function(mode) {
+    this.visualizer.SetModelWeightsMode(mode)
+}
+
+Playground.prototype.SetAxes = function() {
+    let xAxis = +this.axisX.value
+    let yAxis = +this.axisY.value
+    this.visualizer.SetAxes(xAxis, yAxis)
+}
+
 Playground.prototype.UpdateLearningRateIcon = function() {
     this.learningRateValue.innerText = this.visualizer.optimizer.learningRate
 }

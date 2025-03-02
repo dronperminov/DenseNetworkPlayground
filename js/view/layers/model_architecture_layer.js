@@ -192,22 +192,7 @@ class ModelArchitectureLayer extends EventEmitter {
 
     GetNeuronName(layer, neuron) {
         let layerName = "xABCDEFGHIJKLMNOPQRSTUVWXYZ"[layer + 1]
-        let neuronIndex = this.NumberToIndex(neuron + 1)
+        let neuronIndex = NumberToIndex(neuron + 1)
         return `${layerName}${neuronIndex}`
-    }
-
-    NumberToIndex(number) {
-        if (number == 0)
-            return '₀'
-
-        let digitsStr = '₀₁₂₃₄₅₆₇₈₉'
-        let digits = []
-
-        while (number > 0) {
-            digits.push(digitsStr[number % 10])
-            number = Math.floor(number / 10)
-        }
-
-        return digits.reverse().join('')
     }
 }

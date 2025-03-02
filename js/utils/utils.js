@@ -52,3 +52,18 @@ function Show(...elements) {
     for (let element of elements)
         element.classList.remove("hidden")
 }
+
+function NumberToIndex(number) {
+    if (number == 0)
+        return '₀'
+
+    let digitsStr = '₀₁₂₃₄₅₆₇₈₉'
+    let digits = []
+
+    while (number > 0) {
+        digits.push(digitsStr[number % 10])
+        number = Math.floor(number / 10)
+    }
+
+    return digits.reverse().join('')
+}
