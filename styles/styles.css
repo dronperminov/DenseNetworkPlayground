@@ -1,4 +1,23 @@
 :root {
+    --background-color: #ffffff;
+    --text-color: #222222;
+
+    /* MENU */
+    --menu-background-color: #ffffff;
+
+    --menu-toggle-border-color: #222222;
+    --menu-toggle-background-color: #f0f0f0;
+
+    /* BUTTON */
+    --button-color: #222222;
+    --button-border-color: #222222;
+    --button-background-color: #ffffff;
+
+    --button-hover-color: #ffffff;
+    --button-hover-border-color: #2191fb;
+    --button-hover-background-color: #2191fb;
+
+    /* DATA-TABLE */
     --data-table-label-color: #222222;
     --data-table-selected-label-color: #2191fb;
     --data-table-selected-label-border-color: #2191fb;
@@ -12,4 +31,26 @@
 
 * {
     box-sizing: border-box;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    font-family: Ubuntu;
+    overflow: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.playground {
+    width: 100dvw;
+    height: 100dvh;
+    box-sizing: border-box;
+    display: table;
+
+    color: var(--text-color);
+    background: var(--background-color)
 }

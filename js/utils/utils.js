@@ -42,3 +42,13 @@ function AddClassName(element, className, condition) {
 function Round(value, scale = 100) {
     return Math.round(value * scale) / scale
 }
+
+function Hide(...elements) {
+    for (let element of elements)
+        element.classList.add("hidden")
+}
+
+function Show(...elements) {
+    for (let element of elements)
+        element.classList.remove("hidden")
+}

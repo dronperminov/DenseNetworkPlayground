@@ -6,6 +6,7 @@
     <title>Dense Network Playground</title>
 
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="styles/playground/menu.css">
 
     <link rel="stylesheet" type="text/css" href="styles/components/data_plot.css">
     <link rel="stylesheet" type="text/css" href="styles/components/data_table.css">
@@ -14,30 +15,82 @@
     <link rel="stylesheet" type="text/css" href="styles/components/histograms_plot.css">
 </head>
 <body>
-    <div class="data-plot" id="data-plot" oncontextmenu="return false;">
-        <canvas id="model-view"></canvas>
-        <svg id="data-view"></svg>
+    <div class="playground">
+        <div class="menu" id="menu">
+            <div class="run-menu">
+                <div class="run-menu-button" title="Сброс" onclick="playground.Reset()">
+                    <svg width="24px" height="24px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#222222" d="M27.1 14.313V5.396L24.158 8.34c-2.33-2.325-5.033-3.503-8.11-3.503C9.902 4.837 4.901 9.847 4.899 16c.001 6.152 5.003 11.158 11.15 11.16 4.276 0 9.369-2.227 10.836-8.478l.028-.122h-3.23l-.022.068c-1.078 3.242-4.138 5.421-7.613 5.421a8 8 0 0 1-5.691-2.359A7.993 7.993 0 0 1 8 16.001c0-4.438 3.611-8.049 8.05-8.049 2.069 0 3.638.58 5.924 2.573l-3.792 3.789H27.1z"></path>
+                    </svg>
+                    <span>Сброс</span>
+                </div>
+
+                <div id="stop-btn" class="run-menu-button hidden" title="Остановить обучение модели" onclick="playground.Stop()">
+                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 6V18M9 6V18" stroke="#222222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span>Стоп</span>
+                </div>
+
+                <div id="start-btn" class="run-menu-button" title="Запустить обучение модели" onclick="playground.Start()">
+                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 6V18L18 12L8 6Z" fill="#222222" stroke="#222222" stroke-width="1.5" stroke-linejoin="round"></path>
+                    </svg>
+                    <span>Старт</span>
+                </div>
+
+                <div class="run-menu-button" title="Выполнить один шаг обучения (эпоха)" onclick="playground.Step(true)">
+                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 6V18L15 12L5 6Z" fill="#222222"></path>
+                        <path d="M19 6V18M5 18L5 6L15 12L5 18Z" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span>Шаг</span>
+                </div>
+            </div>
+
+            <div class="main-menu">
+
+            </div>
+
+            <div class="icons-menu">
+
+            </div>
+
+            <div class="toggle-menu" onclick="playground.ToggleMenu()">
+                <div class="ham"></div>
+                <span>Свернуть меню</span>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab">
+                <div class="data-table" id="data-table"></div>
+            </div>
+
+            <div class="tab tab-active">
+                <div class="data-plot" id="data-plot" oncontextmenu="return false;">
+                    <canvas id="model-view"></canvas>
+                    <svg id="data-view"></svg>
+                </div>
+
+                <br>
+
+                <div class="histograms-plot">
+                    <svg id="histograms-plot"></svg>
+                </div>
+
+                <br>
+
+                <div class="model-plot" id="model-plot" oncontextmenu="return false;">
+                    <svg></svg>
+                </div>
+
+                <br>
+
+                <div class="metrics-plot" id="metrics-plot"></div>
+            </div>
+        </div>
     </div>
-
-    <br>
-
-    <div class="histograms-plot">
-        <svg id="histograms-plot"></svg>
-    </div>
-
-    <br>
-
-    <div class="model-plot" id="model-plot" oncontextmenu="return false;">
-        <svg></svg>
-    </div>
-
-    <br>
-
-    <div class="metrics-plot" id="metrics-plot"></div>
-
-    <br>
-
-    <div class="data-table" id="data-table"></div>
 
     <script src="js/constants.js"></script>
 
@@ -83,8 +136,11 @@
     <script src="js/visualizer/ui.js"></script>
     <script src="js/visualizer/train.js"></script>
 
+    <script src="js/playground.js"></script>
+
     <script>
-        let visualizer = new Visualizer()
+        let playground = new Playground()
+        playground.Run()
 
         let generator = new DataGenerator()
         configs = {
@@ -92,24 +148,12 @@
             "gaussians3": {dataset: "gaussians", dimension: 3, params: {mean1: [-0.5, -0.4, -0.3], cov1: [[0.1, 0.05, 0], [0.05, 0.1, 0], [0, 0, 0.01]], mean2: [0.4, 0, 0], cov2: [[0.08, -0.06, 0], [-0.06, 0.15, 0], [0, 0, 0.08]]}},
         }
 
-        visualizer.dataset.SetDimension(2)
-        visualizer.dataset.SetData("train", generator.Generate(5000, configs.spiral))
-        visualizer.dataset.SetData("test", generator.Generate(5000, configs.spiral))
+        playground.visualizer.dataset.SetDimension(2)
+        playground.visualizer.dataset.SetData("train", generator.Generate(5000, configs.spiral))
+        playground.visualizer.dataset.SetData("test", generator.Generate(5000, configs.spiral))
 
-        visualizer.SetDataVisibility("test", false)
-        visualizer.SetCompactOffset(0.5)
-
-        let training = false
-
-        function Run() {
-            if (training) {
-                visualizer.TrainStep()
-            }
-
-            window.requestAnimationFrame(Run)
-        }
-
-        Run()
+        playground.visualizer.SetDataVisibility("test", false)
+        playground.visualizer.SetCompactOffset(0.5)
     </script>
 </body>
 </html>

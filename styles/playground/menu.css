@@ -1,0 +1,143 @@
+.menu {
+    width: 300px;
+    max-width: 300px;
+    height: 100dvh;
+    border-right: 1px solid #000;
+    transition: width 0.2s;
+    display: table-cell;
+    vertical-align: top;
+    user-select: none;
+    background: var(--menu-background-color);
+}
+
+.run-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 5px;
+    padding: 5px;
+}
+
+.run-menu-button {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+
+    background: var(--button-background-color);
+    border: 1px solid var(--button-border-color);
+    color: var(--button-color);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.run-menu-button:hover {
+    background: var(--button-hover-background-color);
+    border-color: var(--button-hover-border-color);
+    color: var(--button-hover-color);
+}
+
+.run-menu-button svg {
+    display: none;
+}
+
+.run-menu-button svg * {
+    stroke: var(--button-color);
+    fill: var(--button-color);
+}
+
+.run-menu-button:hover svg * {
+    stroke: var(--button-hover-color);
+    fill: var(--button-hover-color);
+}
+
+.main-menu {
+    display: block;
+    min-height: calc(100dvh - 93px);
+    max-height: calc(100dvh - 93px);
+    overflow-y: auto;
+}
+
+.icons-menu {
+    display: none;
+    min-height: calc(100dvh - 190px);
+    max-height: calc(100dvh - 190px);
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.toggle-menu {
+    height: 50px;
+    padding: 12px;
+    cursor: pointer;
+    border-top: 1px solid var(--menu-toggle-border-color);
+    background: var(--menu-toggle-background-color);
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    align-items: center;
+    grid-gap: 12px;
+}
+
+.ham {
+    width: 26px;
+    height: 2px;
+    background: var(--button-color);
+    position: relative;
+}
+
+.ham:before, .ham:after {
+    content: "";
+    background: var(--button-color);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.ham:before {
+    top: -8px;
+}
+
+.ham:after {
+    top: 8px;
+}
+
+.menu-closed {
+    width: 50px;
+    transition: width 0.2s;
+}
+
+.menu-closed .run-menu {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.menu-closed .run-menu-button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}
+
+.menu-closed .run-menu-button svg {
+    display: block;
+}
+
+.menu-closed .run-menu-button span {
+    display: none;
+}
+
+.menu-closed .main-menu {
+    display: none;
+}
+
+.menu-closed .icons-menu {
+    display: block;
+}
+
+.menu-closed .toggle-menu {
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+
+.menu-closed .toggle-menu span {
+    display: none;
+}
