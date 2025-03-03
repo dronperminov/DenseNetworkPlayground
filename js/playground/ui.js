@@ -5,6 +5,10 @@ Playground.prototype.SetModelInputsCount = function(inputs) {
     this.visualizer.SetDimension(inputs)
 }
 
+Playground.prototype.SetModelLayersCount = function(count, size, activation) {
+    this.visualizer.SetModelLayersCount(count, size, activation)
+}
+
 Playground.prototype.SetModelLayersSize = function(size) {
     this.visualizer.SetModelLayersSize(size)
 }

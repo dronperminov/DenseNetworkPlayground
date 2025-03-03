@@ -62,6 +62,12 @@
                         </label>
                     </div>
 
+                    <div class="menu-block" title="Количество полносвязных слоёв, находящихся в нейронной сети">
+                        <label>Количество слоёв
+                            <input class="basic-input" id="model-layers-count" type="number" min="1" step="1" value="3" autocomplete="off">
+                        </label>
+                    </div>
+
                     <div class="menu-block" title="Количество нейронов, находящихся в каждом слое">
                         <label>Размер слоёв
                             <input class="basic-input" id="model-layers-size" type="number" min="1" step="1" value="10" autocomplete="off">
@@ -105,7 +111,7 @@
 
                     <div class="menu-block">
                         <label>Скорость обучения
-                            <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.001" autocomplete="off">
+                            <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.004" autocomplete="off">
                         </label>
                     </div>
 
@@ -250,7 +256,7 @@
                 <div class="icons-block">
                     <div class="parameter-icon" title="Скорость обучения">
                         <div class="parameter-icon-label">η</div>
-                        <span id="learning-rate-value">0.001</span>
+                        <span id="learning-rate-value">0.004</span>
                     </div>
 
                     <div class="parameter-icon" title="Размер батча">
@@ -260,7 +266,7 @@
 
                     <div class="parameter-icon" title="Доля фоновых точек">
                         <div class="parameter-icon-label"><img src="icons/background.svg"></div>
-                        <span id="background-part-value">100%</span>
+                        <span id="background-part-value">100</span>%
                     </div>
 
                     <div class="parameter-icon" title="Функция потерь">

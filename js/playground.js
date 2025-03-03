@@ -28,6 +28,9 @@ class Playground {
         let activation = document.getElementById("activation")
         activation.addEventListener("change", () => this.SetModelActivation(activation.value))
 
+        let modelLayersCount = new NumberInput(document.getElementById("model-layers-count"))
+        modelLayersCount.on("change", value => this.SetModelLayersCount(value, modelLayersSize.GetValue(), activation.value))
+
         this.thresholdLow = document.getElementById("threshold-low")
         this.thresholdHigh = document.getElementById("threshold-high")
 

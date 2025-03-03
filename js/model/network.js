@@ -137,6 +137,47 @@ class NeuralNetwork {
         this.layers[this.layers.length - 1].Resize(inputs, 1)
     }
 
+    ResizeLayer(layer, size) {
+        this.layers[layer].Resize(this.layers[layer].inputs, size)
+
+        if (layer < this.layers.length - 1)
+            this.layers[layer + 1].Resize(size, this.layers[layer + 1].outputs)
+        else
+            this.outputs = size
+    }
+
+    InsertLayerAfter(layer, size, activation) {
+        let inputs = layer > -1 ? this.layers[layer].outputs : this.inputs
+        let newLayer = new FullyConnectedLayer(inputs, size, activation, this.maxBatchSize)
+
+        if (layer < this.layers.length - 1)
+            this.layers[layer + 1].Resize(size, this.layers[layer + 1].outputs)
+
+        if (this.layers.length == 1) {
+            newLayer.SetActivation("")
+            this.layers[0].SetActivation(activation)
+        }
+
+        this.layers.splice(layer + 1, 0, newLayer)
+    }
+
+    RemoveLayer(layer) {
+        if (this.layers.length < 2)
+            throw new Error("Unable to remove layer. There is only one layer in the network")
+
+        if (layer == 0) {
+            this.layers[layer + 1].Resize(this.layers[layer].inputs, this.layers[layer + 1].outputs)
+        }
+        else if (layer == this.layers.length - 1) {
+            this.outputs = this.layers[layer - 1].outputs
+        }
+        else {
+            this.layers[layer + 1].Resize(this.layers[layer - 1].outputs, this.layers[layer + 1].outputs)
+        }
+
+        this.layers.splice(layer, 1)
+    }
+
     ToggleNeuron(layer, neuron) {
         this.layers[layer].ToggleNeuron(neuron)
     }

@@ -21,6 +21,17 @@ class ModelManager extends EventEmitter {
         this.emit("change")
     }
 
+    SetLayersCount(count, size, activation) {
+        while (this.model.layers.length < count)
+            this.model.InsertLayerAfter(this.model.layers.length - 2, size, activation)
+
+        while (this.model.layers.length > count)
+            this.model.RemoveLayer(this.model.layers.length - 2)
+
+        this.emit("change-architecture")
+        this.emit("change")
+    }
+
     Reset(disabled) {
         this.model.Reset(disabled)
         this.emit("change")
