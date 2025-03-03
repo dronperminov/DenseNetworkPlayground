@@ -45,6 +45,7 @@ Visualizer.prototype.HandleChangeModel = function() {
 
 Visualizer.prototype.HandleChangeModelArchitecture = function() {
     this.modelPlot.ChangeModelArchitecture()
+    this.SetModelShowNeuron(this.model.layers.length - 1, 0)
 }
 
 Visualizer.prototype.HandleClickNeuron = function(layer, neuron, e) {

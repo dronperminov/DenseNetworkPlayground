@@ -30,7 +30,7 @@
 .menu-multiple-block {
     display: grid;
     grid-auto-flow: row;
-    grid-gap: 4px;
+    grid-gap: 5px;
 }
 
 .menu-block-grid {

@@ -126,6 +126,17 @@ class NeuralNetwork {
             this.layers[0].Resize(inputs, this.layers[0].outputs)
     }
 
+    SetLayersSize(size) {
+        let inputs = this.inputs
+
+        for (let i = 0; i < this.layers.length - 1; i++) {
+            this.layers[i].Resize(inputs, size)
+            inputs = size
+        }
+
+        this.layers[this.layers.length - 1].Resize(inputs, 1)
+    }
+
     ToggleNeuron(layer, neuron) {
         this.layers[layer].ToggleNeuron(neuron)
     }

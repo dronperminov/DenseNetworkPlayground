@@ -22,6 +22,9 @@ class Playground {
         let modelInputsCount = new NumberInput(document.getElementById("model-inputs-count"))
         modelInputsCount.on("change", value => this.SetModelInputsCount(value))
 
+        let modelLayersSize = new NumberInput(document.getElementById("model-layers-size"))
+        modelLayersSize.on("change", value => this.SetModelLayersSize(value))
+
         let activation = document.getElementById("activation")
         activation.addEventListener("change", () => this.SetModelActivation(activation.value))
 

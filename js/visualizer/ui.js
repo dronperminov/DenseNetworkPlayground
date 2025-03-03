@@ -24,6 +24,10 @@ Visualizer.prototype.SetDataVisibility = function(name, visible) {
     this.dataPlot.SetVisibility(name, visible)
 }
 
+Visualizer.prototype.SetModelLayersSize = function(size) {
+    this.modelManager.SetLayersSize(size)
+}
+
 Visualizer.prototype.SetModelOutputSize = function(size) {
     this.modelPlot.SetSize(size)
 }

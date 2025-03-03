@@ -251,9 +251,9 @@ class HistogramsPlot {
         let threshold = this.Coordinate2Threshold(x)
 
         if (this.point == "low")
-            this.thresholds.SetLow(Math.min(threshold, this.thresholds.high))
+            this.thresholds.SetLow(Math.min(threshold, this.thresholds.high, 0))
         else
-            this.thresholds.SetHigh(Math.max(threshold, this.thresholds.low))
+            this.thresholds.SetHigh(Math.max(threshold, this.thresholds.low, 0))
     }
 
     MouseDown(e) {

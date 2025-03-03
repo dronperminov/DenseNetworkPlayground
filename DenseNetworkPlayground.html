@@ -58,13 +58,19 @@
 
                     <div class="menu-block" title="Размерность входного пространства, с которой работает нейронная сеть">
                         <label>Количество входов
-                            <input class="basic-input" id="model-inputs-count" type="number" min="1" step="1" value="2">
+                            <input class="basic-input" id="model-inputs-count" type="number" min="1" step="1" value="2" autocomplete="off">
+                        </label>
+                    </div>
+
+                    <div class="menu-block" title="Количество нейронов, находящихся в каждом слое">
+                        <label>Размер слоёв
+                            <input class="basic-input" id="model-layers-size" type="number" min="1" step="1" value="10" autocomplete="off">
                         </label>
                     </div>
 
                     <div class="menu-block" title="Функция, используемая в качестве активационной в каждом слое кроме последнего">
                         <label>Функция активации
-                            <select class="basic-input" id="activation">
+                            <select class="basic-input" id="activation" autocomplete="off">
                                 <option value="relu">ReLU</option>
                                 <option value="leaky-relu">Leaky ReLU</option>
                                 <option value="abs" selected>Abs</option>
@@ -77,18 +83,18 @@
 
                         <div class="menu-block-grid">
                             <label>
-                                <input class="basic-input" id="threshold-low" type="number" min="-1" max="0" step="0.05" value="-0.1">
+                                <input class="basic-input" id="threshold-low" type="number" min="-1" max="0" step="0.05" value="-0.1" autocomplete="off">
                             </label>
 
                             <label>
-                                <input class="basic-input" id="threshold-high" type="number" min="0" max="1" step="0.05" value="0.1">
+                                <input class="basic-input" id="threshold-high" type="number" min="0" max="1" step="0.05" value="0.1" autocomplete="off">
                             </label>
                         </div>
                     </div>
 
                     <div class="menu-block" title="При использовании этого параметры во время сброса отключенные нейроны восстанавливаются">
                         <label class="switch-checkbox">
-                            <input type="checkbox" id="reset-disabled-neurons" checked>
+                            <input type="checkbox" id="reset-disabled-neurons" checked autocomplete="off">
                             <span class="switch-checkbox-text">Сброс отключ. нейронов</span>
                         </label>
                     </div>
@@ -99,27 +105,27 @@
 
                     <div class="menu-block">
                         <label>Скорость обучения
-                            <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.001">
+                            <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.001" autocomplete="off">
                         </label>
                     </div>
 
                     <div class="menu-block">
                         <label>Размер батча
-                            <input class="basic-input" type="range" id="batch-size" step="1" min="1" max="32" value="16">
+                            <input class="basic-input" type="range" id="batch-size" step="1" min="1" max="32" value="16" autocomplete="off">
                         </label>
                         <div id="batch-size-label" class="range-label">16</div>
                     </div>
 
                     <div class="menu-block">
                         <label>Доля фоновых точек
-                            <input class="basic-input" type="range" id="background-part" step="5" min="0" max="500" value="100">
+                            <input class="basic-input" type="range" id="background-part" step="5" min="0" max="500" value="100" autocomplete="off">
                         </label>
                         <div class="range-label"><span id="background-part-label">100</span>%</div>
                     </div>
 
                     <div class="menu-block">
                         <label>Функция потерь
-                            <select class="basic-input" id="criterion">
+                            <select class="basic-input" id="criterion" autocomplete="off">
                                 <option value="mse" selected>MSE</option>
                                 <option value="mae">MAE</option>
                                 <option value="logcosh">Logcosh</option>
@@ -130,7 +136,7 @@
 
                     <div class="menu-block">
                         <label>Оптимизатор
-                            <select class="basic-input" id="optimizer">
+                            <select class="basic-input" id="optimizer" autocomplete="off">
                                 <option value="sgd">SGD</option>
                                 <option value="momentum-sgd">SGDm</option>
                                 <option value="adam" selected>Adam</option>
@@ -142,19 +148,17 @@
                         </label>
                     </div>
 
-                    <div class="menu-block">
+                    <div class="menu-block menu-multiple-block">
                         <label>Регуляризация
-                            <select class="basic-input" id="regularization-type">
+                            <select class="basic-input" id="regularization-type" autocomplete="off">
                                 <option value="">не используется</option>
                                 <option value="l1">L1</option>
                                 <option value="l2" selected>L2</option>
                             </select>
                         </label>
-                    </div>
 
-                    <div class="menu-block">
                         <label>Коэффициент регуляризации
-                            <input class="basic-input" type="number" id="regularization" step="0.001" min="0" max="10" value="0.001">
+                            <input class="basic-input" type="number" id="regularization" step="0.001" min="0" max="10" value="0.001" autocomplete="off">
                         </label>
                     </div>
                 </details>
@@ -164,7 +168,7 @@
 
                     <div class="menu-block">
                         <label>Выход сети
-                            <select class="basic-input" id="model-output-mode">
+                            <select class="basic-input" id="model-output-mode" autocomplete="off">
                                 <option value="no">не показывать</option>
                                 <option value="continuosly" selected>непрерывно</option>
                                 <option value="discrete">дискретно</option>
@@ -177,7 +181,7 @@
                     <div id="model-output-block">
                         <div class="menu-block">
                             <label>Количество точек выхода сети
-                                <select class="basic-input" id="model-output-size">
+                                <select class="basic-input" id="model-output-size" autocomplete="off">
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100" selected>100</option>
@@ -190,7 +194,7 @@
 
                     <div class="menu-block">
                         <label>Отображать в связях:
-                            <select class="basic-input" id="model-weights-mode">
+                            <select class="basic-input" id="model-weights-mode" autocomplete="off">
                                 <option value="weights" selected>весовые коэффициенты</option>
                                 <option value="grads">градиенты</option>
                             </select>
@@ -201,17 +205,17 @@
                         <div class="menu-block menu-multiple-block">
                             <label>Отображать</label>
                             <label class="switch-checkbox">
-                                <input type="checkbox" id="plot-train-data" checked>
+                                <input type="checkbox" id="plot-train-data" checked autocomplete="off">
                                 <span class="switch-checkbox-text">обучающие точки</span>
                             </label>
 
                             <label class="switch-checkbox">
-                                <input type="checkbox" id="plot-test-data">
+                                <input type="checkbox" id="plot-test-data" autocomplete="off">
                                 <span class="switch-checkbox-text">тестовые точки</span>
                             </label>
 
                             <label class="switch-checkbox">
-                                <input type="checkbox" id="plot-background-data">
+                                <input type="checkbox" id="plot-background-data" autocomplete="off">
                                 <span class="switch-checkbox-text">фоновые точки</span>
                             </label>
                         </div>
@@ -222,7 +226,7 @@
                         <div class="menu-block-grid">
                             <div>
                                 <label>Ось Х:
-                                    <select class="basic-input" id="axis-x">
+                                    <select class="basic-input" id="axis-x" autocomplete="off">
                                         <option value="0" selected>x₁</option>
                                         <option value="1">x₂</option>
                                     </select>
@@ -231,7 +235,7 @@
 
                             <div>
                                 <label>Ось Y:
-                                    <select class="basic-input" id="axis-y">
+                                    <select class="basic-input" id="axis-y" autocomplete="off">
                                         <option value="0">x₁</option>
                                         <option value="1" selected>x₂</option>
                                     </select>

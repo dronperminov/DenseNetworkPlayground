@@ -15,6 +15,12 @@ class ModelManager extends EventEmitter {
         this.emit("change")
     }
 
+    SetLayersSize(size) {
+        this.model.SetLayersSize(size)
+        this.emit("change-architecture")
+        this.emit("change")
+    }
+
     Reset(disabled) {
         this.model.Reset(disabled)
         this.emit("change")
