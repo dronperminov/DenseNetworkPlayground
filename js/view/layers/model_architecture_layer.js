@@ -97,11 +97,11 @@ class ModelArchitectureLayer extends EventEmitter {
             let size = (i < 0 ? this.model.inputs : this.model.layers[i].outputs)
 
             for (let j = 0; j < size + bias; j++)
-                this.neurons[i].push(this.MakeNeuron(j == size ? "1" : this.GetNeuronName(i, j)))
+                this.neurons[i].push(this.MakeNeuron(j == size ? "1" : this.GetNeuronName(i, j), i < 0 || j == size))
         }
 
         for (let i = 0; i < this.model.layers.length; i++)
-            for (let j = 0; j < this.neurons[i].length; j++)
+            for (let j = 0; j < this.model.layers[i].outputs; j++)
                 this.neurons[i][j].neuron.addEventListener("mousedown", e => this.emit("click-neuron", i, j, e))
     }
 
@@ -159,9 +159,13 @@ class ModelArchitectureLayer extends EventEmitter {
         }
     }
 
-    MakeNeuron(name) {
+    MakeNeuron(name, inert) {
         let neuron = MakeElement(this.svg, {class: "neuron"}, "circle")
         let text = MakeElement(this.svg, {"dominant-baseline": "middle", "text-anchor": "middle", textContent: name}, "text")
+
+        if (inert)
+            neuron.classList.add("neuron-inert")
+
         return {neuron, text}
     }
 

@@ -61,3 +61,7 @@
 .neuron-disabled.neuron-active {
     fill: #aaaaaa;
 }
+
+.neuron-inert {
+    pointer-events: none;
+}
