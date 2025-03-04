@@ -22,6 +22,10 @@ class NumberInput extends EventEmitter {
         return value
     }
 
+    SetValue(value) {
+        this.input.value = value
+    }
+
     Change() {
         let value = this.GetValue()
         this.input.value = value

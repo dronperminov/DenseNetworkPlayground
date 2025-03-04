@@ -20,7 +20,7 @@ class Playground {
 
     InitModelMenu() {
         let modelInputsCount = new NumberInput(document.getElementById("model-inputs-count"))
-        modelInputsCount.on("change", value => this.SetModelInputsCount(value))
+        modelInputsCount.on("change", value => this.SetModelInputsCount(value, modelInputsCount))
 
         let modelLayersSize = new NumberInput(document.getElementById("model-layers-size"))
         modelLayersSize.on("change", value => this.SetModelLayersSize(value))

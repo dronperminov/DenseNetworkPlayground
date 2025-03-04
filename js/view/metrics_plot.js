@@ -52,6 +52,15 @@ class MetricsPlot {
         this.plots[metric].start = Math.max(this.plots[metric].start, step - this.plots[metric].maxSteps)
     }
 
+    Reset() {
+        for (let plot of Object.values(this.plots)) {
+            plot.start = 0
+            plot.maxSteps = 100
+        }
+
+        this.Plot()
+    }
+
     Plot() {
         for (let metric of Object.keys(this.plots))
             this.PlotMetric(metric)

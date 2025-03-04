@@ -15,6 +15,8 @@ class Metrics extends EventEmitter {
         for (let metric of Object.keys(this.metrics))
             for (let name of Object.keys(this.metrics[metric]))
                 this.metrics[metric][name] = []
+
+        this.emit("reset")
     }
 
     Set(metric, name, epoch, value) {

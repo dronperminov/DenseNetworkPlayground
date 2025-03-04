@@ -83,6 +83,7 @@ class Visualizer {
         this.modelPlot.on("view-click", (e, point) => this.HandleCtrlClickView(e, point))
 
         this.metrics.on("change", (metric, name, epoch, value) => this.metricsPlot.Set(metric, name, epoch, value))
+        this.metrics.on("reset", () => this.metricsPlot.Reset())
         this.thresholds.on("change", (low, high) => this.HandleChangeThresholds(low, high))
     }
 }
