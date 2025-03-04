@@ -40,8 +40,8 @@ class Playground {
 
         let thresholdLow = new NumberInput(this.thresholdLow)
         let thresholdHigh = new NumberInput(this.thresholdHigh)
-        thresholdLow.on("input", value => this.visualizer.thresholds.SetLow(value))
-        thresholdHigh.on("input", value => this.visualizer.thresholds.SetHigh(value))
+        thresholdLow.on("change", value => this.visualizer.thresholds.SetLow(value))
+        thresholdHigh.on("change", value => this.visualizer.thresholds.SetHigh(value))
 
         this.resetDisabledNeurons = document.getElementById("reset-disabled-neurons")
 
