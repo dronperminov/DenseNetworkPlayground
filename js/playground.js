@@ -16,6 +16,7 @@ class Playground {
         this.InitModelMenu()
         this.InitTrainMenu()
         this.InitViewMenu()
+        this.InitDataMenu()
     }
 
     InitModelMenu() {
@@ -33,6 +34,9 @@ class Playground {
 
         this.thresholdLow = document.getElementById("threshold-low")
         this.thresholdHigh = document.getElementById("threshold-high")
+
+        this.thresholdLowValue = document.getElementById("threshold-low-value")
+        this.thresholdHighValue = document.getElementById("threshold-high-value")
 
         let thresholdLow = new NumberInput(this.thresholdLow)
         let thresholdHigh = new NumberInput(this.thresholdHigh)
@@ -112,6 +116,11 @@ class Playground {
         this.visualizer.dataset.on("change-dimension", dimension => this.HandleChangeDimension(dimension))
         this.visualizer.dataset.on("change", (name, split) => this.HandleChangeData(name, split))
         this.visualizer.dataset.on("clear", () => this.HandleClearData())
+    }
+
+    InitDataMenu() {
+        this.trainDatasetValue = document.getElementById("train-dataset-value")
+        this.testDatasetValue = document.getElementById("test-dataset-value")
     }
 
     Start() {

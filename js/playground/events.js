@@ -9,8 +9,13 @@ Playground.prototype.HandleChangeDimension = function(dimension) {
 }
 
 Playground.prototype.HandleChangeData = function(name, split) {
-    if (name == "train")
+    if (name == "train") {
         this.UpdateTrainButtons(split.data.length == 0)
+        this.trainDatasetValue.innerText = split.data.length
+    }
+
+    if (name == "test")
+        this.testDatasetValue.innerText = split.data.length
 
     if (split.data.length > 0)
         this.dataBlock.classList.remove("hidden")
@@ -18,6 +23,9 @@ Playground.prototype.HandleChangeData = function(name, split) {
 
 Playground.prototype.HandleClearData = function() {
     this.dataBlock.classList.add("hidden")
+    this.trainDatasetValue.innerText = "0"
+    this.testDatasetValue.innerText = "0"
+
     this.UpdateTrainButtons(true)
 }
 
@@ -43,4 +51,7 @@ Playground.prototype.UpdateTrainButtons = function(disabled) {
 Playground.prototype.HandleChangeThresholds = function(low, high) {
     this.thresholdLow.value = low
     this.thresholdHigh.value = high
+
+    this.thresholdLowValue.innerText = low
+    this.thresholdHighValue.innerText = high
 }
