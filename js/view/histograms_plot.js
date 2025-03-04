@@ -21,6 +21,11 @@ class HistogramsPlot {
         this.svg.addEventListener("mouseup", e => this.MouseUp(e))
         this.svg.addEventListener("mouseleave", e => this.MouseUp(e))
 
+        this.svg.addEventListener("touchmove", e => this.MouseMove(e))
+        this.svg.addEventListener("touchstart", e => this.MouseDown(e))
+        this.svg.addEventListener("touchend", e => this.MouseUp(e))
+        this.svg.addEventListener("touchleave", e => this.MouseUp(e))
+
         this.UpdateSizes()
 
         new ResizeObserver(() => this.Resize()).observe(this.svg)
@@ -224,7 +229,9 @@ class HistogramsPlot {
     }
 
     GetPoint(e) {
-        return Math.max(this.padding, Math.min(this.svg.clientWidth - this.padding, e.offsetX))
+        let x = e.touches ? e.touches[0].clientX - this.svg.getBoundingClientRect().left : e.offsetX
+
+        return Math.max(this.padding, Math.min(this.svg.clientWidth - this.padding, x))
     }
 
     HoverThresholds(x) {
