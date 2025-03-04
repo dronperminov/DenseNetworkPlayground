@@ -1,0 +1,11 @@
+.view {
+    display: table-cell;
+    height: 100dvh;
+}
+
+@media (max-width: 767px) {
+    .view {
+        display: block;
+        margin-left: 50px;
+    }
+}

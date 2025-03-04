@@ -148,3 +148,10 @@
 .menu-closed .toggle-menu span {
     display: none;
 }
+
+@media (max-width: 767px) {
+    .menu {
+        position: absolute;
+        z-index: 2;
+    }
+}

@@ -11,6 +11,8 @@
     <link rel="stylesheet" type="text/css" href="styles/playground/menu.css">
     <link rel="stylesheet" type="text/css" href="styles/playground/main_menu.css">
     <link rel="stylesheet" type="text/css" href="styles/playground/icons_menu.css">
+    <link rel="stylesheet" type="text/css" href="styles/playground/view.css">
+    <link rel="stylesheet" type="text/css" href="styles/playground/tabs.css">
 
     <link rel="stylesheet" type="text/css" href="styles/components/data_plot.css">
     <link rel="stylesheet" type="text/css" href="styles/components/data_table.css">
@@ -297,32 +299,43 @@
             </div>
         </div>
 
-        <div class="tabs">
+        <div class="view">
             <div class="tab">
-                <div class="data-table" id="data-table"></div>
-            </div>
-
-            <div class="tab tab-active">
-                <div class="data-plot" id="data-plot" oncontextmenu="return false;">
-                    <canvas id="model-view"></canvas>
-                    <svg id="data-view"></svg>
+                <div class="tab-nav">
+                    <label id="tab-model-label" for="tab-model-input">Модель</label>
+                    <label id="tab-data-label" for="tab-data-input">Набор данных</label>
+                    <label id="tab-experiments-label" for="tab-experiments-input">Эксперименты</label>
                 </div>
 
-                <br>
+                <div class="tab-contents">
+                    <input id="tab-model-input" type="radio" name="tab-input" autocomplete="off" checked>
+                    <div class="tab-content" id="tab-model">
+                        <div class="data-plot" id="data-plot" oncontextmenu="return false;">
+                            <canvas id="model-view"></canvas>
+                            <svg id="data-view"></svg>
+                        </div>
 
-                <div class="histograms-plot">
-                    <svg id="histograms-plot"></svg>
+                        <div class="histograms-plot">
+                            <svg id="histograms-plot"></svg>
+                        </div>
+
+                        <div class="model-plot" id="model-plot" oncontextmenu="return false;">
+                            <svg></svg>
+                        </div>
+
+                        <div class="metrics-plot" id="metrics-plot"></div>
+                    </div>
+
+                    <input id="tab-data-input" type="radio" name="tab-input" autocomplete="off">
+                    <div class="tab-content" id="tab-data">
+                        <div class="data-table" id="data-table"></div>
+                    </div>
+
+                    <input id="tab-experiments-input" type="radio" name="tab-input" autocomplete="off">
+                    <div class="tab-content" id="tab-experiments">
+                        <!-- TODO -->
+                    </div>
                 </div>
-
-                <br>
-
-                <div class="model-plot" id="model-plot" oncontextmenu="return false;">
-                    <svg></svg>
-                </div>
-
-                <br>
-
-                <div class="metrics-plot" id="metrics-plot"></div>
             </div>
         </div>
     </div>

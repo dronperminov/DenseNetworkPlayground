@@ -13,9 +13,15 @@
     --menu-toggle-border-color: #222222;
     --menu-toggle-background-color: #f6f6f6;
 
+    /* TAB */
+    --tab-background-color: var(--background-color);
+    --tab-border-color: #aaaaaa;
+    --tab-text-color: var(--text-color);
+    --tab-active-color: var(--main-color);
+
     /* INPUT */
     --input-color: var(--text-color);
-    --input-border-color: #aaa;
+    --input-border-color: #aaaaaa;
 
     --input-hover-color: var(--text-color);
     --input-hover-border-color: var(--main-color);
