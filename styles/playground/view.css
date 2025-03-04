@@ -68,7 +68,7 @@
 
     #tab-train {
         grid-template-columns: min-content 1fr 2fr 320px;
-        grid-template-rows: min-content 1fr;
+        grid-template-rows: min-content minmax(500px, 1fr);
         grid-template-areas:
             "data metrics metrics metrics"
             "model model histograms histograms";
@@ -76,7 +76,7 @@
 
     #tab-train:has(.surface-plot:not(.hidden)) {
         grid-template-columns: min-content min-content 1fr 2fr;
-        grid-template-rows: min-content 1fr;
+        grid-template-rows: min-content minmax(500px, 1fr);
         grid-template-areas:
             "data surface metrics metrics"
             "model model histograms histograms";
@@ -96,7 +96,7 @@
     #tab-train {
         padding: 5px;
         grid-template-columns: 250px 1fr;
-        grid-template-rows: 250px 1fr 200px;
+        grid-template-rows: 250px minmax(500px, 1fr) 200px;
         grid-template-areas:
             "data model"
             "histograms histograms"
@@ -109,7 +109,7 @@
 
     #tab-train:has(.surface-plot:not(.hidden)) {
         grid-template-columns: 250px 1fr;
-        grid-template-rows: 250px 1fr 1.5fr;
+        grid-template-rows: 250px minmax(300px, 1fr) minmax(500px, 1.5fr);
         grid-template-areas:
             "data surface"
             "model metrics"

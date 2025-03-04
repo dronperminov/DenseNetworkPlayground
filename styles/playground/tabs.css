@@ -57,19 +57,8 @@
 
 @media (max-width: 579px) {
     .tab-nav {
-        padding: 0;
-    }
-
-    .tab-nav label {
-        display: block;
-        border-radius: 0;
-    }
-
-    .tab-nav:has(~ .tab-contents > #tab-data-input:checked) #tab-data-label,
-    .tab-nav:has(~ .tab-contents > #tab-train-input:checked) #tab-train-label,
-    .tab-nav:has(~ .tab-contents > #tab-experiments-input:checked) #tab-experiments-label {
-        border-left: none;
-        border-right: none;
-        border-color: var(--tab-border-color);
+        overflow-y: hidden;
+        overflow-x: auto;
+        scrollbar-width: thin;
     }
 }
