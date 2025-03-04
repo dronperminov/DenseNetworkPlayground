@@ -42,22 +42,41 @@
     grid-area: metrics;
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1380px) {
     #tab-train .metrics-plot {
         grid-auto-flow: column;
     }
 
+    #tab-train .data-plot {
+        resize: both;
+        width: 320px;
+        height: 320px;
+        min-width: 220px;
+        min-height: 220px;
+        max-width: 500px;
+        max-height: 500px;
+    }
+
+    #tab-train .surface-plot {
+        resize: horizontal;
+        overflow: hidden;
+        min-width: 220px;
+        width: 320px;
+        max-width: 500px;
+        height: 100%;
+    }
+
     #tab-train {
-        grid-template-columns: 320px 1fr 2fr 320px;
-        grid-template-rows: 320px 1fr;
+        grid-template-columns: min-content 1fr 2fr 320px;
+        grid-template-rows: min-content 1fr;
         grid-template-areas:
             "data metrics metrics metrics"
             "model model histograms histograms";
     }
 
     #tab-train:has(.surface-plot:not(.hidden)) {
-        grid-template-columns: 320px 315px 1fr 2fr;
-        grid-template-rows: 320px 1fr;
+        grid-template-columns: min-content min-content 1fr 2fr;
+        grid-template-rows: min-content 1fr;
         grid-template-areas:
             "data surface metrics metrics"
             "model model histograms histograms";

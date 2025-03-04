@@ -18,6 +18,7 @@ class ModelOutputLayer {
 
         this.viewBox.on("change-limits", limits => this.Plot())
         new ResizeObserver(() => this.Resize()).observe(canvas)
+        new ResizeObserver(() => this.ResizeSurface()).observe(surfaceDiv)
     }
 
     SetAxes(xAxis, yAxis) {
@@ -87,7 +88,7 @@ class ModelOutputLayer {
             this.UpdatePixels()
 
         if (this.showSurface)
-            this.UpdateSurface()
+            this.UpdateSurface(config)
     }
 
     GetPoint(x, y) {
@@ -131,14 +132,27 @@ class ModelOutputLayer {
         this.outputs = new Float64Array(width * height)
         this.pixels = this.ctx.createImageData(width, height)
 
-        this.surfaceX = new Float64Array(width)
-        this.surfaceY = new Float64Array(height)
-        this.surfaceZ = []
-        this.surface = false
-        this.surfaceDiv.innerHTML = ""
+        let surfaceX = new Float64Array(width)
+        let surfaceY = new Float64Array(height)
+        let surfaceZ = []
 
         for (let i = 0; i < height; i++)
-            this.surfaceZ[i] = new Float64Array(width)
+            surfaceZ[i] = new Float64Array(width)
+
+        this.surfaceCreated = false
+        this.surfaceDiv.innerHTML = ""
+        this.surface = {
+            x: surfaceX,
+            y: surfaceY,
+            z: surfaceZ,
+            cmin: Infinity,
+            cmax: -Infinity,
+            type: "surface",
+            colorbar: {
+                tickfont: {size: 10},
+                thickness: 10
+            }
+        }
     }
 
     UpdateInputs() {
@@ -151,18 +165,18 @@ class ModelOutputLayer {
         let index = 0
 
         for (let i = 0; i < this.canvas.width; i++)
-            this.surfaceX[i] = limits.xmin + dj * i
+            this.surface.x[i] = limits.xmin + dj * i
 
         for (let i = 0; i < this.canvas.height; i++)
-            this.surfaceY[i] = limits.ymax - di * i
+            this.surface.y[i] = limits.ymax - di * i
 
         for (let i = 0; i < this.canvas.height; i++) {
             for (let j = 0; j < this.canvas.width; j++) {
                 for (let d = 0; d < this.model.inputs; d++)
                     this.inputs[index + d] = this.point[d]
 
-                this.inputs[index + this.axes[0]] = this.surfaceX[j]
-                this.inputs[index + this.axes[1]] = this.surfaceY[i]
+                this.inputs[index + this.axes[0]] = this.surface.x[j]
+                this.inputs[index + this.axes[1]] = this.surface.y[i]
                 index += this.model.inputs
             }
         }
@@ -186,27 +200,31 @@ class ModelOutputLayer {
         this.ctx.putImageData(this.pixels, 0, 0)
     }
 
-    UpdateSurface() {
-        let surface = this.GetSurface()
+    UpdateSurface(config) {
+        if (!this.surfaceCreated || config.inputs || config.outputs)
+            this.FillSurface()
 
         this.surfaceDiv.classList.remove("hidden")
+        this.surface.colorscale = this.GetSurfaceColorscale(this.surface.cmin, this.surface.cmax)
 
-        if (!this.surface) {
-            this.surface = true
+        if (!this.surfaceCreated) {
+            this.surfaceCreated = true
 
-            Plotly.newPlot(this.surfaceDiv, [surface], this.GetSurfaceLayout(), {displayModeBar: false})
+            Plotly.newPlot(this.surfaceDiv, [this.surface], this.GetSurfaceLayout(), {displayModeBar: false})
         }
         else {
-            Plotly.restyle(this.surfaceDiv, {
-                x: [surface.x],
-                y: [surface.y],
-                z: [surface.z],
-                colorscale: [surface.colorscale],
-                cmin: surface.cmin,
-                cmax: surface.cmax
-            }, [0])
+            let diff = {colorscale: [this.surface.colorscale]}
 
-            Plotly.relayout(this.surfaceDiv, { scene: {camera: {eye: this.surfaceDiv.layout.scene.camera.eye }}}, [0])
+            if (config.inputs || config.outputs) {
+                diff.x = [this.surface.x]
+                diff.y = [this.surface.y]
+                diff.z = [this.surface.z]
+
+                diff.cmin = this.surface.cmin
+                diff.cmax = this.surface.cmax
+            }
+
+            Plotly.restyle(this.surfaceDiv, diff)
         }
     }
 
@@ -222,6 +240,21 @@ class ModelOutputLayer {
         this.Plot()
     }
 
+    ResizeSurface() {
+        if (!this.surfaceCreated || this.surfaceDiv.clientWidth == 0 || this.surfaceDiv.clientHeight == 0)
+            return
+
+        Plotly.relayout(this.surfaceDiv, {
+            width: this.surfaceDiv.clientWidth,
+            height: this.surfaceDiv.clientHeight,
+            scene: {
+                camera: {
+                    eye: this.surfaceDiv.layout.scene.camera.eye
+                }
+            }
+        })
+    }
+
     Clear() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
         this.surfaceDiv.classList.add("hidden")
@@ -231,7 +264,7 @@ class ModelOutputLayer {
         return this.mode != "no"
     }
 
-    GetSurface() {
+    FillSurface() {
         let cmin = Infinity
         let cmax = -Infinity
         let index = 0
@@ -239,7 +272,7 @@ class ModelOutputLayer {
         for (let i = 0; i < this.canvas.height; i++) {
             for (let j = 0; j < this.canvas.width; j++) {
                 let output = this.outputs[index]
-                this.surfaceZ[i][j] = output
+                this.surface.z[i][j] = output
 
                 cmin = Math.min(cmin, output)
                 cmax = Math.max(cmax, output)
@@ -252,19 +285,8 @@ class ModelOutputLayer {
             cmax += 0.001
         }
 
-        return {
-            x: this.surfaceX,
-            y: this.surfaceY,
-            z: this.surfaceZ,
-            cmin: cmin,
-            cmax: cmax,
-            type: "surface",
-            colorbar: {
-                tickfont: {size: 10},
-                thickness: 10
-            },
-            colorscale: this.GetSurfaceColorscale(cmin, cmax)
-        }
+        this.surface.cmin = cmin
+        this.surface.cmax = cmax
     }
 
     GetSurfaceLayout() {
