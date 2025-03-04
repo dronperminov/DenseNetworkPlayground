@@ -7,8 +7,14 @@ class ViewBox extends EventEmitter {
 
         this.svg.addEventListener("mousedown", e => this.MouseDown(e))
         this.svg.addEventListener("mousemove", e => this.MouseMove(e))
-        this.svg.addEventListener("mouseup", e => this.MouseUp(e))
-        this.svg.addEventListener("mouseleave", e => this.MouseUp(e))
+        this.svg.addEventListener("mouseup", e => this.MouseUp())
+        this.svg.addEventListener("mouseleave", e => this.MouseUp())
+
+        this.svg.addEventListener("touchstart", e => this.TouchStart(e))
+        this.svg.addEventListener("touchmove", e => this.TouchMove(e))
+        this.svg.addEventListener("touchup", e => this.MouseUp())
+        this.svg.addEventListener("touchleave", e => this.MouseUp())
+
         this.svg.addEventListener("wheel", e => this.Wheel(e))
         new ResizeObserver(() => this.Resize()).observe(this.svg)
 
@@ -111,7 +117,15 @@ class ViewBox extends EventEmitter {
     }
 
     GetPoint(e) {
+        if (e.touches)
+            return this.GetTouchPoint(e.touches[0])
+
         return {x: e.offsetX, y: e.offsetY}
+    }
+
+    GetTouchPoint(touch) {
+        let bbox = this.svg.getBoundingClientRect()
+        return {x: touch.clientX - bbox.left, y: touch.clientY - bbox.top}
     }
 
     Wheel(e) {
@@ -160,7 +174,62 @@ class ViewBox extends EventEmitter {
         this.point = point
     }
 
-    MouseUp(e) {
+    MouseUp() {
         this.point = null
+    }
+
+    TouchStart(e) {
+        if (e.touches.length == 1) {
+            e.preventDefault()
+            this.MouseDown(e)
+            return
+        }
+
+        if (e.touches.length == 2) {
+            e.preventDefault()
+            this.point1 = this.GetTouchPoint(e.touches[0])
+            this.point2 = this.GetTouchPoint(e.touches[1])
+        }
+    }
+
+    TouchMove(e) {
+        if (e.touches.length == 1) {
+            e.preventDefault()
+            this.MouseMove(e)
+            return
+        }
+
+        if (e.touches.length == 2) {
+            e.preventDefault()
+            let point1 = this.GetTouchPoint(e.touches[0])
+            let point2 = this.GetTouchPoint(e.touches[1])
+
+            let c1 = this.GetCenter(this.point1, this.point2)
+            let c2 = this.GetCenter(point1, point2)
+            let dx = c1.x - c2.x
+            let dy = c1.y - c2.y
+
+            let dst1 = this.GetDistance(this.point1, this.point2)
+            let dst2 = this.GetDistance(point1, point2)
+            let scale = dst1 / dst2
+
+            this.x += dx * this.scale
+            this.y +=  dy * this.scale
+            this.ScaleAt(this.x + c2.x * this.scale, this.y + c2.y * this.scale, scale)
+
+            this.point1 = point1
+            this.point2 = point2
+            this.point = null
+        }
+    }
+
+    GetDistance(p1, p2) {
+        let dx = p1.x - p2.x
+        let dy = p1.y - p2.y
+        return Math.sqrt(dx*dx + dy*dy)
+    }
+
+    GetCenter(p1, p2) {
+        return {x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2}
     }
 }
