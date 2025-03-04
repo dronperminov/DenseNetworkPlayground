@@ -15,7 +15,7 @@ class MetricsPlot {
         svg.addEventListener("wheel", e => this.MetricWheel(metric, e))
 
         let axes = MakeElement(svg, {class: "metric-axes"}, "path")
-        let title = MakeElement(svg, {class: "metric-title", x: 0, y: 2, textContent: config.title}, "text")
+        let title = MakeElement(svg, {class: "metric-title", x: 0, y: 0, textContent: config.title}, "text")
         let g = MakeElement(svg, null, "g")
         let paths = {}
 

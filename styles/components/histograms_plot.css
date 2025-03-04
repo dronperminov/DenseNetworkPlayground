@@ -1,10 +1,8 @@
 .histograms-plot {
-    height: 700px;
-    width: 800px;
-    min-height: 250px;
+    height: 100%;
+    width: 100%;
     user-select: none;
     overflow: hidden;
-    resize: both;
 }
 
 .histograms-plot svg {
@@ -42,4 +40,18 @@
 
 .histogram-threshold-hover {
     stroke: #222222;
+}
+
+@media (max-width: 767px) {
+    .histogram-label {
+        font-size: 9px;
+    }
+
+    .histogram-bin {
+        font-size: 9px;
+    }
+
+    .histogram-threshold-label {
+        font-size: 10px;
+    }
 }

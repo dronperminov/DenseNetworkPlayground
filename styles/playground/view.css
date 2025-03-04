@@ -3,9 +3,78 @@
     height: 100dvh;
 }
 
+#tab-train {
+    display: grid;
+    grid-template-columns: 300px 1fr 1fr 200px;
+    grid-template-rows: 300px 1fr;
+    grid-gap: 5px;
+    grid-template-areas:
+        "data model model model"
+        "histograms histograms metrics metrics";
+}
+
+.data-plot {
+    grid-area: data;
+}
+
+.histograms-plot {
+    grid-area: histograms;
+}
+
+.model-plot {
+    grid-area: model;
+}
+
+.metrics-plot {
+    grid-area: metrics;
+}
+
+@media (min-width: 1500px) {
+    #tab-train .metrics-plot {
+        grid-auto-flow: column;
+    }
+
+    #tab-train {
+        padding: 5px;
+        grid-template-columns: 320px 1fr 1fr 650px;
+        grid-template-rows: 320px 1fr;
+        grid-gap: 5px;
+        grid-template-areas:
+            "data metrics metrics metrics"
+            "model model histograms histograms";
+    }
+}
+
 @media (max-width: 767px) {
     .view {
         display: block;
         margin-left: 50px;
+    }
+
+    #tab-train .metrics-plot {
+        grid-auto-flow: column;
+    }
+
+    #tab-train {
+        padding: 5px;
+        grid-template-columns: 250px 1fr;
+        grid-template-rows: 250px 1fr 200px;
+        grid-gap: 5px;
+        grid-template-areas:
+            "data model"
+            "histograms histograms"
+            "metrics metrics";
+    }
+}
+
+@media (max-width: 579px) {
+    #tab-train .metrics-plot {
+        grid-auto-flow: row;
+    }
+
+    #tab-train {
+        grid-template-columns: 1fr;
+        grid-template-rows: 250px 600px 500px 400px;
+        grid-template-areas: "data" "histograms" "metrics" "model";
     }
 }

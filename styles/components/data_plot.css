@@ -1,12 +1,9 @@
 .data-plot {
-    width: 350px;
-    height: 350px;
-    min-width: 150px;
-    min-height: 150px;
+    width: 100%;
+    height: 100%;
     border: 1px solid #000;
     position: relative;
     user-select: none;
-    resize: both;
     overflow: hidden;
 }
 
