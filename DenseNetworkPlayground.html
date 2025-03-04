@@ -198,6 +198,13 @@
                                 </select>
                             </label>
                         </div>
+
+                        <div class="menu-block">
+                            <label class="switch-checkbox">
+                                <input type="checkbox" id="plot-model-surface" autocomplete="off">
+                                <span class="switch-checkbox-text">Выход сети в 3D</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="menu-block">
@@ -315,6 +322,8 @@
                             <svg id="data-view"></svg>
                         </div>
 
+                        <div class="surface-plot hidden" id="model-surface"></div>
+
                         <div class="histograms-plot">
                             <svg id="histograms-plot"></svg>
                         </div>
@@ -342,6 +351,8 @@
 
     <script src="js/constants.js"></script>
 
+    <script src="js/libs/plotly-3.0.0.min.js"></script>
+
     <!-- UTILS -->
     <script src="js/utils/random.js"></script>
     <script src="js/utils/utils.js"></script>
@@ -358,7 +369,6 @@
     <!-- DATA -->
     <script src="js/data/data_generator.js"></script>
     <script src="js/data/dataset.js"></script>
-
 
     <!-- MODEL -->
     <script src="js/model/fully_connected_layer.js"></script>

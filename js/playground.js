@@ -90,6 +90,9 @@ class Playground {
         let modelOutputSize = document.getElementById("model-output-size")
         modelOutputSize.addEventListener("change", () => this.SetModelOutputSize(modelOutputSize.value))
 
+        let plotSurface = document.getElementById("plot-model-surface")
+        plotSurface.addEventListener("change", () => this.visualizer.SetModelOutputSurfaceVisibility(plotSurface.checked))
+
         let modelWeightsMode = document.getElementById("model-weights-mode")
         modelWeightsMode.addEventListener("change", () => this.SetModelWeightsMode(modelWeightsMode.value))
 

@@ -13,8 +13,21 @@
         "histograms histograms metrics metrics";
 }
 
+#tab-train:has(.surface-plot:not(.hidden)) {
+    grid-template-columns: 300px 1.4fr 1fr;
+    grid-template-rows: 300px 300px 1fr;
+    grid-template-areas:
+        "data histograms metrics"
+        "surface histograms metrics"
+        "model model metrics";
+}
+
 .data-plot {
     grid-area: data;
+}
+
+.surface-plot {
+    grid-area: surface;
 }
 
 .histograms-plot {
@@ -35,12 +48,18 @@
     }
 
     #tab-train {
-        padding: 5px;
-        grid-template-columns: 320px 1fr 1fr 650px;
+        grid-template-columns: 320px 1fr 2fr 320px;
         grid-template-rows: 320px 1fr;
-        grid-gap: 5px;
         grid-template-areas:
             "data metrics metrics metrics"
+            "model model histograms histograms";
+    }
+
+    #tab-train:has(.surface-plot:not(.hidden)) {
+        grid-template-columns: 320px 315px 1fr 2fr;
+        grid-template-rows: 320px 1fr;
+        grid-template-areas:
+            "data surface metrics metrics"
             "model model histograms histograms";
     }
 }
@@ -59,11 +78,23 @@
         padding: 5px;
         grid-template-columns: 250px 1fr;
         grid-template-rows: 250px 1fr 200px;
-        grid-gap: 5px;
         grid-template-areas:
             "data model"
             "histograms histograms"
             "metrics metrics";
+    }
+
+    #tab-train:has(.surface-plot:not(.hidden)) .metrics-plot {
+        grid-auto-flow: row;
+    }
+
+    #tab-train:has(.surface-plot:not(.hidden)) {
+        grid-template-columns: 250px 1fr;
+        grid-template-rows: 250px 1fr 1.5fr;
+        grid-template-areas:
+            "data surface"
+            "model metrics"
+            "histograms metrics";
     }
 }
 
@@ -76,5 +107,11 @@
         grid-template-columns: 1fr;
         grid-template-rows: 250px 600px 500px 400px;
         grid-template-areas: "data" "histograms" "metrics" "model";
+    }
+
+    #tab-train:has(.surface-plot:not(.hidden)) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 250px 250px 600px 500px 400px;
+        grid-template-areas: "data" "surface" "histograms" "metrics" "model";
     }
 }

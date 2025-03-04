@@ -44,7 +44,10 @@ class Visualizer {
         this.dataTable.Add("train", {title: "Обучающие данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
         this.dataTable.Add("test", {title: "Тестовые данные", colors: {"-1": "#2191fb", "1": "#ba274a"}})
 
-        this.modelPlot = new ModelPlot(viewBox, document.getElementById("model-view"), document.getElementById("model-plot"), this.model, this.thresholds)
+        let modelView = document.getElementById("model-view")
+        let modelPlot = document.getElementById("model-plot")
+        let modelSurface = document.getElementById("model-surface")
+        this.modelPlot = new ModelPlot(viewBox, modelView, modelPlot, modelSurface, this.model, this.thresholds)
 
         this.metricsPlot = new MetricsPlot(document.getElementById("metrics-plot"), this.metrics)
         this.metricsPlot.Add("loss", [

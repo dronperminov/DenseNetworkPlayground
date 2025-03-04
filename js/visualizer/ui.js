@@ -50,6 +50,10 @@ Visualizer.prototype.SetModelShowNeuron = function(layer, neuron) {
     this.modelPlot.SetShow(layer, neuron)
 }
 
+Visualizer.prototype.SetModelOutputSurfaceVisibility = function(visible) {
+    this.modelPlot.SetSurfaceVisibility(visible)
+}
+
 Visualizer.prototype.SetModelOutputPoint = function(point) {
     this.modelPlot.SetPoint(point)
 }
