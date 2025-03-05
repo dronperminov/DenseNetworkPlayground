@@ -125,6 +125,28 @@ class Playground {
     InitDataMenu() {
         this.trainDatasetValue = document.getElementById("train-dataset-value")
         this.testDatasetValue = document.getElementById("test-dataset-value")
+
+        this.trainFileInput = new FileInput("train-file-input")
+        this.trainFileInput.on("change", () => this.ChangeUploadDataFile())
+
+        this.testFileInput = new FileInput("test-file-input")
+        this.testFileInput.on("change", () => this.ChangeUploadDataFile())
+
+        this.uploadDataBlock = document.getElementById("upload-data-block")
+
+        let resetUploadDataBtn = document.getElementById("reset-upload-data-btn")
+        resetUploadDataBtn.addEventListener("click", () => this.ResetUploadData())
+
+        let uploadDataBtn = document.getElementById("upload-data-btn")
+        uploadDataBtn.addEventListener("click", () => this.UploadData())
+
+        this.dataControlBlock = document.getElementById("data-control-block")
+
+        let downloadDataBtn = document.getElementById("download-data-btn")
+        downloadDataBtn.addEventListener("click", () => this.visualizer.DownloadDataset())
+
+        let clearDataBtn = document.getElementById("clear-data-btn")
+        clearDataBtn.addEventListener("click", () => this.visualizer.ClearData())
     }
 
     Start() {

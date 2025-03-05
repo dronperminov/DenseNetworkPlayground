@@ -11,8 +11,22 @@ Visualizer.prototype.SetThresholds = function(low, high) {
     this.thresholds.Set(low, high)
 }
 
+Visualizer.prototype.SetData = function(name, data) {
+    this.dataset.SetData(name, data)
+    this.dataPlot.ResetLimits()
+}
+
+Visualizer.prototype.AddData = function(name, data) {
+    this.dataset.AddData(name, data)
+    this.dataPlot.ResetLimits()
+}
+
 Visualizer.prototype.ClearData = function() {
     this.dataset.Clear()
+}
+
+Visualizer.prototype.DownloadDataset = function() {
+    this.dataset.Download()
 }
 
 Visualizer.prototype.SetCompactOffset = function(offset) {

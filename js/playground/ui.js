@@ -77,6 +77,64 @@ Playground.prototype.SetAxes = function() {
     this.visualizer.SetAxes(xAxis, yAxis)
 }
 
+Playground.prototype.ChangeUploadDataFile = function() {
+    this.uploadDataBlock.classList.remove("hidden")
+}
+
+Playground.prototype.ResetUploadData = function() {
+    this.trainFileInput.Reset()
+    this.testFileInput.Reset()
+    this.uploadDataBlock.classList.add("hidden")
+}
+
+Playground.prototype.UploadData = function() {
+    let files = {
+        train: this.trainFileInput.GetFile(),
+        test: this.testFileInput.GetFile()
+    }
+
+    let promises = []
+
+    for (let [name, file] of Object.entries(files)) {
+        if (file === null)
+            continue
+
+        promises.push(new Promise(resolve => {
+            let reader = new FileReader()
+            reader.readAsText(file)
+            reader.onload = () => resolve({name: name, text: reader.result})
+        }))
+    }
+
+    Promise.all(promises).then(results => this.ParseUploadData(results))
+}
+
+Playground.prototype.ParseUploadData = function(results) {
+    let reader = new CSVReader()
+    let splits = {}
+    let name2text = {train: "обучающих", test: "тестовых"}
+
+    try {
+        for (let result of results) {
+            let {header, rows} = reader.Read(result.text)
+            let dimension = header.length - 1
+
+            if (dimension != this.visualizer.model.inputs)
+                throw new Error(`некорректная размерность ${name2text[result.name]} данных: ${dimension} (ожидалось ${this.visualizer.model.inputs})`)
+
+            splits[result.name] = Data.FromCSV(header, rows)
+        }
+
+        for (let [name, data] of Object.entries(splits))
+            this.visualizer.SetData(name, data)
+    }
+    catch (error) {
+        alert(`Ошибка: ${error.message}`)
+    }
+
+    this.ResetUploadData()
+}
+
 Playground.prototype.SetCompactOffset = function(offset) {
     this.visualizer.SetCompactOffset(offset / 100)
 }

@@ -17,14 +17,17 @@ Playground.prototype.HandleChangeData = function(name, split) {
     if (name == "test")
         this.testDatasetValue.innerText = split.data.length
 
-    if (split.data.length > 0)
+    if (split.data.length > 0) {
         this.dataBlock.classList.remove("hidden")
+        this.dataControlBlock.classList.remove("hidden")
+    }
 }
 
 Playground.prototype.HandleClearData = function() {
     this.dataBlock.classList.add("hidden")
     this.trainDatasetValue.innerText = "0"
     this.testDatasetValue.innerText = "0"
+    this.dataControlBlock.classList.add("hidden")
 
     this.UpdateTrainButtons(true)
 }

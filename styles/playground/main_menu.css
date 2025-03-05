@@ -15,11 +15,15 @@
 }
 
 .menu-block {
+    padding: 5px;
+    text-align: left;
+}
+
+.menu-section .menu-block {
+    background: var(--menu-section-background-color);
     margin-left: 10px;
     border-left: 2px solid var(--menu-section-border-color);
     padding: 5px 5px 10px 10px;
-    text-align: left;
-    background: var(--menu-section-background-color);
 }
 
 .menu-block label {
