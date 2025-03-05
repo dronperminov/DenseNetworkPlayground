@@ -77,6 +77,10 @@ Playground.prototype.SetAxes = function() {
     this.visualizer.SetAxes(xAxis, yAxis)
 }
 
+Playground.prototype.SetCompactOffset = function(offset) {
+    this.visualizer.SetCompactOffset(offset / 100)
+}
+
 Playground.prototype.UpdateLearningRateIcon = function() {
     this.learningRateValue.innerText = this.visualizer.optimizer.learningRate
 }

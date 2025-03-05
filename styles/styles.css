@@ -26,6 +26,8 @@
     --input-hover-color: var(--text-color);
     --input-hover-border-color: var(--main-color);
 
+    --input-disabled-color: #aaaaaa;
+
     /* BUTTON */
     --button-color: #222222;
     --button-border-color: #222222;

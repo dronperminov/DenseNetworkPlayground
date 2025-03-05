@@ -18,6 +18,11 @@
     border-color: var(--input-hover-border-color);
 }
 
+.basic-input:disabled {
+    color: var(--input-disabled-color);
+    border-color: var(--input-disabled-color);
+}
+
 .range-label {
     display: block;
     text-align: center;

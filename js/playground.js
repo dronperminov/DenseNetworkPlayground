@@ -82,6 +82,10 @@ class Playground {
         regularization.on("input", value => this.SetRegularization(value))
         regularization.on("change", value => this.SetRegularization(value))
 
+        this.compactOffset = document.getElementById("compact-offset")
+        let compactOffset = new NumberInput(this.compactOffset)
+        compactOffset.on("change", value => this.SetCompactOffset(value))
+
         this.UpdateTrainIcons()
     }
 

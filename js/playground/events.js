@@ -41,6 +41,11 @@ Playground.prototype.UpdateTrainButtons = function(disabled) {
     if (disabled)
         this.Stop()
 
+    if (disabled)
+        this.compactOffset.setAttribute("disabled", "")
+    else
+        this.compactOffset.removeAttribute("disabled")
+
     for (let button of [this.startBtn, this.stopBtn, this.stepBtn])
         if (disabled)
             button.setAttribute("disabled", "")
