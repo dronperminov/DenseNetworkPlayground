@@ -270,7 +270,7 @@
 
                 <div id="data-menu">
                     <details class="menu-section" open>
-                        <summary>Загрузить из файла</summary>
+                        <summary>Загрузка из файла</summary>
 
                         <div class="menu-block menu-multiple-block">
                             <label>Обучающие данные</label>
@@ -292,9 +292,26 @@
                         </div>
                     </details>
 
-                    <div class="menu-block menu-block-grid" id="data-control-block">
-                        <button class="basic-button" id="download-data-btn">Скачать</button>
-                        <button class="basic-button" id="clear-data-btn">Очистить</button>
+                    <div id="data-control-block">
+                        <details class="menu-section" open>
+                            <summary>Модификации</summary>
+
+                            <div class="menu-block menu-multiple-block">
+                                <label>Режим нормализации
+                                    <select class="basic-input" id="data-normalization-mode" autocomplete="off">
+                                        <option value="min-max">min &rarr; 0, max &rarr; 1</option>
+                                        <option value="mean-std" selected>&mu; &rarr; 0, &sigma; &rarr; 1</option>
+                                    </select>
+                                </label>
+
+                                <button class="basic-button" id="normalize-data-btn">Нормализовать</button>
+                            </div>
+                        </details>
+
+                        <div class="menu-block menu-block-grid">
+                            <button class="basic-button" id="download-data-btn">Скачать</button>
+                            <button class="basic-button" id="clear-data-btn">Очистить</button>
+                        </div>
                     </div>
                 </div>
             </div>

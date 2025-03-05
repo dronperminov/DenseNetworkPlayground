@@ -16,6 +16,12 @@ class Data {
         return this
     }
 
+    Normalize(sub, mul) {
+        for (let i = 0; i < this.length; i++)
+            for (let j = 0; j < this.dimension; j++)
+                this.inputs[i * this.dimension + j] = (this.inputs[i * this.dimension + j] - sub[j]) * mul[j]
+    }
+
     GetMinMaxStatistic() {
         let min = new Float64Array(this.dimension).fill(Infinity)
         let max = new Float64Array(this.dimension).fill(-Infinity)

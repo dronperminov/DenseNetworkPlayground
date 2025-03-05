@@ -21,6 +21,11 @@ Visualizer.prototype.AddData = function(name, data) {
     this.dataPlot.ResetLimits()
 }
 
+Visualizer.prototype.NormalizeData = function(mode) {
+    this.dataset.NormalizeData("train", mode)
+    this.dataPlot.ResetLimits()
+}
+
 Visualizer.prototype.ClearData = function() {
     this.dataset.Clear()
 }

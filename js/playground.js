@@ -142,6 +142,10 @@ class Playground {
 
         this.dataControlBlock = document.getElementById("data-control-block")
 
+        this.dataNormalizationMode = document.getElementById("data-normalization-mode")
+        this.normalizeDataBtn = document.getElementById("normalize-data-btn")
+        this.normalizeDataBtn.addEventListener("click", () => this.NormalizeData())
+
         let downloadDataBtn = document.getElementById("download-data-btn")
         downloadDataBtn.addEventListener("click", () => this.visualizer.DownloadDataset())
 

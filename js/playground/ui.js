@@ -135,6 +135,11 @@ Playground.prototype.ParseUploadData = function(results) {
     this.ResetUploadData()
 }
 
+Playground.prototype.NormalizeData = function() {
+    let mode = this.dataNormalizationMode.value
+    this.visualizer.NormalizeData(mode)
+}
+
 Playground.prototype.SetCompactOffset = function(offset) {
     this.visualizer.SetCompactOffset(offset / 100)
 }

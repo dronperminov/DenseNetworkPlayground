@@ -40,6 +40,46 @@ class Dataset extends EventEmitter {
         this.SetData(name, data, config)
     }
 
+    NormalizeData(target, mode, eps = 1e-8) {
+        if (!this.splits[target] || this.splits[target].data.length == 0)
+            throw new Error(`There are no data in the ${target} split`)
+
+        let stats = this.splits[target].stats
+
+        if (stats === null)
+            stats = this.splits[target].data.GetStatistic()
+
+        let sub = new Float64Array(this.dimension).fill(0)
+        let mul = new Float64Array(this.dimension).fill(1)
+
+        for (let i = 0; i < this.dimension; i++) {
+            let div = 1
+
+            if (mode == "min-max") {
+                sub[i] = stats.min[i]
+                div = stats.max[i] - stats.min[i]
+            }
+            else if (mode == "mean-std") {
+                sub[i] = stats.mean[i]
+                div = stats.std[i]
+            }
+
+            if (Math.abs(div) < eps)
+                div = 1
+
+            mul[i] = 1 / div
+        }
+
+        for (let [name, split] of Object.entries(this.splits)) {
+            if (!split)
+                continue
+
+            split.data.Normalize(sub, mul)
+            split.stats = split.data.GetStatistic()
+            this.emit("change", name, split)
+        }
+    }
+
     Clear() {
         if (Object.keys(this.splits).length === 0)
             return

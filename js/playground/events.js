@@ -44,16 +44,11 @@ Playground.prototype.UpdateTrainButtons = function(disabled) {
     if (disabled)
         this.Stop()
 
-    if (disabled)
-        this.compactOffset.setAttribute("disabled", "")
-    else
-        this.compactOffset.removeAttribute("disabled")
-
-    for (let button of [this.startBtn, this.stopBtn, this.stepBtn])
+    for (let element of [this.startBtn, this.stopBtn, this.stepBtn, this.compactOffset, this.normalizeDataBtn])
         if (disabled)
-            button.setAttribute("disabled", "")
+            element.setAttribute("disabled", "")
         else
-            button.removeAttribute("disabled")
+            element.removeAttribute("disabled")
 }
 
 Playground.prototype.HandleChangeThresholds = function(low, high) {
