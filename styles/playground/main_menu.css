@@ -43,3 +43,19 @@
     margin-top: 5px;
     font-size: 0.85em;
 }
+
+#model-menu, #train-menu, #view-menu, #data-menu {
+    display: none;
+}
+
+.playground:has(#tab-train-input:checked) {
+    #model-menu, #train-menu, #view-menu {
+        display: block;
+    }
+}
+
+.playground:has(#tab-data-input:checked) {
+    #data-menu {
+        display: block;
+    }
+}

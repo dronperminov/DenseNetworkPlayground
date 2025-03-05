@@ -12,6 +12,8 @@
     <link rel="stylesheet" type="text/css" href="styles/playground/main_menu.css">
     <link rel="stylesheet" type="text/css" href="styles/playground/icons_menu.css">
     <link rel="stylesheet" type="text/css" href="styles/playground/view.css">
+    <link rel="stylesheet" type="text/css" href="styles/playground/train_view.css">
+    <link rel="stylesheet" type="text/css" href="styles/playground/data_view.css">
     <link rel="stylesheet" type="text/css" href="styles/playground/tabs.css">
 
     <link rel="stylesheet" type="text/css" href="styles/components/data_plot.css">
@@ -55,7 +57,7 @@
             </div>
 
             <div class="main-menu">
-                <details class="menu-section" open>
+                <details id="model-menu" class="menu-section" open>
                     <summary>Параметры модели</summary>
 
                     <div class="menu-block" title="Размерность входного пространства, с которой работает нейронная сеть">
@@ -108,7 +110,7 @@
                     </div>
                 </details>
 
-                <details class="menu-section" open>
+                <details id="train-menu" class="menu-section" open>
                     <summary>Параметры обучения</summary>
 
                     <div class="menu-block">
@@ -177,7 +179,7 @@
                     </div>
                 </details>
 
-                <details class="menu-section" open>
+                <details id="view-menu" class="menu-section" open>
                     <summary>Параметры отображения</summary>
 
                     <div class="menu-block">
@@ -265,6 +267,10 @@
                         </div>
                     </div>
                 </details>
+
+                <details id="data-menu" class="menu-section" open>
+                    <summary>Данные</summary>
+                </details>
             </div>
 
             <div class="icons-menu">
@@ -326,7 +332,7 @@
             <div class="tab">
                 <div class="tab-nav">
                     <label id="tab-train-label" for="tab-train-input">Обучение</label>
-                    <label id="tab-data-label" for="tab-data-input">Набор данных</label>
+                    <label id="tab-data-label" for="tab-data-input">Данные</label>
                     <label id="tab-experiments-label" for="tab-experiments-input">Эксперименты</label>
                 </div>
 

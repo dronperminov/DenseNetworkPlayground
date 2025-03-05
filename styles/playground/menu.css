@@ -2,7 +2,7 @@
     width: 300px;
     max-width: 300px;
     height: 100dvh;
-    border-right: 1px solid #000;
+    border-right: 1px solid var(--menu-border-color);
     transition: width 0.2s;
     display: table-cell;
     vertical-align: top;

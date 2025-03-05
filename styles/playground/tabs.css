@@ -55,6 +55,12 @@
     cursor: default;
 }
 
+@media (max-width: 767px) {
+    .tab-content {
+        padding: 5px;
+    }
+}
+
 @media (max-width: 579px) {
     .tab-nav {
         overflow-y: hidden;

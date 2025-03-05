@@ -6,10 +6,10 @@ class DataTable {
 
     constructor(div, initialRows = 25) {
         this.div = div
-        this.div.addEventListener("scroll", () => this.Scroll())
 
         this.labels = MakeElement(div, {class: "data-table-labels"})
         this.tabs = MakeElement(div, {class: "data-table-tabs"})
+        this.tabs.addEventListener("scroll", () => this.Scroll())
 
         this.tables = {}
         this.stats2title = {"min": "min", "max": "max", "mean": "μ", "std": "σ", "variance": "σ²"}
@@ -47,8 +47,7 @@ class DataTable {
 
         this.tables[name].tab.classList.remove("data-table-tab-hidden")
         this.tables[name].label.classList.add("data-table-label-selected")
-
-        this.div.scroll({top: 0})
+        this.tabs.scroll({top: 0})
     }
 
     ChangeData(name, split) {
@@ -82,12 +81,12 @@ class DataTable {
     }
 
     Scroll() {
-        if (this.div.clientHeight == 0 || this.div.scrollTop < this.tabs.clientHeight - this.div.clientHeight - 5)
-            return
-
         for (let table of Object.values(this.tables)) {
             if (!table.label.classList.contains("data-table-label-selected"))
                 continue
+
+            if (this.tabs.clientHeight + this.tabs.scrollTop < table.tab.clientHeight - 5)
+                return
 
             for (let count = 0; count < this.initialRows && table.lastRenderedIndex < table.data.length - 1; count++)
                 this.RenderTableRow(table, table.lastRenderedIndex + 1)

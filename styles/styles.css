@@ -2,54 +2,56 @@
     --background-color: #ffffff;
     --text-color: #222222;
     --main-color: #2191fb;
+    --disabled-color: #aaaaaa;
 
     /* MENU */
-    --menu-border-color: #222222;
-    --menu-background-color: #ffffff;
+    --menu-border-color: var(--text-color);
+    --menu-background-color: var(--background-color);
 
     --menu-section-border-color: var(--menu-border-color);
     --menu-section-background-color: #f0f0f0;
 
-    --menu-toggle-border-color: #222222;
+    --menu-toggle-border-color: var(--menu-border-color);
     --menu-toggle-background-color: #f6f6f6;
 
     /* TAB */
     --tab-background-color: var(--background-color);
-    --tab-border-color: #aaaaaa;
+    --tab-border-color: var(--disabled-color);
     --tab-text-color: var(--text-color);
     --tab-active-color: var(--main-color);
 
     /* INPUT */
     --input-color: var(--text-color);
-    --input-border-color: #aaaaaa;
+    --input-border-color: var(--disabled-color);
 
     --input-hover-color: var(--text-color);
     --input-hover-border-color: var(--main-color);
 
-    --input-disabled-color: #aaaaaa;
+    --input-disabled-color: var(--disabled-color);
 
     /* BUTTON */
-    --button-color: #222222;
-    --button-border-color: #222222;
-    --button-background-color: #ffffff;
+    --button-color: var(--text-color);
+    --button-border-color: var(--text-color);
+    --button-background-color: var(--background-color);
 
-    --button-hover-color: #ffffff;
-    --button-hover-border-color: #2191fb;
-    --button-hover-background-color: #2191fb;
+    --button-hover-color: var(--background-color);
+    --button-hover-border-color: var(--main-color);
+    --button-hover-background-color: var(--main-color);
 
-    --button-disabled-color: #aaaaaa;
-    --button-disabled-border-color: #aaaaaa;
-    --button-disabled-background-color: #ffffff;
+    --button-disabled-color: var(--disabled-color);
+    --button-disabled-border-color: var(--disabled-color);
+    --button-disabled-background-color: #f0f0f0;
 
     /* DATA-TABLE */
-    --data-table-label-color: #222222;
-    --data-table-selected-label-color: #2191fb;
-    --data-table-selected-label-border-color: #2191fb;
+    --data-table-background-color: var(--tab-background-color);
+    --data-table-border-color: var(--tab-border-color);
+    --data-table-label-color: var(--tab-text-color);
+    --data-table-selected-label-color: var(--tab-active-color);
+    --data-table-selected-label-border-color: var(--tab-active-color);
 
     --data-table-header-background-color: #eeeeee;
 
-    --data-table-cell-color: #222222;
-    --data-table-border-color: #222222;
+    --data-table-cell-color: var(--text-color);
     --data-table-cell-border-color: #dddddd;
 }
 
