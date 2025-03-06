@@ -129,3 +129,27 @@ Visualizer.prototype.ToggleNeuron = function(layer, neuron) {
 Visualizer.prototype.SetActivation = function(activation) {
     this.modelManager.SetActivation(activation)
 }
+
+Visualizer.prototype.FindUnusedNeurons = function(eps = 0.001) {
+    let model = this.modelManager.model
+    let metric = this.metrics.metrics.loss.train
+
+    let loss = metric[metric.length - 1]
+    let unused = 0
+
+    for (let layer = 0; layer < model.layers.length - 1; layer++) {
+        for (let neuron = 0; neuron < model.layers[layer].outputs; neuron++) {
+            if (model.layers[layer].disabled[neuron])
+                continue
+
+            this.ToggleNeuron(layer, neuron)
+
+            if (metric[metric.length - 1] < loss + eps)
+                unused++
+            else
+                this.ToggleNeuron(layer, neuron)
+        }
+    }
+
+    return unused
+}
