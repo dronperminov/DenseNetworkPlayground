@@ -14,6 +14,7 @@ class Playground {
         this.stepBtn = document.getElementById("step-btn")
 
         this.tabTrainInput = document.getElementById("tab-train-input")
+        this.tabDataInput = document.getElementById("tab-data-input")
         this.tabExperimentsInput = document.getElementById("tab-experiments-input")
 
         this.tabExperiments = document.getElementById("tab-experiments")
@@ -174,9 +175,13 @@ class Playground {
 
     InitExperimentsMenu() {
         this.syntheticDataBackgroundCount = new NumberInput(document.getElementById("synthetic-data-background-count"))
+        this.treeBackgroundCount = new NumberInput(document.getElementById("tree-background-count"))
 
         let syntheticDataGenerateBtn = document.getElementById("synthetic-data-generate-btn")
         syntheticDataGenerateBtn.addEventListener("click", () => this.RunSyntheticDataExperiment())
+
+        let treeExperimentBtn = document.getElementById("tree-experiment-btn")
+        treeExperimentBtn.addEventListener("click", () => this.RunTreeExperiment())
     }
 
     Start() {

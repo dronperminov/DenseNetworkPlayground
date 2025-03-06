@@ -12,8 +12,7 @@ Playground.prototype.RunSyntheticDataExperiment = function() {
     let count = this.syntheticDataBackgroundCount.GetValue()
     let data = this.visualizer.GenerateSyntheticData(count)
     let split = {data: data, stats: data.GetStatistic()}
-    let low = this.visualizer.thresholds.low
-    let high = this.visualizer.thresholds.high
+    let thresholds = this.visualizer.thresholds
 
     this.tabExperiments.innerHTML = ""
     MakeElement(this.tabExperiments, {innerText: "Генерация синтетических данных"}, "h2")
@@ -21,8 +20,8 @@ Playground.prototype.RunSyntheticDataExperiment = function() {
     MakeElement(stepsList, {class: "text", innerText: `Сгенерированы ${count} случайных точек на компакте`}, "li")
     MakeElement(stepsList, {class: "text", innerHTML: "Для каждой сгенерированной точки x<sub>i</sub> была получено предсказание модели y<sub>i</sub>"}, "li")
 
-    if (low < high)
-        MakeElement(stepsList, {class: "text", innerHTML: `Точки с ${low} &le; y<sub>i</sub> &lt; ${high} были удалены (пороги доверия)`}, "li")
+    if (thresholds.low < thresholds.high)
+        MakeElement(stepsList, {class: "text", innerHTML: `Точки с ${thresholds.low} &le; y<sub>i</sub> &lt; ${thresholds.high} были удалены (пороги доверия)`}, "li")
 
     MakeElement(stepsList, {class: "text", innerHTML: "В качестве синтетической выборки были выбраны точки x<sub>i</sub> с вероятностью |y<sub>i</sub>|"}, "li")
 
@@ -60,4 +59,13 @@ Playground.prototype.RunSyntheticDataExperiment = function() {
     dataTable.ChangeData("synthetic", split)
     dataPlot.ChangeData("synthetic", split)
     dataPlot.ResetLimits()
+}
+
+Playground.prototype.RunTreeExperiment = function() {
+    let count = this.treeBackgroundCount.GetValue()
+    let background = this.visualizer.compact.GetData(count)
+
+    this.tabExperiments.innerHTML = ""
+    MakeElement(this.tabExperiments, {innerText: "Построение объясняющего дерева (eXTree)"}, "h2")
+    console.log(background)
 }

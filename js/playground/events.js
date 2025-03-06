@@ -49,10 +49,14 @@ Playground.prototype.UpdateAxisDimension = function(axis, dimension) {
 }
 
 Playground.prototype.UpdateTrainButtons = function(disabled) {
-    if (disabled)
+    if (disabled) {
         this.Stop()
 
-    for (let element of [this.startBtn, this.stopBtn, this.stepBtn, this.compactOffset, this.normalizeDataBtn])
+        if (this.tabExperimentsInput.checked)
+            this.tabDataInput.checked = true
+    }
+
+    for (let element of [this.startBtn, this.stopBtn, this.stepBtn, this.compactOffset, this.normalizeDataBtn, this.tabExperimentsInput])
         if (disabled)
             element.setAttribute("disabled", "")
         else
