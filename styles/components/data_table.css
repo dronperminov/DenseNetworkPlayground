@@ -1,5 +1,6 @@
 .data-table {
     width: 100%;
+    border-bottom: 1px solid var(--data-table-border-color);
 }
 
 .data-table-labels {
@@ -15,7 +16,7 @@
     border: 1px solid transparent;
     margin-bottom: -1px;
     color: var(--data-table-label-color);
-    transition: color .15s ease-in-out, border-color .15s ease-in-out;
+    transition: color .15s, border-color .15s;
     cursor: pointer;
     border-radius: 5px 5px 0 0;
 }
@@ -37,6 +38,7 @@
     max-height: 550px;
     resize: vertical;
     overflow: auto;
+    border-right: 1px solid var(--data-table-border-color);
 }
 
 .data-table-tab {
@@ -76,6 +78,13 @@
     color: var(--data-table-cell-color);
     border: 1px solid var(--data-table-cell-border-color);
     position: relative;
+}
+
+.data-table-tab-cell:first-child {
+    border-left: 1px solid var(--data-table-border-color);
+}
+
+.data-table-tab-cell:last-child {
 }
 
 .data-table-tab-sort-icon {
