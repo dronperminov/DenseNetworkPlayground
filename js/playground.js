@@ -54,6 +54,9 @@ class Playground {
         let uploadModelBtn = document.getElementById("upload-model-btn")
         uploadModelBtn.addEventListener("click", () => this.modelFileInput.click())
 
+        let removeDisabledNeuronsBtn = document.getElementById("remove-disabled-neurons-btn")
+        removeDisabledNeuronsBtn.addEventListener("click", () => this.RemoveDisabledNeurons())
+
         this.visualizer.modelManager.on("change-architecture", () => this.HandleChangeModelArchitecture())
         this.visualizer.thresholds.on("change", (low, high) => this.HandleChangeThresholds(low, high))
     }

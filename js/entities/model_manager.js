@@ -37,6 +37,14 @@ class ModelManager extends EventEmitter {
         this.emit("change")
     }
 
+    RemoveDisabledNeurons() {
+        this.model.RemoveDisabledNeurons()
+        this.model.ZeroGradientParams()
+
+        this.emit("change-architecture")
+        this.emit("change")
+    }
+
     ZeroGradientParams() {
         this.model.ZeroGradientParams()
     }

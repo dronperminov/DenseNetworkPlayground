@@ -51,6 +51,10 @@ Playground.prototype.LoadModel = function(data) {
     }
 }
 
+Playground.prototype.RemoveDisabledNeurons = function() {
+    this.visualizer.RemoveDisabledNeurons()
+}
+
 Playground.prototype.SetLearningRate = function(learningRate) {
     this.visualizer.SetLearningRate(learningRate)
     this.UpdateLearningRateIcon()

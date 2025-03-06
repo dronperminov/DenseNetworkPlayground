@@ -178,6 +178,16 @@ class NeuralNetwork {
         this.layers.splice(layer, 1)
     }
 
+    RemoveDisabledNeurons() {
+        let inputMask = new Array(this.inputs).fill(false)
+
+        for (let layer of this.layers) {
+            let outputMask = layer.disabled.slice()
+            layer.ShiftNeurons(inputMask, outputMask)
+            inputMask = outputMask
+        }
+    }
+
     ToggleNeuron(layer, neuron) {
         this.layers[layer].ToggleNeuron(neuron)
     }

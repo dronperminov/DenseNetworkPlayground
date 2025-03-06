@@ -153,6 +153,74 @@ class FullyConnectedLayer {
         }
     }
 
+    ShiftNeurons(inputMask, outputMask) {
+        let inputMap = []
+        let outputMap = []
+
+        for (let i = 0; i < inputMask.length; i++)
+            if (!inputMask[i])
+                inputMap.push(i)
+
+        for (let i = 0; i < outputMask.length; i++)
+            if (!outputMask[i])
+                outputMap.push(i)
+
+        let inputs = inputMap.length
+        let outputs = outputMap.length
+
+        if (inputs == this.inputs && outputs == this.outputs)
+            return
+
+        for (let i = 0; i < outputs; i++) {
+            let newI = outputMap[i]
+
+            for (let j = 0; j < inputs; j++) {
+                let newJ = inputMap[j]
+
+                this.w[i * inputs + j] = this.w[newI * this.inputs + newJ]
+                this.dw[i * inputs + j] = this.dw[newI * this.inputs + newJ]
+                this.dw1[i * inputs + j] = this.dw1[newI * this.inputs + newJ]
+                this.dw2[i * inputs + j] = this.dw2[newI * this.inputs + newJ]
+            }
+
+            this.b[i] = this.b[newI]
+            this.db[i] = this.db[newI]
+            this.db1[i] = this.db1[newI]
+            this.db2[i] = this.db2[newI]
+            this.disabled[i] = false
+        }
+
+        for (let batch = 0; batch < this.maxBatchSize; batch++) {
+            for (let i = 0; i < outputs; i++) {
+                this.value[batch * outputs + i] = this.value[batch * this.outputs + outputMap[i]]
+                this.output[batch * outputs + i] = this.output[batch * this.outputs + outputMap[i]]
+                this.df[batch * outputs + i] = this.df[batch * this.outputs + outputMap[i]]
+            }
+
+            for (let j = 0; j < inputs; j++)
+                this.dx[batch * inputs + j] = this.dx[batch * this.inputs + inputMap[j]]
+        }
+
+        this.w = new Float64Array(this.w.buffer, 0, inputs * outputs)
+        this.dw = new Float64Array(this.dw.buffer, 0, inputs * outputs)
+        this.dw1 = new Float64Array(this.dw1.buffer, 0, inputs * outputs)
+        this.dw2 = new Float64Array(this.dw2.buffer, 0, inputs * outputs)
+
+        this.b = new Float64Array(this.b.buffer, 0, outputs)
+        this.db = new Float64Array(this.db.buffer, 0, outputs)
+        this.db1 = new Float64Array(this.db1.buffer, 0, outputs)
+        this.db2 = new Float64Array(this.db2.buffer, 0, outputs)
+
+        this.value = new Float64Array(this.value.buffer, 0, outputs * this.maxBatchSize)
+        this.output = new Float64Array(this.output.buffer, 0, outputs * this.maxBatchSize)
+        this.df = new Float64Array(this.df.buffer, 0, outputs * this.maxBatchSize)
+        this.dx = new Float64Array(this.dx.buffer, 0, inputs * this.maxBatchSize)
+
+        this.disabled.length = outputs
+        this.inputs = inputs
+        this.outputs = outputs
+    }
+
     ToggleNeuron(neuron) {
         this.disabled[neuron] = !this.disabled[neuron]
     }

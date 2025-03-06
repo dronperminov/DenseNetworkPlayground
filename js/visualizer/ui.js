@@ -63,6 +63,10 @@ Visualizer.prototype.LoadModel = function(data) {
     this.modelManager.Load(data)
 }
 
+Visualizer.prototype.RemoveDisabledNeurons = function() {
+    this.modelManager.RemoveDisabledNeurons()
+}
+
 Visualizer.prototype.SetModelOutputSize = function(size) {
     this.modelPlot.SetSize(size)
 }
