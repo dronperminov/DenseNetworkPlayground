@@ -48,18 +48,24 @@
     font-size: 0.85em;
 }
 
-#model-menu, #train-menu, #view-menu, #data-menu {
+#train-menu, #data-menu, #experiments-menu {
     display: none;
 }
 
 .playground:has(#tab-train-input:checked) {
-    #model-menu, #train-menu, #view-menu {
+    #train-menu {
         display: block;
     }
 }
 
 .playground:has(#tab-data-input:checked) {
     #data-menu {
+        display: block;
+    }
+}
+
+.playground:has(#tab-experiments-input:checked) {
+    #experiments-menu {
         display: block;
     }
 }

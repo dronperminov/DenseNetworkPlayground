@@ -57,216 +57,218 @@
             </div>
 
             <div class="main-menu">
-                <details id="model-menu" class="menu-section" open>
-                    <summary>Параметры модели</summary>
+                <div id="train-menu">
+                    <details class="menu-section" open>
+                        <summary>Параметры модели</summary>
 
-                    <div class="menu-block" title="Размерность входного пространства, с которой работает нейронная сеть">
-                        <label>Количество входов
-                            <input class="basic-input" id="model-inputs-count" type="number" min="1" step="1" value="2" autocomplete="off">
-                        </label>
-                    </div>
-
-                    <div class="menu-block" title="Количество полносвязных слоёв, находящихся в нейронной сети">
-                        <label>Количество слоёв
-                            <input class="basic-input" id="model-layers-count" type="number" min="1" step="1" value="3" autocomplete="off">
-                        </label>
-                    </div>
-
-                    <div class="menu-block" title="Количество нейронов, находящихся в каждом слое">
-                        <label>Размер слоёв
-                            <input class="basic-input" id="model-layers-size" type="number" min="1" step="1" value="10" autocomplete="off">
-                        </label>
-                    </div>
-
-                    <div class="menu-block" title="Функция, используемая в качестве активационной в каждом слое кроме последнего">
-                        <label>Функция активации
-                            <select class="basic-input" id="activation" autocomplete="off">
-                                <option value="relu">ReLU</option>
-                                <option value="leaky-relu">Leaky ReLU</option>
-                                <option value="abs" selected>Abs</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="menu-block" title="Пороги для выбора классов (значения меньше первого порога считаются классом -1, а выше второго - классом 1)">
-                        <label>Пороги доверия</label>
-
-                        <div class="menu-block-grid">
-                            <label>
-                                <input class="basic-input" id="threshold-low" type="number" min="-1" max="0" step="0.05" value="-0.1" autocomplete="off">
-                            </label>
-
-                            <label>
-                                <input class="basic-input" id="threshold-high" type="number" min="0" max="1" step="0.05" value="0.1" autocomplete="off">
+                        <div class="menu-block" title="Размерность входного пространства, с которой работает нейронная сеть">
+                            <label>Количество входов
+                                <input class="basic-input" id="model-inputs-count" type="number" min="1" step="1" value="2" autocomplete="off">
                             </label>
                         </div>
-                    </div>
 
-                    <div class="menu-block" title="При использовании этого параметры во время сброса отключенные нейроны восстанавливаются">
-                        <label class="switch-checkbox">
-                            <input type="checkbox" id="reset-disabled-neurons" checked autocomplete="off">
-                            <span class="switch-checkbox-text">Сброс отключ. нейронов</span>
-                        </label>
-                    </div>
-                </details>
+                        <div class="menu-block" title="Количество полносвязных слоёв, находящихся в нейронной сети">
+                            <label>Количество слоёв
+                                <input class="basic-input" id="model-layers-count" type="number" min="1" step="1" value="3" autocomplete="off">
+                            </label>
+                        </div>
 
-                <details id="train-menu" class="menu-section" open>
-                    <summary>Параметры обучения</summary>
+                        <div class="menu-block" title="Количество нейронов, находящихся в каждом слое">
+                            <label>Размер слоёв
+                                <input class="basic-input" id="model-layers-size" type="number" min="1" step="1" value="10" autocomplete="off">
+                            </label>
+                        </div>
 
-                    <div class="menu-block">
-                        <label>Скорость обучения
-                            <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.004" autocomplete="off">
-                        </label>
-                    </div>
+                        <div class="menu-block" title="Функция, используемая в качестве активационной в каждом слое кроме последнего">
+                            <label>Функция активации
+                                <select class="basic-input" id="activation" autocomplete="off">
+                                    <option value="relu">ReLU</option>
+                                    <option value="leaky-relu">Leaky ReLU</option>
+                                    <option value="abs" selected>Abs</option>
+                                </select>
+                            </label>
+                        </div>
 
-                    <div class="menu-block">
-                        <label>Размер батча
-                            <input class="basic-input" type="range" id="batch-size" step="1" min="1" max="32" value="16" autocomplete="off">
-                        </label>
-                        <div id="batch-size-label" class="range-label">16</div>
-                    </div>
+                        <div class="menu-block" title="Пороги для выбора классов (значения меньше первого порога считаются классом -1, а выше второго - классом 1)">
+                            <label>Пороги доверия</label>
 
-                    <div class="menu-block">
-                        <label>Доля фоновых точек
-                            <input class="basic-input" type="range" id="background-part" step="5" min="0" max="500" value="100" autocomplete="off">
-                        </label>
-                        <div class="range-label"><span id="background-part-label">100</span>%</div>
-                    </div>
+                            <div class="menu-block-grid">
+                                <label>
+                                    <input class="basic-input" id="threshold-low" type="number" min="-1" max="0" step="0.05" value="-0.1" autocomplete="off">
+                                </label>
 
-                    <div class="menu-block">
-                        <label>Функция потерь
-                            <select class="basic-input" id="criterion" autocomplete="off">
-                                <option value="mse" selected>MSE</option>
-                                <option value="mae">MAE</option>
-                                <option value="logcosh">Logcosh</option>
-                                <option value="huber">Huber</option>
-                            </select>
-                        </label>
-                    </div>
+                                <label>
+                                    <input class="basic-input" id="threshold-high" type="number" min="0" max="1" step="0.05" value="0.1" autocomplete="off">
+                                </label>
+                            </div>
+                        </div>
 
-                    <div class="menu-block">
-                        <label>Оптимизатор
-                            <select class="basic-input" id="optimizer" autocomplete="off">
-                                <option value="sgd">SGD</option>
-                                <option value="momentum-sgd">SGDm</option>
-                                <option value="adam" selected>Adam</option>
-                                <option value="adamax">Adamax</option>
-                                <option value="adadelta">Adadelta</option>
-                                <option value="adagrad">Adagrad</option>
-                                <option value="rmsprop">RMSprop</option>
-                            </select>
-                        </label>
-                    </div>
+                        <div class="menu-block" title="При использовании этого параметры во время сброса отключенные нейроны восстанавливаются">
+                            <label class="switch-checkbox">
+                                <input type="checkbox" id="reset-disabled-neurons" checked autocomplete="off">
+                                <span class="switch-checkbox-text">Сброс отключ. нейронов</span>
+                            </label>
+                        </div>
+                    </details>
 
-                    <div class="menu-block menu-multiple-block">
-                        <label>Регуляризация
-                            <select class="basic-input" id="regularization-type" autocomplete="off">
-                                <option value="">не используется</option>
-                                <option value="l1">L1</option>
-                                <option value="l2" selected>L2</option>
-                            </select>
-                        </label>
+                    <details class="menu-section" open>
+                        <summary>Параметры обучения</summary>
 
-                        <label>Коэффициент регуляризации
-                            <input class="basic-input" type="number" id="regularization" step="0.001" min="0" max="10" value="0.001" autocomplete="off">
-                        </label>
-                    </div>
-
-                    <div class="menu-block">
-                        <label>Отступ компакта (%)
-                            <input class="basic-input" type="number" id="compact-offset" step="1" min="-90" value="50" autocomplete="off">
-                        </label>
-                    </div>
-                </details>
-
-                <details id="view-menu" class="menu-section" open>
-                    <summary>Параметры отображения</summary>
-
-                    <div class="menu-block">
-                        <label>Выход сети
-                            <select class="basic-input" id="model-output-mode" autocomplete="off">
-                                <option value="no">не показывать</option>
-                                <option value="continuosly" selected>непрерывно</option>
-                                <option value="discrete">дискретно</option>
-                                <option value="discrete-4">дискретно (4 уровня)</option>
-                                <option value="discrete-10">дискретно (10 уровней)</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div id="model-output-block">
                         <div class="menu-block">
-                            <label>Количество точек выхода сети
-                                <select class="basic-input" id="model-output-size" autocomplete="off">
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100" selected>100</option>
-                                    <option value="150">150</option>
-                                    <option value="max">максимум</option>
+                            <label>Скорость обучения
+                                <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.004" autocomplete="off">
+                            </label>
+                        </div>
+
+                        <div class="menu-block">
+                            <label>Размер батча
+                                <input class="basic-input" type="range" id="batch-size" step="1" min="1" max="32" value="16" autocomplete="off">
+                            </label>
+                            <div id="batch-size-label" class="range-label">16</div>
+                        </div>
+
+                        <div class="menu-block">
+                            <label>Доля фоновых точек
+                                <input class="basic-input" type="range" id="background-part" step="5" min="0" max="500" value="100" autocomplete="off">
+                            </label>
+                            <div class="range-label"><span id="background-part-label">100</span>%</div>
+                        </div>
+
+                        <div class="menu-block">
+                            <label>Функция потерь
+                                <select class="basic-input" id="criterion" autocomplete="off">
+                                    <option value="mse" selected>MSE</option>
+                                    <option value="mae">MAE</option>
+                                    <option value="logcosh">Logcosh</option>
+                                    <option value="huber">Huber</option>
                                 </select>
                             </label>
                         </div>
 
                         <div class="menu-block">
-                            <label class="switch-checkbox">
-                                <input type="checkbox" id="plot-model-surface" autocomplete="off">
-                                <span class="switch-checkbox-text">Выход сети в 3D</span>
+                            <label>Оптимизатор
+                                <select class="basic-input" id="optimizer" autocomplete="off">
+                                    <option value="sgd">SGD</option>
+                                    <option value="momentum-sgd">SGDm</option>
+                                    <option value="adam" selected>Adam</option>
+                                    <option value="adamax">Adamax</option>
+                                    <option value="adadelta">Adadelta</option>
+                                    <option value="adagrad">Adagrad</option>
+                                    <option value="rmsprop">RMSprop</option>
+                                </select>
                             </label>
                         </div>
-                    </div>
 
-                    <div class="menu-block">
-                        <label>Отображать в связях:
-                            <select class="basic-input" id="model-weights-mode" autocomplete="off">
-                                <option value="weights" selected>весовые коэффициенты</option>
-                                <option value="grads">градиенты</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div id="data-block">
                         <div class="menu-block menu-multiple-block">
-                            <label>Отображать</label>
-                            <label class="switch-checkbox">
-                                <input type="checkbox" id="plot-train-data" checked autocomplete="off">
-                                <span class="switch-checkbox-text">обучающие точки</span>
+                            <label>Регуляризация
+                                <select class="basic-input" id="regularization-type" autocomplete="off">
+                                    <option value="">не используется</option>
+                                    <option value="l1">L1</option>
+                                    <option value="l2" selected>L2</option>
+                                </select>
                             </label>
 
-                            <label class="switch-checkbox">
-                                <input type="checkbox" id="plot-test-data" autocomplete="off">
-                                <span class="switch-checkbox-text">тестовые точки</span>
-                            </label>
-
-                            <label class="switch-checkbox">
-                                <input type="checkbox" id="plot-background-data" autocomplete="off">
-                                <span class="switch-checkbox-text">фоновые точки</span>
+                            <label>Коэффициент регуляризации
+                                <input class="basic-input" type="number" id="regularization" step="0.001" min="0" max="10" value="0.001" autocomplete="off">
                             </label>
                         </div>
-                    </div>
 
-                    <div class="menu-block">
-                        <label>Проекционные координаты</label>
-                        <div class="menu-block-grid">
-                            <div>
-                                <label>Ось Х:
-                                    <select class="basic-input" id="axis-x" autocomplete="off">
-                                        <option value="0" selected>x₁</option>
-                                        <option value="1">x₂</option>
+                        <div class="menu-block">
+                            <label>Отступ компакта (%)
+                                <input class="basic-input" type="number" id="compact-offset" step="1" min="-90" value="50" autocomplete="off">
+                            </label>
+                        </div>
+                    </details>
+
+                    <details class="menu-section" open>
+                        <summary>Параметры отображения</summary>
+
+                        <div class="menu-block">
+                            <label>Выход сети
+                                <select class="basic-input" id="model-output-mode" autocomplete="off">
+                                    <option value="no">не показывать</option>
+                                    <option value="continuosly" selected>непрерывно</option>
+                                    <option value="discrete">дискретно</option>
+                                    <option value="discrete-4">дискретно (4 уровня)</option>
+                                    <option value="discrete-10">дискретно (10 уровней)</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div id="model-output-block">
+                            <div class="menu-block">
+                                <label>Количество точек выхода сети
+                                    <select class="basic-input" id="model-output-size" autocomplete="off">
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100" selected>100</option>
+                                        <option value="150">150</option>
+                                        <option value="max">максимум</option>
                                     </select>
                                 </label>
                             </div>
 
-                            <div>
-                                <label>Ось Y:
-                                    <select class="basic-input" id="axis-y" autocomplete="off">
-                                        <option value="0">x₁</option>
-                                        <option value="1" selected>x₂</option>
-                                    </select>
+                            <div class="menu-block">
+                                <label class="switch-checkbox">
+                                    <input type="checkbox" id="plot-model-surface" autocomplete="off">
+                                    <span class="switch-checkbox-text">Выход сети в 3D</span>
                                 </label>
                             </div>
                         </div>
-                    </div>
-                </details>
+
+                        <div class="menu-block">
+                            <label>Отображать в связях:
+                                <select class="basic-input" id="model-weights-mode" autocomplete="off">
+                                    <option value="weights" selected>весовые коэффициенты</option>
+                                    <option value="grads">градиенты</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div id="data-block">
+                            <div class="menu-block menu-multiple-block">
+                                <label>Отображать</label>
+                                <label class="switch-checkbox">
+                                    <input type="checkbox" id="plot-train-data" checked autocomplete="off">
+                                    <span class="switch-checkbox-text">обучающие точки</span>
+                                </label>
+
+                                <label class="switch-checkbox">
+                                    <input type="checkbox" id="plot-test-data" autocomplete="off">
+                                    <span class="switch-checkbox-text">тестовые точки</span>
+                                </label>
+
+                                <label class="switch-checkbox">
+                                    <input type="checkbox" id="plot-background-data" autocomplete="off">
+                                    <span class="switch-checkbox-text">фоновые точки</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="menu-block">
+                            <label>Проекционные координаты</label>
+                            <div class="menu-block-grid">
+                                <div>
+                                    <label>Ось Х:
+                                        <select class="basic-input" id="axis-x" autocomplete="off">
+                                            <option value="0" selected>x₁</option>
+                                            <option value="1">x₂</option>
+                                        </select>
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label>Ось Y:
+                                        <select class="basic-input" id="axis-y" autocomplete="off">
+                                            <option value="0">x₁</option>
+                                            <option value="1" selected>x₂</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
 
                 <div id="data-menu">
                     <details class="menu-section" open>
@@ -313,6 +315,12 @@
                             <button class="basic-button" id="clear-data-btn">Очистить</button>
                         </div>
                     </div>
+                </div>
+
+                <div id="experiments-menu">
+                    <details class="menu-section" open>
+                        <summary>Синтетические данные</summary>
+                    </details>
                 </div>
             </div>
 
@@ -481,9 +489,9 @@
             "gaussians3": {dataset: "gaussians", dimension: 3, params: {mean1: [-0.5, -0.4, -0.3], cov1: [[0.1, 0.05, 0], [0.05, 0.1, 0], [0, 0, 0.01]], mean2: [0.4, 0, 0], cov2: [[0.08, -0.06, 0], [-0.06, 0.15, 0], [0, 0, 0.08]]}},
         }
 
-        playground.visualizer.dataset.SetDimension(2)
-        playground.visualizer.dataset.SetData("train", generator.Generate(5000, configs.spiral))
-        playground.visualizer.dataset.SetData("test", generator.Generate(5000, configs.spiral))
+        playground.visualizer.SetDimension(2)
+        playground.visualizer.SetData("train", generator.Generate(5000, configs.spiral))
+        playground.visualizer.SetData("test", generator.Generate(5000, configs.spiral))
 
         playground.visualizer.SetDataVisibility("test", false)
         playground.visualizer.SetCompactOffset(0.5)
