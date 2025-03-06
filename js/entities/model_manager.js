@@ -98,6 +98,9 @@ class ModelManager extends EventEmitter {
     }
 
     ToggleNeuron(layer, neuron) {
+        if (layer == this.model.layers.length - 1)
+            return
+
         this.model.ToggleNeuron(layer, neuron)
         this.emit("change")
     }
