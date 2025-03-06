@@ -13,10 +13,14 @@ class Playground {
         this.stopBtn = document.getElementById("stop-btn")
         this.stepBtn = document.getElementById("step-btn")
 
+        this.tabTrainInput = document.getElementById("tab-train-input")
+        this.tabExperimentsInput = document.getElementById("tab-experiments-input")
+
         this.InitModelMenu()
         this.InitTrainMenu()
         this.InitViewMenu()
         this.InitDataMenu()
+        this.InitExperimentsMenu()
     }
 
     InitModelMenu() {
@@ -166,28 +170,42 @@ class Playground {
         clearDataBtn.addEventListener("click", () => this.visualizer.ClearData())
     }
 
+    InitExperimentsMenu() {
+
+    }
+
     Start() {
         this.startBtn.classList.add("hidden")
         this.stopBtn.classList.remove("hidden")
+        this.tabTrainInput.checked = true
+        this.tabExperimentsInput.setAttribute("disabled", "")
+
         this.running = true
     }
 
     Stop() {
         this.stopBtn.classList.add("hidden")
         this.startBtn.classList.remove("hidden")
+        this.tabExperimentsInput.removeAttribute("disabled")
+
         this.running = false
     }
 
-    Step(stop) {
-        if (stop)
-            this.Stop()
+    Step() {
+        this.running = false
+        this.stopBtn.classList.add("hidden")
+        this.startBtn.classList.remove("hidden")
+        this.tabTrainInput.checked = true
+        this.tabExperimentsInput.setAttribute("disabled", "")
 
         this.visualizer.TrainStep()
+
+        this.tabExperimentsInput.removeAttribute("disabled")
     }
 
     Run() {
         if (this.running)
-            this.Step(false)
+            this.visualizer.TrainStep()
 
         window.requestAnimationFrame(() => this.Run())
     }

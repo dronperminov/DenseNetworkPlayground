@@ -19,6 +19,8 @@
     --tab-border-color: var(--disabled-color);
     --tab-text-color: var(--text-color);
     --tab-active-color: var(--main-color);
+    --tab-disabled-color: var(--disabled-color);
+    --tab-disabled-background-color: #f0f0f0;
 
     /* INPUT */
     --input-color: var(--text-color);

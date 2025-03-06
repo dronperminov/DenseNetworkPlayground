@@ -47,7 +47,7 @@
                     <span>Старт</span>
                 </div>
 
-                <div id="step-btn" class="run-menu-button" title="Выполнить один шаг обучения (эпоха)" onclick="playground.Step(true)" disabled>
+                <div id="step-btn" class="run-menu-button" title="Выполнить один шаг обучения (эпоха)" onclick="playground.Step()" disabled>
                     <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5 6V18L15 12L5 6Z" fill="#222222"></path>
                         <path d="M19 6V18M5 18L5 6L15 12L5 18Z" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -331,6 +331,16 @@
                 <div id="experiments-menu">
                     <details class="menu-section" open>
                         <summary>Синтетические данные</summary>
+
+                        <div class="menu-block">
+                            <label>Количество фоновых точек
+                                <input class="basic-input" type="number" id="synthetic-data-background-count" step="1" min="10" max="1000000" value="10000" autocomplete="off">
+                            </label>
+                        </div>
+
+                        <div class="menu-block">
+                            <button class="basic-button">Сгенерировать</button>
+                        </div>
                     </details>
                 </div>
             </div>

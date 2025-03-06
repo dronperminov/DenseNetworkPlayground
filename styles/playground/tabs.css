@@ -17,7 +17,7 @@
     border: 1px solid transparent;
     margin-bottom: -1px;
     color: var(--tab-text-color);
-    transition: color .15s ease-in-out, border-color .15s ease-in-out;
+    transition: color .15s, border-color .15s;
     cursor: pointer;
     border-radius: 5px 5px 0 0;
 }
@@ -53,6 +53,15 @@
     color: var(--tab-active-color);
     border-color: var(--tab-border-color) var(--tab-border-color) var(--tab-background-color);
     cursor: default;
+}
+
+.tab-nav:has(~ .tab-contents > #tab-data-input:disabled) #tab-data-label,
+.tab-nav:has(~ .tab-contents > #tab-train-input:disabled) #tab-train-label,
+.tab-nav:has(~ .tab-contents > #tab-experiments-input:disabled) #tab-experiments-label {
+    color: var(--tab-disabled-color);
+    border-bottom: none;
+    background: var(--tab-disabled-background-color);
+    cursor: not-allowed;
 }
 
 @media (max-width: 767px) {
