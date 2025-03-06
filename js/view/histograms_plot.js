@@ -111,6 +111,9 @@ class HistogramsPlot {
     }
 
     Resize() {
+        if (this.svg.clientWidth == 0 || this.svg.clientHeight == 0)
+            return
+
         this.UpdateSizes()
         this.ChangeThresholds()
         this.Plot()
@@ -151,7 +154,7 @@ class HistogramsPlot {
 
     PlotHistogram(plot, y0, height, xLow, xHigh) {
         for (let i = 0; i < this.n + 2; i++) {
-            let rectHeight = plot.histogram[i] / plot.max * height
+            let rectHeight = Math.max(plot.histogram[i] / plot.max * height, 0)
             let x = this.padding + i * this.rectWidth
             let y = y0 + height - rectHeight
             let label = plot.histogram[i] > 0 ? `${plot.histogram[i]}` : ""

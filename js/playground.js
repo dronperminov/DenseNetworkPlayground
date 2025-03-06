@@ -16,6 +16,8 @@ class Playground {
         this.tabTrainInput = document.getElementById("tab-train-input")
         this.tabExperimentsInput = document.getElementById("tab-experiments-input")
 
+        this.tabExperiments = document.getElementById("tab-experiments")
+
         this.InitModelMenu()
         this.InitTrainMenu()
         this.InitViewMenu()
@@ -171,7 +173,10 @@ class Playground {
     }
 
     InitExperimentsMenu() {
+        this.syntheticDataBackgroundCount = new NumberInput(document.getElementById("synthetic-data-background-count"))
 
+        let syntheticDataGenerateBtn = document.getElementById("synthetic-data-generate-btn")
+        syntheticDataGenerateBtn.addEventListener("click", () => this.RunSyntheticDataExperiment())
     }
 
     Start() {

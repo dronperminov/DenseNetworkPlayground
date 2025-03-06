@@ -68,12 +68,15 @@ class MetricsPlot {
 
     PlotMetric(metric) {
         let plot = this.plots[metric]
+        let width = plot.svg.clientWidth
+        let height = plot.svg.clientHeight
+
+        if (width == 0 || height == 0)
+            return
+
         let metrics = this.metrics.metrics[metric]
         let maxEpoch = this.GetMaxEpoch(metrics)
         let maxValue = this.GetMaxValue(metrics, plot.start)
-
-        let width = plot.svg.clientWidth
-        let height = plot.svg.clientHeight
 
         let left = this.padding
         let right = width - this.padding

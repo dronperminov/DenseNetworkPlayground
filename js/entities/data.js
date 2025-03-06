@@ -79,6 +79,9 @@ class Data {
     }
 
     GetStatistic() {
+        if (this.length == 0)
+            return null
+
         let {min, max} = this.GetMinMaxStatistic()
         let {mean, std, variance} = this.GetMeanStdStatistic()
         let labels = this.GetLabelsStatistic()

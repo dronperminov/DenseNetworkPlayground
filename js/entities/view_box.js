@@ -53,6 +53,9 @@ class ViewBox extends EventEmitter {
     }
 
     Resize() {
+        if (this.svg.clientWidth == 0 || this.svg.clientHeight == 0)
+            return
+
         let dw = (this.svg.clientWidth / this.width - 1) * this.bbox.width
         let dh = (this.svg.clientHeight / this.height - 1) * this.bbox.height
 

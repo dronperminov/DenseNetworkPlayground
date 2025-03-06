@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="styles/playground/view.css">
     <link rel="stylesheet" type="text/css" href="styles/playground/train_view.css">
     <link rel="stylesheet" type="text/css" href="styles/playground/data_view.css">
+    <link rel="stylesheet" type="text/css" href="styles/playground/experiments_view.css">
     <link rel="stylesheet" type="text/css" href="styles/playground/tabs.css">
 
     <link rel="stylesheet" type="text/css" href="styles/components/data_plot.css">
@@ -334,12 +335,12 @@
 
                         <div class="menu-block">
                             <label>Количество фоновых точек
-                                <input class="basic-input" type="number" id="synthetic-data-background-count" step="1" min="10" max="1000000" value="10000" autocomplete="off">
+                                <input class="basic-input" type="number" id="synthetic-data-background-count" step="1" min="10" max="1000000" value="5000" autocomplete="off">
                             </label>
                         </div>
 
                         <div class="menu-block">
-                            <button class="basic-button">Сгенерировать</button>
+                            <button class="basic-button" id="synthetic-data-generate-btn">Сгенерировать</button>
                         </div>
                     </details>
                 </div>
@@ -489,6 +490,7 @@
     <script src="js/visualizer/events.js"></script>
     <script src="js/visualizer/ui.js"></script>
     <script src="js/visualizer/train.js"></script>
+    <script src="js/visualizer/experiments.js"></script>
 
     <!-- INPUTS -->
     <script src="js/inputs/number_input.js"></script>
@@ -499,6 +501,7 @@
     <script src="js/playground.js"></script>
     <script src="js/playground/ui.js"></script>
     <script src="js/playground/events.js"></script>
+    <script src="js/playground/experiments.js"></script>
 
     <script>
         let playground = new Playground()
