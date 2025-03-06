@@ -9,7 +9,6 @@ class DataPlot {
         this.viewBox.on("change-limits", limits => this.ChangeViewLimits(limits))
         this.viewBox.on("change-view", () => this.ChangeView())
 
-        compact.on("change", () => this.ChangeCompact())
         viewBox.svg.addEventListener("dblclick", e => this.ResetLimits())
     }
 

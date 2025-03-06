@@ -74,6 +74,8 @@ class Visualizer {
     }
 
     InitEventHandlers() {
+        this.compact.on("change", () => this.dataPlot.ChangeCompact())
+
         this.dataset.on("change", (name, split) => this.HandleChangeData(name, split))
         this.dataset.on("change-dimension", dimension => this.HandleChangeDimension(dimension))
         this.dataset.on("clear", () => this.HandleClearData())
