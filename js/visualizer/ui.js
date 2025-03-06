@@ -2,6 +2,10 @@ Visualizer.prototype.SetDimension = function(dimension) {
     this.dataset.SetDimension(dimension)
 }
 
+Visualizer.prototype.GetDimension = function() {
+    return this.dataset.dimension
+}
+
 Visualizer.prototype.SetAxes = function(xAxis, yAxis) {
     this.dataPlot.SetAxes(xAxis, yAxis)
     this.modelPlot.SetAxes(xAxis, yAxis)
@@ -45,12 +49,18 @@ Visualizer.prototype.SetDataVisibility = function(name, visible) {
 
 Visualizer.prototype.SetModelLayersCount = function(count, size, activation) {
     this.modelManager.SetLayersCount(count, size, activation)
-    this.model.ZeroGradientParams()
 }
 
 Visualizer.prototype.SetModelLayersSize = function(size) {
     this.modelManager.SetLayersSize(size)
-    this.model.ZeroGradientParams()
+}
+
+Visualizer.prototype.DownloadModel = function() {
+    this.modelManager.Download()
+}
+
+Visualizer.prototype.LoadModel = function(data) {
+    this.modelManager.Load(data)
 }
 
 Visualizer.prototype.SetModelOutputSize = function(size) {
@@ -85,7 +95,7 @@ Visualizer.prototype.SetCriterion = function(name) {
 Visualizer.prototype.SetOptimizer = function(name) {
     let config = this.optimizer.GetConfig()
     this.optimizer = GetOptimizer(name, config)
-    this.model.ZeroGradientParams()
+    this.modelManager.ZeroGradientParams()
 }
 
 Visualizer.prototype.SetLearningRate = function(learningRate) {

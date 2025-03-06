@@ -59,7 +59,7 @@
             <div class="main-menu">
                 <div id="train-menu">
                     <details class="menu-section" open>
-                        <summary>Параметры модели</summary>
+                        <summary>Модель</summary>
 
                         <div class="menu-block" title="Размерность входного пространства, с которой работает нейронная сеть">
                             <label>Количество входов
@@ -103,11 +103,20 @@
                             </div>
                         </div>
 
-                        <div class="menu-block" title="При использовании этого параметры во время сброса отключенные нейроны восстанавливаются">
+                        <div class="menu-block" title="При использовании этого параметра во время сброса отключенные нейроны остаются выключенными">
                             <label class="switch-checkbox">
                                 <input type="checkbox" id="reset-disabled-neurons" checked autocomplete="off">
                                 <span class="switch-checkbox-text">Сброс отключ. нейронов</span>
                             </label>
+                        </div>
+
+                        <div class="menu-block menu-multiple-block">
+                            <label>Управление</label>
+                            <div class="menu-block-grid">
+                                <input class="file-input" id="model-file-input" type="file" accept=".json" autocomplete="off">
+                                <button class="basic-button" id="download-model-btn">Скачать</button>
+                                <button class="basic-button" id="upload-model-btn">Загрузить</button>
+                            </div>
                         </div>
                     </details>
 
@@ -116,7 +125,7 @@
 
                         <div class="menu-block">
                             <label>Скорость обучения
-                                <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.004" autocomplete="off">
+                                <input class="basic-input" type="number" id="learning-rate" step="0.00001" min="0" max="10" value="0.0004" autocomplete="off">
                             </label>
                         </div>
 

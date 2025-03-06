@@ -20,17 +20,17 @@ class Playground {
     }
 
     InitModelMenu() {
-        let modelInputsCount = new NumberInput(document.getElementById("model-inputs-count"))
-        modelInputsCount.on("change", value => this.SetModelInputsCount(value, modelInputsCount))
+        this.modelInputsCount = new NumberInput(document.getElementById("model-inputs-count"))
+        this.modelInputsCount.on("change", value => this.SetModelInputsCount(value))
 
-        let modelLayersSize = new NumberInput(document.getElementById("model-layers-size"))
-        modelLayersSize.on("change", value => this.SetModelLayersSize(value))
+        this.modelLayersSize = new NumberInput(document.getElementById("model-layers-size"))
+        this.modelLayersSize.on("change", value => this.SetModelLayersSize(value))
 
-        let activation = document.getElementById("activation")
-        activation.addEventListener("change", () => this.SetModelActivation(activation.value))
+        this.modelActivation = document.getElementById("activation")
+        this.modelActivation.addEventListener("change", () => this.SetModelActivation(this.modelActivation.value))
 
-        let modelLayersCount = new NumberInput(document.getElementById("model-layers-count"))
-        modelLayersCount.on("change", value => this.SetModelLayersCount(value, modelLayersSize.GetValue(), activation.value))
+        this.modelLayersCount = new NumberInput(document.getElementById("model-layers-count"))
+        this.modelLayersCount.on("change", value => this.SetModelLayersCount(value, this.modelLayersSize.GetValue(), this.modelActivation.value))
 
         this.thresholdLow = document.getElementById("threshold-low")
         this.thresholdHigh = document.getElementById("threshold-high")
@@ -45,6 +45,16 @@ class Playground {
 
         this.resetDisabledNeurons = document.getElementById("reset-disabled-neurons")
 
+        let downloadModelBtn = document.getElementById("download-model-btn")
+        downloadModelBtn.addEventListener("click", () => this.DownloadModel())
+
+        this.modelFileInput = document.getElementById("model-file-input")
+        this.modelFileInput.addEventListener("change", () => this.UploadModel())
+
+        let uploadModelBtn = document.getElementById("upload-model-btn")
+        uploadModelBtn.addEventListener("click", () => this.modelFileInput.click())
+
+        this.visualizer.modelManager.on("change-architecture", () => this.HandleChangeModelArchitecture())
         this.visualizer.thresholds.on("change", (low, high) => this.HandleChangeThresholds(low, high))
     }
 

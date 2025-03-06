@@ -1,6 +1,6 @@
-Playground.prototype.SetModelInputsCount = function(inputs, modelInputsCount) {
+Playground.prototype.SetModelInputsCount = function(inputs) {
     if (!confirm("Вы уверены, что хотите изменить размерность входа модели?")) {
-        modelInputsCount.SetValue(this.visualizer.model.inputs)
+        this.modelInputsCount.SetValue(this.visualizer.GetDimension())
         return
     }
 
@@ -17,6 +17,38 @@ Playground.prototype.SetModelLayersSize = function(size) {
 
 Playground.prototype.SetModelActivation = function(activation) {
     this.visualizer.SetActivation(activation)
+}
+
+Playground.prototype.DownloadModel = function() {
+    this.visualizer.DownloadModel()
+}
+
+Playground.prototype.UploadModel = function() {
+    if (this.modelFileInput.files.length != 1)
+        return
+
+    let reader = new FileReader()
+    reader.addEventListener("load", e => {
+        this.LoadModel(JSON.parse(e.target.result))
+        this.modelFileInput.value = ""
+    })
+
+    reader.readAsText(this.modelFileInput.files[0])
+}
+
+Playground.prototype.LoadModel = function(data) {
+    let message = `Входная размерность загружаемой модели (${data.inputs}) отличается от размера текущей, имеющиеся данные будут очищены. Желаете продолжить?`
+
+    if (data.inputs != this.visualizer.GetDimension() && !confirm(message))
+        return
+
+    try {
+        this.visualizer.LoadModel(data)
+    }
+    catch (error) {
+        alert(error.message)
+        return
+    }
 }
 
 Playground.prototype.SetLearningRate = function(learningRate) {
@@ -113,14 +145,15 @@ Playground.prototype.ParseUploadData = function(results) {
     let reader = new CSVReader()
     let splits = {}
     let name2text = {train: "обучающих", test: "тестовых"}
+    let targetDimension = this.visualizer.GetDimension()
 
     try {
         for (let result of results) {
             let {header, rows} = reader.Read(result.text)
             let dimension = header.length - 1
 
-            if (dimension != this.visualizer.model.inputs)
-                throw new Error(`некорректная размерность ${name2text[result.name]} данных: ${dimension} (ожидалось ${this.visualizer.model.inputs})`)
+            if (dimension != targetDimension)
+                throw new Error(`некорректная размерность ${name2text[result.name]} данных: ${dimension} (ожидалось ${targetDimension})`)
 
             splits[result.name] = Data.FromCSV(header, rows)
         }

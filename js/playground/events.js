@@ -32,6 +32,14 @@ Playground.prototype.HandleClearData = function() {
     this.UpdateTrainButtons(true)
 }
 
+Playground.prototype.HandleChangeModelArchitecture = function() {
+    let model = this.visualizer.modelManager.model
+
+    this.modelInputsCount.SetValue(model.inputs)
+    this.modelLayersCount.SetValue(model.layers.length)
+    this.modelLayersSize.SetValue(model.layers[0].outputs)
+}
+
 Playground.prototype.UpdateAxisDimension = function(axis, dimension) {
     while (axis.children.length > dimension)
         axis.removeChild(axis.lastChild)

@@ -11,12 +11,16 @@ class ModelManager extends EventEmitter {
             return
 
         this.model.SetInputs(inputs)
+        this.ZeroGradientParams()
+
         this.emit("change-architecture")
         this.emit("change")
     }
 
     SetLayersSize(size) {
         this.model.SetLayersSize(size)
+        this.ZeroGradientParams()
+
         this.emit("change-architecture")
         this.emit("change")
     }
@@ -28,8 +32,13 @@ class ModelManager extends EventEmitter {
         while (this.model.layers.length > count)
             this.model.RemoveLayer(this.model.layers.length - 2)
 
+        this.ZeroGradientParams()
         this.emit("change-architecture")
         this.emit("change")
+    }
+
+    ZeroGradientParams() {
+        this.model.ZeroGradientParams()
     }
 
     Reset(disabled) {
@@ -64,6 +73,20 @@ class ModelManager extends EventEmitter {
     ClearPredictions() {
         this.predictions = {}
         this.emit("clear-predictions")
+    }
+
+    Download() {
+        let link = document.createElement("a")
+        let data = new Blob([JSON.stringify(this.model.ToJSON())], {type: "application/json"})
+        link.href = URL.createObjectURL(data)
+        link.download = `model_${this.model.GetName()}.json`
+        link.click()
+    }
+
+    Load(data) {
+        this.model.FromJSON(data)
+        this.emit("change-architecture")
+        this.emit("change")
     }
 
     ToggleNeuron(layer, neuron) {

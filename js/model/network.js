@@ -182,6 +182,65 @@ class NeuralNetwork {
         this.layers[layer].ToggleNeuron(neuron)
     }
 
+    ToJSON() {
+        return {
+            inputs: this.inputs,
+            layers: this.layers.map(layer => layer.ToJSON())
+        }
+    }
+
+    FromJSON(json) {
+        this.ValidateJSON(json)
+
+        this.inputs = json.inputs
+        this.outputs = json.inputs
+        this.layers = []
+
+        for (let i = 0; i < json.layers.length; i++) {
+            this.AddLayer({size: json.layers[i].outputs, activation: json.layers[i].activation})
+            this.layers[i].FromJSON(json.layers[i])
+        }
+    }
+
+    ValidateJSON(json) {
+        if (!json.inputs)
+            throw new Error("Некорректный формат файла модели. Не указано количество входов")
+
+        if (isNaN(json.inputs) || json.inputs < 1)
+            throw new Error("Некорректный формат файла модели. Указано некорректное количество входов")
+
+        if (!json.layers || json.layers.length == 0)
+            throw new Error("Некорректный формат файла модели. Отсутствует описание слоёв")
+
+        let outputs = json.inputs
+
+        for (let i = 0; i < json.layers.length; i++) {
+            let layer = json.layers[i]
+
+            if (layer.inputs != outputs)
+                throw new Error(`Некорректный формат записи слоя ${i + 1}. Ожидаемое количество входов - ${outputs}, а указано ${layer.inputs}`)
+
+            if (!layer.outputs)
+                throw new Error(`Некорректный формат записи слоя ${i + 1}. Не указано количество выходов`)
+
+            if (layer.w.length != layer.inputs * layer.outputs)
+                throw new Error(`Некорректное описание слоя ${i + 1}. Одидаемое количество весовых коэффициентов w - ${layer.inputs * layer.outputs}, а указано ${layer.w.length}`)
+
+            if (layer.b.length != layer.outputs)
+                throw new Error(`Некорректное описание слоя ${i + 1}. Одидаемое количество весовых коэффициентов b - ${layer.outputs}, а указано ${layer.b.length}`)
+
+            if (layer.disabled.length != layer.outputs)
+                throw new Error(`Некорректное описание слоя ${i + 1}. Одидаемое количество флагов отключенности - ${layer.outputs}, а указано ${layer.disabled.length}`)
+
+            outputs = layer.outputs
+        }
+    }
+
+    GetName() {
+        let sizes = [this.inputs, ...this.layers.map(layer => layer.outputs)]
+        return sizes.join("-")
+    }
+
     /* UNROLLED VERSIONS */
     PredictUnrolled(x, size, result = null) {
         if (result === null)

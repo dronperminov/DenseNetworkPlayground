@@ -11,12 +11,12 @@ class Visualizer {
     }
 
     InitModel() {
-        this.model = new NeuralNetwork(2)
-        this.model.AddLayer({size: 10, activation: "abs"})
-        this.model.AddLayer({size: 10, activation: "abs"})
-        this.model.AddLayer({size: 1, activation: ""})
+        let model = new NeuralNetwork(2)
+        model.AddLayer({size: 10, activation: "abs"})
+        model.AddLayer({size: 10, activation: "abs"})
+        model.AddLayer({size: 1, activation: ""})
 
-        this.modelManager = new ModelManager(this.model)
+        this.modelManager = new ModelManager(model)
     }
 
     InitTrain() {
@@ -27,7 +27,7 @@ class Visualizer {
         this.metrics.Add("error", ["train", "test"])
 
         this.criterion = GetLoss("mse")
-        this.optimizer = GetOptimizer("adam", {learningRate: 0.004, regularizationType: "l2", lambda: 0.001})
+        this.optimizer = GetOptimizer("adam", {learningRate: 0.0004, regularizationType: "l2", lambda: 0.001})
         this.batchSize = 16
         this.backgroundPart = 1
     }
@@ -47,7 +47,7 @@ class Visualizer {
         let modelView = document.getElementById("model-view")
         let modelPlot = document.getElementById("model-plot")
         let modelSurface = document.getElementById("model-surface")
-        this.modelPlot = new ModelPlot(viewBox, modelView, modelPlot, modelSurface, this.model, this.thresholds)
+        this.modelPlot = new ModelPlot(viewBox, modelView, modelPlot, modelSurface, this.modelManager.model, this.thresholds)
 
         this.metricsPlot = new MetricsPlot(document.getElementById("metrics-plot"), this.metrics)
         this.metricsPlot.Add("loss", [
