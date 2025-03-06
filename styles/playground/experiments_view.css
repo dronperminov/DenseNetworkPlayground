@@ -11,6 +11,10 @@
     padding-left: 1em;
 }
 
+#tab-experiments li {
+    line-height: 1.3em;
+}
+
 #tab-experiments .text {
     color: var(--text-color);
 }
