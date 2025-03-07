@@ -43,6 +43,16 @@ function MakeCheckbox(parent = null, text, checked) {
     return input
 }
 
+function CloneSelect(targetSelect, parent = null) {
+    let select = MakeElement(parent, {class: "basic-input inline-input"}, "select")
+
+    for (let option of targetSelect.children)
+        MakeElement(select, {value: option.value, innerText: option.innerText}, "option")
+
+    select.value = targetSelect.value
+    return select
+}
+
 function AddClassName(element, className, condition) {
     if (condition)
         element.classList.add(className)

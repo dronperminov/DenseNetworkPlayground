@@ -190,7 +190,7 @@ class ModelOutputLayer {
         let index = 0
 
         for (let i = 0; i < this.outputs.length; i++) {
-            let [r, g, b] = this.GetOutputColor(this.outputs[i])
+            let [r, g, b] = this.thresholds.GetOutputColor(this.outputs[i], this.mode)
             this.pixels.data[index++] = r
             this.pixels.data[index++] = g
             this.pixels.data[index++] = b
@@ -306,29 +306,6 @@ class ModelOutputLayer {
         }
     }
 
-    GetOutputColor(output) {
-        if (this.thresholds.IsInside(output))
-            return [255, 255, 255]
-
-        let color = output < 0 ? [118, 153, 212] : [221, 115, 115]
-        let value = Math.abs(output)
-
-        if (this.mode == "discrete") {
-            value = this.DiscreteValue(value, 1)
-        }
-        else if (this.mode == "discrete-2") {
-            value = this.DiscreteValue(value, 2)
-        }
-        else if (this.mode == "discrete-4") {
-            value = this.DiscreteValue(value, 4)
-        }
-        else if (this.mode == "discrete-10") {
-            value = this.DiscreteValue(value, 10)
-        }
-
-        return this.MixColor(color, [255, 255, 255], value)
-    }
-
     GetSurfaceColorscale(zmin, zmax) {
         let values = [zmin, zmax]
 
@@ -343,7 +320,7 @@ class ModelOutputLayer {
             if (scale < 0 || scale > 1)
                 continue
 
-            let [r, g, b] = this.GetOutputColor(value)
+            let [r, g, b] = this.thresholds.GetOutputColor(value, this.mode)
             colorscale.push([`${scale}`, `rgb(${r}, ${g}, ${b})`])
         }
 
@@ -353,15 +330,5 @@ class ModelOutputLayer {
 
     DiscreteValue(value, levels) {
         return (Math.round(value * levels) + 1) / levels 
-    }
-
-    MixColor(color1, color2, t) {
-        t = Math.max(0, Math.min(1, t))
-
-        return [
-            Math.floor(color1[0] * t + color2[0] * (1 - t)),
-            Math.floor(color1[1] * t + color2[1] * (1 - t)),
-            Math.floor(color1[2] * t + color2[2] * (1 - t))
-        ]
     }
 }

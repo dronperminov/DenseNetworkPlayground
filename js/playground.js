@@ -112,11 +112,11 @@ class Playground {
     InitViewMenu() {
         this.modelOutputBlock = document.getElementById("model-output-block")
 
-        let modelOutputMode = document.getElementById("model-output-mode")
-        modelOutputMode.addEventListener("change", () => this.SetModelOutputMode(modelOutputMode.value))
+        this.modelOutputMode = document.getElementById("model-output-mode")
+        this.modelOutputMode.addEventListener("change", () => this.SetModelOutputMode(this.modelOutputMode.value))
 
-        let modelOutputSize = document.getElementById("model-output-size")
-        modelOutputSize.addEventListener("change", () => this.SetModelOutputSize(modelOutputSize.value))
+        this.modelOutputSize = document.getElementById("model-output-size")
+        this.modelOutputSize.addEventListener("change", () => this.SetModelOutputSize(this.modelOutputSize.value))
 
         let plotSurface = document.getElementById("plot-model-surface")
         plotSurface.addEventListener("change", () => this.visualizer.SetModelOutputSurfaceVisibility(plotSurface.checked))

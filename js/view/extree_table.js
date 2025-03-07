@@ -1,8 +1,9 @@
 class ExTreeTable {
-    constructor(div, splits, dataPlot, leafs, initialRows = 20) {
+    constructor(div, splits, dataPlot, modelPlot, leafs, initialRows = 20) {
         this.div = div
         this.splits = splits
         this.dataPlot = dataPlot
+        this.modelPlot = modelPlot
         this.leafs = leafs
         this.masks = {}
 
@@ -42,7 +43,7 @@ class ExTreeTable {
         let leaf = this.leafs[index]
 
         let row = MakeElement(this.table, {class: "extree-table-row"})
-        row.addEventListener("click", () => this.ClickRow(row, leaf))
+        row.addEventListener("click", () => this.ClickRow(row, leaf, index))
 
         MakeElement(row, {class: "extree-table-cell", innerText: `${index + 1}`})
         MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafContent(leaf)})
@@ -99,7 +100,7 @@ class ExTreeTable {
         return `${Round(leaf.stats[name].diff, 10000)}`
     }
 
-    ClickRow(row, leaf) {
+    ClickRow(row, leaf, leafIndex) {
         row.classList.toggle("extree-table-row-selected")
 
         let value = row.classList.contains("extree-table-row-selected") ? true : false
@@ -111,5 +112,7 @@ class ExTreeTable {
 
             this.dataPlot.SetMask(name, noMask ? null : this.masks[name])
         }
+
+        this.modelPlot.SetCell(leafIndex, value)
     }
 }

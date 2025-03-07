@@ -1,13 +1,3 @@
-Playground.prototype.BuildAxisSelect = function(dimension, axis, parent = null) {
-    let select = MakeElement(parent, {class: "basic-input inline-input"}, "select")
-
-    for (let i = 0; i < dimension; i++)
-        MakeElement(select, {value: i, innerText: `x${NumberToIndex(i + 1)}`}, "option")
-
-    select.value = axis
-    return select
-}
-
 Playground.prototype.RunSyntheticDataExperiment = function() {
     let count = this.syntheticDataBackgroundCount.GetValue()
     let data = this.visualizer.GenerateSyntheticData(count)
@@ -36,8 +26,8 @@ Playground.prototype.RunSyntheticDataExperiment = function() {
     let liX = MakeElement(axisList, {innerHTML: "Проекционная координата на <b>ось X</b>: "}, "li")
     let liY = MakeElement(axisList, {innerHTML: "Проекционная координата на <b>ось Y</b>: "}, "li")
 
-    let axisX = this.BuildAxisSelect(data.dimension, this.axisX.value, liX)
-    let axisY = this.BuildAxisSelect(data.dimension, this.axisY.value, liY)
+    let axisX = CloneSelect(this.axisX, liX)
+    let axisY = CloneSelect(this.axisY, liY)
 
     let dataPlotDiv = MakeElement(this.tabExperiments, {class: "data-plot", style: "width: 300px; height: 300px;"})
     let dataPlotSVG = MakeElement(dataPlotDiv, null, "svg")
@@ -70,9 +60,11 @@ Playground.prototype.RunTreeExperiment = function() {
     }
 
     let tree = new ExTree()
+    let model = new NeuralNetwork(2)
+    model.FromJSON(this.visualizer.modelManager.model.ToJSON())
 
     for (let [name, data] of Object.entries(datas)) {
-        let prediction = this.visualizer.modelManager.model.PredictWithSignsUnrolled(data.inputs, data.length)
+        let prediction = model.PredictWithSignsUnrolled(data.inputs, data.length)
         tree.Fill(name, data, prediction.result, prediction.signs)
     }
 
@@ -91,6 +83,8 @@ Playground.prototype.RunTreeExperiment = function() {
     MakeElement(this.tabExperiments, {innerText: "Управление"}, "h3")
     let controlsList = MakeElement(this.tabExperiments, null, "ul")
 
+    let liModelSize = MakeElement(controlsList, {innerHTML: "Количество точек выхода модели: "}, "li")
+    let liModelMode = MakeElement(controlsList, {innerHTML: "Режим отображения выхода модели: "}, "li")
     let liX = MakeElement(controlsList, {innerHTML: "Проекционная координата на <b>ось X</b>: "}, "li")
     let liY = MakeElement(controlsList, {innerHTML: "Проекционная координата на <b>ось Y</b>: "}, "li")
 
@@ -98,14 +92,17 @@ Playground.prototype.RunTreeExperiment = function() {
     let liTest = MakeElement(controlsList, {innerHTML: ""}, "li")
     let liBackground = MakeElement(controlsList, {innerHTML: ""}, "li")
 
-    let axisX = this.BuildAxisSelect(datas.train.dimension, this.axisX.value, liX)
-    let axisY = this.BuildAxisSelect(datas.train.dimension, this.axisY.value, liY)
+    let axisX = CloneSelect(this.axisX, liX)
+    let axisY = CloneSelect(this.axisY, liY)
 
     let trainCheckbox = MakeCheckbox(liTrain, "Отображать обучающие точки", true)
     let testCheckbox = MakeCheckbox(liTest, "Отображать тестовые точки", false)
     let backgroundCheckbox = MakeCheckbox(liBackground, "Отображать фоновые точки", false)
+    let modelSizeInput = CloneSelect(this.modelOutputSize, liModelSize)
+    let modelModeInput = CloneSelect(this.modelOutputMode, liModelMode)
 
     let dataPlotDiv = MakeElement(this.tabExperiments, {class: "data-plot", style: "width: 300px; height: 300px;"})
+    let modelPlotCanvas = MakeElement(dataPlotDiv, null, "canvas")
     let dataPlotSVG = MakeElement(dataPlotDiv, null, "svg")
 
     MakeElement(this.tabExperiments, {innerText: "Ячейки дерева"}, "h3")
@@ -134,15 +131,23 @@ Playground.prototype.RunTreeExperiment = function() {
     dataPlot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
     dataPlot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: false})
     dataPlot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: false})
-    dataPlot.SetAxes(+axisX.value, +axisY.value)
 
-    axisX.addEventListener("change", () => dataPlot.SetAxes(+axisX.value, +axisY.value))
-    axisY.addEventListener("change", () => dataPlot.SetAxes(+axisX.value, +axisY.value))
+    let modelCellsPlot = new ModelCellsPlot(viewBox, modelPlotCanvas, model, this.visualizer.thresholds, leafs, modelModeInput.value, modelSizeInput.value)
+
+    let setAxes = () => {
+        dataPlot.SetAxes(+axisX.value, +axisY.value)
+        modelCellsPlot.SetAxes(+axisX.value, +axisY.value)
+    }
+
+    axisX.addEventListener("change", setAxes)
+    axisY.addEventListener("change", setAxes)
     trainCheckbox.addEventListener("change", () => dataPlot.SetVisibility("train", trainCheckbox.checked))
     testCheckbox.addEventListener("change", () => dataPlot.SetVisibility("test", testCheckbox.checked))
     backgroundCheckbox.addEventListener("change", () => dataPlot.SetVisibility("background", backgroundCheckbox.checked))
+    modelSizeInput.addEventListener("change", () => modelCellsPlot.SetSize(modelSizeInput.value))
+    modelModeInput.addEventListener("change", () => modelCellsPlot.SetMode(modelModeInput.value))
 
-    let treeTable = new ExTreeTable(treeTableDiv, datas, dataPlot, leafs)
+    let treeTable = new ExTreeTable(treeTableDiv, datas, dataPlot, modelCellsPlot, leafs)
     treeTable.Plot()
 
     let dataTable = new DataTable(dataTableDiv)
@@ -157,5 +162,6 @@ Playground.prototype.RunTreeExperiment = function() {
         dataTable.ChangeData(name, split)
     }
 
+    setAxes()
     dataPlot.ResetLimits()
 }
