@@ -32,6 +32,17 @@ function MakeElement(parent = null, attributes = null, tagName = "div") {
     return element
 }
 
+function MakeCheckbox(parent = null, text, checked) {
+    let label = MakeElement(parent, {class: "switch-checkbox"}, "label")
+    let input = MakeElement(label, {type: "checkbox", autocomplete: "off"}, "input")
+    let span = MakeElement(label, {class: "switch-checkbox-text", innerText: text}, "span")
+
+    if (checked)
+        input.setAttribute("checked", "")
+
+    return input
+}
+
 function AddClassName(element, className, condition) {
     if (condition)
         element.classList.add(className)

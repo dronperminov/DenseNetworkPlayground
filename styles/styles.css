@@ -65,6 +65,16 @@
 
     --data-table-cell-color: var(--text-color);
     --data-table-cell-border-color: #dddddd;
+
+    /* EXTREE-TABLE */
+    --extree-table-background-color: var(--tab-background-color);
+    --extree-table-border-color: var(--tab-border-color);
+
+    --extree-table-header-background-color: #eeeeee;
+    --extree-table-selected-background-color: #afe9a8;
+
+    --extree-table-cell-color: var(--text-color);
+    --extree-table-cell-border-color: #aaaaaa;
 }
 
 * {

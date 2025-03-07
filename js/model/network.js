@@ -116,6 +116,15 @@ class NeuralNetwork {
             this.layers[i].LoadWeights(weights[i])
     }
 
+    GetNeuronsCount() {
+        let neurons = 0
+
+        for (let layer of this.layers)
+            neurons += layer.outputs
+
+        return neurons
+    }
+
     SetInputs(inputs) {
         if (inputs == this.inputs)
             return
@@ -285,6 +294,35 @@ class NeuralNetwork {
         }
 
         return result
+    }
+
+    PredictWithSignsUnrolled(x, size) {
+        let result = new Float64Array(this.outputs * size)
+        let signs = new Array(size)
+        let neurons = this.GetNeuronsCount()
+
+        for (let i = 0; i < size; i++)
+            signs[i] = new Array(neurons)
+
+        for (let i = 0; i < size; i += this.maxBatchSize) {
+            let j = Math.min(i + this.maxBatchSize, size)
+            let batchSize = j - i
+
+            let data = x.subarray(i * this.inputs, j * this.inputs)
+            let output = this.ForwardUnrolled(data, batchSize)
+
+            result.set(output.subarray(0, batchSize * this.outputs), i * this.outputs)
+
+            for (let batch = 0; batch < batchSize; batch++) {
+                let neuron = 0
+
+                for (let layer of this.layers)
+                    for (let index = 0; index < layer.outputs; index++)
+                        signs[i + batch][neuron++] = layer.value[batch * layer.outputs + index] < 0 ? -1 : 1
+            }
+        }
+
+        return {result, signs}
     }
 
     ForwardUnrolled(x, batchSize) {

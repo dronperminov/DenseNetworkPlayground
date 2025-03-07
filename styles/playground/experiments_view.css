@@ -7,8 +7,20 @@
     margin-bottom: 0.5em;
 }
 
+#tab-experiments h3 {
+    margin-top: 0;
+    margin-bottom: 0.3em;
+}
+
+#tab-experiments p {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    font-size: 0.9em;
+}
+
 #tab-experiments ul {
     padding-left: 1em;
+    margin-top: 0;
 }
 
 #tab-experiments li {
@@ -25,4 +37,8 @@
     min-width: 150px;
     min-height: 150px;
     max-width: 100%;
+}
+
+#tab-experiments .extree-table {
+    margin-bottom: 2em;
 }
