@@ -103,6 +103,10 @@ class TreeExperiment {
         let background = MakeElement(controls, {innerHTML: ""}, "li")
         this.controls["plot-background"] = MakeCheckbox(background, "Отображать фоновые точки", false)
         this.controls["plot-background"].addEventListener("change", () => this.dataPlot.SetVisibility("background", this.controls["plot-background"].checked))
+
+        let grid = MakeElement(controls, {innerHTML: ""}, "li")
+        this.controls["plot-grid"] = MakeCheckbox(grid, "Отображать сетку", true)
+        this.controls["plot-grid"].addEventListener("change", () => this.dataPlot.SetGridVisibility(this.controls["plot-grid"].checked))
     }
 
     InitDataModelPlot(leafs) {

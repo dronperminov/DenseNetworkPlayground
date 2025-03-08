@@ -32,6 +32,28 @@
     position: absolute;
 }
 
+.data-plot-axes {
+    stroke: #444444;
+    fill: none;
+}
+
+.data-plot-grid {
+    stroke: #888888;
+    fill: none;
+}
+
+.data-plot-grid-label-x {
+    fill: #444444;
+    dominant-baseline: text-before-edge;
+    text-anchor: middle;
+}
+
+.data-plot-grid-label-y {
+    fill: #444444;
+    dominant-baseline: middle;
+    text-anchor: start;
+}
+
 .data-plot-label-lb {
     bottom: 0px;
     left: 2px;

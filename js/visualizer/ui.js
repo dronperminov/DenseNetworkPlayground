@@ -47,6 +47,10 @@ Visualizer.prototype.SetDataVisibility = function(name, visible) {
     this.dataPlot.SetVisibility(name, visible)
 }
 
+Visualizer.prototype.SetDataGridVisibility = function(visible) {
+    this.dataPlot.SetGridVisibility(visible)
+}
+
 Visualizer.prototype.SetModelLayersCount = function(count, size, activation) {
     this.modelManager.SetLayersCount(count, size, activation)
 }

@@ -15,7 +15,6 @@ class SyntheticDataExperiment {
             return
 
         this.InitControls(axisX, axisY)
-        this.InitControlsEvents()
         this.InitDataPlot()
 
         this.dataTable.ChangeData("synthetic", split)
@@ -45,18 +44,19 @@ class SyntheticDataExperiment {
 
     InitControls(axisX, axisY) {
         MakeElement(this.parent, {innerText: "Управление"}, "h3")
-        let axisList = MakeElement(this.parent, null, "ul")
+        let controls = MakeElement(this.parent, null, "ul")
 
-        let x = MakeElement(axisList, {innerHTML: "Проекционная координата на <b>ось X</b>: "}, "li")
-        let y = MakeElement(axisList, {innerHTML: "Проекционная координата на <b>ось Y</b>: "}, "li")
-
+        let x = MakeElement(controls, {innerHTML: "Проекционная координата на <b>ось X</b>: "}, "li")
         this.controls["axis-x"] = CloneSelect(axisX, x)
-        this.controls["axis-y"] = CloneSelect(axisY, y)
-    }
-
-    InitControlsEvents() {
         this.controls["axis-x"].addEventListener("change", () => this.SetAxes())
+
+        let y = MakeElement(controls, {innerHTML: "Проекционная координата на <b>ось Y</b>: "}, "li")
+        this.controls["axis-y"] = CloneSelect(axisY, y)
         this.controls["axis-y"].addEventListener("change", () => this.SetAxes())
+
+        let grid = MakeElement(controls, {innerHTML: ""}, "li")
+        this.controls["plot-grid"] = MakeCheckbox(grid, "Отображать сетку", true)
+        this.controls["plot-grid"].addEventListener("change", () => this.dataPlot.SetGridVisibility(this.controls["plot-grid"].checked))
     }
 
     InitDataPlot() {

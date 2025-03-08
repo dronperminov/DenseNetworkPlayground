@@ -131,6 +131,9 @@ class Playground {
             plotData.addEventListener("change", () => this.visualizer.SetDataVisibility(name, plotData.checked))
         }
 
+        let plotGrid = document.getElementById("plot-grid")
+        plotGrid.addEventListener("change", () => this.visualizer.SetDataGridVisibility(plotGrid.checked))
+
         this.axisX = document.getElementById("axis-x")
         this.axisY = document.getElementById("axis-y")
 

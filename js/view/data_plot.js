@@ -2,6 +2,8 @@ class DataPlot {
     constructor(div, viewBox, compact) {
         this.viewBox = viewBox
         this.labelsLayer = new LabelsLayer(div)
+
+        this.gridLayer = new GridLayer(this.viewBox)
         this.compactLayer = new CompactLayer(this.viewBox, compact)
         this.dataLayer = new DataLayer(this.viewBox)
 
@@ -28,6 +30,10 @@ class DataPlot {
 
     SetMask(name, mask) {
         this.dataLayer.SetMask(name, mask)
+    }
+
+    SetGridVisibility(visible) {
+        this.gridLayer.SetVisibility(visible)
     }
 
     ResetLimits() {
@@ -65,11 +71,13 @@ class DataPlot {
     }
 
     ChangeViewScale(scale) {
+        this.gridLayer.UpdateSizes(scale)
         this.dataLayer.UpdateSizes(scale)
         this.compactLayer.UpdateSizes(scale)
     }
 
     ChangeViewLimits(limits) {
+        this.gridLayer.Plot(limits)
         this.labelsLayer.UpdateLabels(limits)
     }
 
