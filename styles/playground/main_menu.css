@@ -36,6 +36,11 @@
     height: 250px;
 }
 
+.menu-block .description {
+    font-size: 0.75em;
+    color: var(--disabled-color);
+}
+
 .menu-multiple-block {
     display: grid;
     grid-auto-flow: row;
