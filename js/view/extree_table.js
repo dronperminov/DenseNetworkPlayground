@@ -26,12 +26,13 @@ class ExTreeTable {
     }
 
     PlotHeader() {
-        let names = [
-            "№",
-            "Содержимое",
-            "c<sub>n</sub>(x)<br>train", "h<sub>n</sub>(x)<br>train", "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|<br>train",
-            "c<sub>n</sub>(x)<br>test", "h<sub>n</sub>(x)<br>test", "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|<br>test"
-        ]
+        let names = ["№", "Содержимое"]
+
+        if (this.splits.train)
+            names.push("c<sub>n</sub>(x)<br>train", "h<sub>n</sub>(x)<br>train", "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|<br>train")
+
+        if (this.splits.test)
+            names.push("c<sub>n</sub>(x)<br>test", "h<sub>n</sub>(x)<br>test", "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|<br>test")
 
         let header = MakeElement(this.table, {class: "extree-table-header"})
 
@@ -49,6 +50,9 @@ class ExTreeTable {
         MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafContent(leaf)})
 
         for (let name of ["train", "test"]) {
+            if (!this.splits[name])
+                continue
+
             MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafCn(leaf, name)})
             MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafHn(leaf, name)})
             MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafDiff(leaf, name)})
@@ -68,8 +72,9 @@ class ExTreeTable {
     GetLeafContent(leaf) {
         let content  = []
 
-        for (let [name, split] of Object.entries(leaf.splits))
-            content.push(`${name}: ${split.labels.length} (${this.GetLeafCounts(leaf, name)})`)
+        for (let name of ["train", "test", "background"])
+            if (this.splits[name])
+                content.push(`${name}: ${leaf.splits[name].labels.length} (${this.GetLeafCounts(leaf, name)})`)
 
         return content.join("<br>")
     }

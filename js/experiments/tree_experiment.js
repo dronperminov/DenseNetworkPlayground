@@ -15,8 +15,7 @@ class TreeExperiment {
         let leafs = tree.GetLeafs()
 
         this.ShowSteps(datas)
-        this.InitControls(axisX, axisY, modelOutputMode, modelOutputSize)
-        this.InitControlsEvents()
+        this.InitControls(datas, axisX, axisY, modelOutputMode, modelOutputSize)
 
         this.InitDataModelPlot(leafs)
         this.ShowLeafsInfo(leafs)
@@ -69,38 +68,41 @@ class TreeExperiment {
         MakeElement(stepsList, {class: "text", innerText: `Сгенерированы ${datas.background.length} случайных точек на компакте и добавлены в дерево (с меткой 0)`}, "li")
     }
 
-    InitControls(axisX, axisY, modelOutputMode, modelOutputSize) {
+    InitControls(datas, axisX, axisY, modelOutputMode, modelOutputSize) {
         MakeElement(this.parent, {innerText: "Управление"}, "h3")
         let controls = MakeElement(this.parent, null, "ul")
 
         let size = MakeElement(controls, {innerHTML: "Количество точек выхода модели: "}, "li")
-        let mode = MakeElement(controls, {innerHTML: "Режим отображения выхода модели: "}, "li")
         this.controls["model-size"] = CloneSelect(modelOutputSize, size)
+        this.controls["model-size"].addEventListener("change", () => this.modelPlot.SetSize(this.controls["model-size"].value))
+
+        let mode = MakeElement(controls, {innerHTML: "Режим отображения выхода модели: "}, "li")
         this.controls["model-mode"] = CloneSelect(modelOutputMode, mode)
+        this.controls["model-mode"].addEventListener("change", () => this.modelPlot.SetMode(this.controls["model-mode"].value))
 
         let x = MakeElement(controls, {innerHTML: "Проекционная координата на <b>ось X</b>: "}, "li")
-        let y = MakeElement(controls, {innerHTML: "Проекционная координата на <b>ось Y</b>: "}, "li")
         this.controls["axis-x"] = CloneSelect(axisX, x)
-        this.controls["axis-y"] = CloneSelect(axisY, y)
-
-        let train = MakeElement(controls, {innerHTML: ""}, "li")
-        let test = MakeElement(controls, {innerHTML: ""}, "li")
-        let background = MakeElement(controls, {innerHTML: ""}, "li")
-        this.controls["plot-train"] = MakeCheckbox(train, "Отображать обучающие точки", true)
-        this.controls["plot-test"] = MakeCheckbox(test, "Отображать тестовые точки", false)
-        this.controls["plot-background"] = MakeCheckbox(background, "Отображать фоновые точки", false)
-    }
-
-    InitControlsEvents() {
         this.controls["axis-x"].addEventListener("change", () => this.SetAxes())
+
+        let y = MakeElement(controls, {innerHTML: "Проекционная координата на <b>ось Y</b>: "}, "li")
+        this.controls["axis-y"] = CloneSelect(axisY, y)
         this.controls["axis-y"].addEventListener("change", () => this.SetAxes())
 
-        this.controls["plot-train"].addEventListener("change", () => this.dataPlot.SetVisibility("train", this.controls["plot-train"].checked))
-        this.controls["plot-test"].addEventListener("change", () => this.dataPlot.SetVisibility("test", this.controls["plot-test"].checked))
-        this.controls["plot-background"].addEventListener("change", () => this.dataPlot.SetVisibility("background", this.controls["plot-background"].checked))
+        if (datas.train) {
+            let train = MakeElement(controls, {innerHTML: ""}, "li")
+            this.controls["plot-train"] = MakeCheckbox(train, "Отображать обучающие точки", true)
+            this.controls["plot-train"].addEventListener("change", () => this.dataPlot.SetVisibility("train", this.controls["plot-train"].checked))
+        }
 
-        this.controls["model-size"].addEventListener("change", () => this.modelPlot.SetSize(this.controls["model-size"].value))
-        this.controls["model-mode"].addEventListener("change", () => this.modelPlot.SetMode(this.controls["model-mode"].value))
+        if (datas.test) {
+            let test = MakeElement(controls, {innerHTML: ""}, "li")
+            this.controls["plot-test"] = MakeCheckbox(test, "Отображать тестовые точки", false)
+            this.controls["plot-test"].addEventListener("change", () => this.dataPlot.SetVisibility("test", this.controls["plot-test"].checked))
+        }
+
+        let background = MakeElement(controls, {innerHTML: ""}, "li")
+        this.controls["plot-background"] = MakeCheckbox(background, "Отображать фоновые точки", false)
+        this.controls["plot-background"].addEventListener("change", () => this.dataPlot.SetVisibility("background", this.controls["plot-background"].checked))
     }
 
     InitDataModelPlot(leafs) {
