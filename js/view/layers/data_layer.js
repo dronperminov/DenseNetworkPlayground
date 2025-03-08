@@ -94,6 +94,8 @@ class DataLayer {
     }
 
     UpdatePlotSizes(plot, scale) {
+        scale = Math.min(scale, 1)
+
         for (let circle of plot.points) {
             circle.setAttribute("r", scale * 3)
             circle.setAttribute("stroke-width", scale)

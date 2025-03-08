@@ -11,6 +11,8 @@ class GridLayer {
     }
 
     Plot(limits) {
+        this.UpdateSizes(this.viewBox.GetScale())
+
         let zeroX = this.viewBox.XtoScreen(0)
         let zeroY = this.viewBox.YtoScreen(0)
 

@@ -41,6 +41,7 @@ class CompactLayer {
     }
 
     UpdateSizes(scale) {
+        scale = Math.min(scale, 1)
         this.path.setAttribute("stroke-width", scale)
         this.path.setAttribute("stroke-dasharray", [scale * 5, scale * 5])
     }

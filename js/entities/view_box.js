@@ -96,7 +96,7 @@ class ViewBox extends EventEmitter {
     }
 
     GetScale() {
-        return Math.min(this.scale, 1)
+        return this.scale
     }
 
     Update() {

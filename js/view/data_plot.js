@@ -82,6 +82,7 @@ class DataPlot {
     }
 
     ChangeView() {
+        this.gridLayer.UpdateSizes(this.viewBox.GetScale())
         this.dataLayer.Plot()
         this.ChangeCompact()
     }
