@@ -4,14 +4,13 @@ class ModelCellsPlot {
         this.canvas = canvas
         this.model = model
         this.thresholds = thresholds
-        this.cells = cells
         this.point = new Float64Array(model.inputs).fill(0)
 
         this.ctx = canvas.getContext("2d")
         this.axes = [0, 1]
         this.mode = mode
         this.size = size
-        this.selectedCells = new Set()
+        this.selectedCells = []
 
         this.UpdateCanvasSize()
 
@@ -50,11 +49,11 @@ class ModelCellsPlot {
         this.Plot()
     }
 
-    SetCell(index, selected) {
+    SetCell(cell, selected) {
         if (selected)
-            this.selectedCells.add(index)
+            this.selectedCells.push(cell)
         else
-            this.selectedCells.delete(index)
+            this.selectedCells.splice(this.selectedCells.indexOf(cell), 1)
 
         this.Plot({inputs: false, outputs: false, pixels: true})
     }
@@ -159,14 +158,14 @@ class ModelCellsPlot {
             let canShow = true
 
             for (let i = 0; i < this.signs[index].length && canShow; i++)
-                if (this.signs[index][i] != this.cells[cell].signs[i])
+                if (this.signs[index][i] != cell.signs[i])
                     canShow = false
 
             if (canShow)
                 return true
         }
 
-        return this.selectedCells.size == 0
+        return this.selectedCells.length == 0
     }
 
     Resize() {

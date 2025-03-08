@@ -142,8 +142,24 @@ class TreeExperiment {
         MakeElement(this.parent, {class: "text", innerText: "Нажмите на строку таблицы, чтобы отобразить выбранную ячейку"}, "p")
         let treeTableDiv = MakeElement(this.parent, {class: "extree-table"})
 
-        this.treeTable = new ExTreeTable(treeTableDiv, datas, this.dataPlot, this.modelPlot, leafs)
+        this.treeTable = new ExTreeTable(treeTableDiv, datas, leafs)
         this.treeTable.Plot()
+
+        let masks = {}
+
+        for (let [name, data] of Object.entries(datas))
+            masks[name] = new Array(data.length).fill(false)
+
+        this.treeTable.on("click-leaf", (leaf, value, noCells) => {
+            for (let [name, data] of Object.entries(datas)) {
+                for (let index of leaf.splits[name].indices)
+                    masks[name][index] = value
+
+                this.dataPlot.SetMask(name, noCells ? null : masks[name])
+            }
+
+            this.modelPlot.SetCell(leaf, value)
+        })
     }
 
     InitDataTable() {

@@ -1,14 +1,10 @@
-class ExTreeTable {
-    constructor(div, splits, dataPlot, modelPlot, leafs, initialRows = 20) {
+class ExTreeTable extends EventEmitter {
+    constructor(div, splits, leafs, initialRows = 20) {
+        super()
+
         this.div = div
         this.splits = splits
-        this.dataPlot = dataPlot
-        this.modelPlot = modelPlot
         this.leafs = leafs
-        this.masks = {}
-
-        for (let [name, data] of Object.entries(this.splits))
-            this.masks[name] = new Array(data.length).fill(false)
 
         this.initialRows = initialRows
         this.lastRenderedIndex = -1
@@ -109,15 +105,7 @@ class ExTreeTable {
         row.classList.toggle("extree-table-row-selected")
 
         let value = row.classList.contains("extree-table-row-selected") ? true : false
-        let noMask = this.div.querySelector(".extree-table-row-selected") == null
-
-        for (let [name, data] of Object.entries(this.splits)) {
-            for (let index of leaf.splits[name].indices)
-                this.masks[name][index] = value
-
-            this.dataPlot.SetMask(name, noMask ? null : this.masks[name])
-        }
-
-        this.modelPlot.SetCell(leafIndex, value)
+        let noCells = this.div.querySelector(".extree-table-row-selected") == null
+        this.emit("click-leaf", leaf, value, noCells)
     }
 }
