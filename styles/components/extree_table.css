@@ -21,15 +21,16 @@
     position: sticky;
     z-index: 1;
     background: var(--extree-table-header-background-color);
-    height: 32px;
+    height: 35px;
 }
 
 .extree-table-header:first-child {
     top: 0;
+    cursor: pointer;
 }
 
 .extree-table-header ~ .extree-table-header {
-    top: 32px;
+    top: 35px;
 }
 
 .extree-table-row {
@@ -49,12 +50,14 @@
     color: var(--extree-table-cell-color);
     line-height: 1.4em;
     white-space: nowrap;
+    min-width: 65px;
 }
 
 .extree-table-header .extree-table-cell {
     font-weight: bold;
     border-top: none;
     padding: 2px 5px;
+    position: relative;
 }
 
 .extree-table-row:last-child .extree-table-cell {
@@ -75,4 +78,18 @@
     width: 0.7em;
     height: 0.7em;
     border-radius: 100%;
+}
+
+.extree-table-ascending:after, .extree-table-descending:after {
+    position: absolute;
+    right: 4px;
+    font-size: 1.2em;
+}
+
+.extree-table-ascending:after {
+    content: "↓";
+}
+
+.extree-table-descending:after {
+    content: "↑";
 }

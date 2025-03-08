@@ -38,6 +38,7 @@
     max-height: 550px;
     resize: vertical;
     overflow: auto;
+    border-left: 1px solid var(--data-table-border-color);
     border-right: 1px solid var(--data-table-border-color);
 }
 
@@ -80,13 +81,6 @@
     border-right: 1px solid var(--data-table-cell-border-color);
     border-bottom: 1px solid var(--data-table-cell-border-color);
     position: relative;
-}
-
-.data-table-tab-cell:first-child {
-    border-left: 1px solid var(--data-table-border-color);
-}
-
-.data-table-tab-cell:last-child {
 }
 
 .data-table-tab-sort-icon {

@@ -139,7 +139,7 @@ class TreeExperiment {
     }
 
     InitTreeCellsTable(datas, leafs) {
-        MakeElement(this.parent, {class: "text", innerText: "Нажмите на строку таблицы, чтобы отобразить выбранную ячейку"}, "p")
+        MakeElement(this.parent, {class: "text", innerText: "Нажмите на строку таблицы, чтобы отобразить выбранную ячейку. Нажмите на заголовочный столбец, чтобы отсортировать ячейки по возрастанию значения (нажмите ещё раз для сортировки по убыванию)."}, "p")
         let treeTableDiv = MakeElement(this.parent, {class: "extree-table"})
 
         this.treeTable = new ExTreeTable(treeTableDiv, datas, leafs)
