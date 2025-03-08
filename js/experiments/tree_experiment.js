@@ -110,7 +110,7 @@ class TreeExperiment {
     }
 
     InitDataModelPlot(leafs) {
-        let dataPlotDiv = MakeElement(this.parent, {class: "data-plot", style: "width: 300px; height: 300px;"})
+        let dataPlotDiv = MakeElement(this.parent, {class: "data-plot"})
         let modelPlotCanvas = MakeElement(dataPlotDiv, null, "canvas")
         let dataPlotSVG = MakeElement(dataPlotDiv, null, "svg")
 

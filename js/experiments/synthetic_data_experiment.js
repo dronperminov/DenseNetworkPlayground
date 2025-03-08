@@ -60,7 +60,7 @@ class SyntheticDataExperiment {
     }
 
     InitDataPlot() {
-        let dataPlotDiv = MakeElement(this.parent, {class: "data-plot", style: "width: 300px; height: 300px;"})
+        let dataPlotDiv = MakeElement(this.parent, {class: "data-plot"})
         let dataPlotSVG = MakeElement(dataPlotDiv, null, "svg")
         let dataTableDiv = MakeElement(this.parent, {class: "data-table"})
 

@@ -194,6 +194,14 @@ Playground.prototype.NormalizeData = function() {
     this.visualizer.NormalizeData(mode)
 }
 
+Playground.prototype.ClearData = function() {
+    this.visualizer.ClearData()
+}
+
+Playground.prototype.DownloadDataset = function() {
+    this.visualizer.DownloadDataset()
+}
+
 Playground.prototype.SetCompactOffset = function(offset) {
     this.visualizer.SetCompactOffset(offset / 100)
 }

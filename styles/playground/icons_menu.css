@@ -1,7 +1,7 @@
 .icons-block {
     display: grid;
     grid-auto-flow: row;
-    grid-gap: 5px;
+    grid-gap: 6px;
     padding: 0 5px;
 }
 
@@ -11,13 +11,41 @@
     padding: 5px 0;
 }
 
-.parameter-icon-label {
-    font-family: Roboto;
-    font-weight: bold;
-    font-size: 1.4em;
-    padding-bottom: 1px;
+.parameter-icon-interactive {
+    cursor: pointer;
+    font-size: 0.6em;
+}
+
+.parameter-icon-interactive:hover {
+    color: var(--main-color);
+}
+
+.parameter-icon-interactive:hover svg {
+    fill: var(--main-color);
 }
 
 .icons-block hr {
     margin: 2px 0;
+}
+
+#train-icons-menu, #data-icons-menu, #experiments-icons-menu {
+    display: none;
+}
+
+.playground:has(#tab-train-input:checked) {
+    #train-icons-menu {
+        display: grid;
+    }
+}
+
+.playground:has(#tab-data-input:checked) {
+    #data-icons-menu {
+        display: grid;
+    }
+}
+
+.playground:has(#tab-experiments-input:checked) {
+    #experiments-icons-menu {
+        display: grid;
+    }
 }

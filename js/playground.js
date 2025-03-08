@@ -179,10 +179,10 @@ class Playground {
         this.normalizeDataBtn.addEventListener("click", () => this.NormalizeData())
 
         let downloadDataBtn = document.getElementById("download-data-btn")
-        downloadDataBtn.addEventListener("click", () => this.visualizer.DownloadDataset())
+        downloadDataBtn.addEventListener("click", () => this.DownloadDataset())
 
         let clearDataBtn = document.getElementById("clear-data-btn")
-        clearDataBtn.addEventListener("click", () => this.visualizer.ClearData())
+        clearDataBtn.addEventListener("click", () => this.ClearData())
     }
 
     InitExperimentsMenu() {
