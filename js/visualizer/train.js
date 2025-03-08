@@ -7,6 +7,12 @@ Visualizer.prototype.Reset = function(disabled) {
 
 Visualizer.prototype.GetTrainData = function() {
     let trainData = this.dataset.splits.train.data
+
+    if (this.modelManager.trainerModel) {
+        trainData = this.compact.GetData(trainData.length)
+        this.modelManager.trainerModel.PredictUnrolled(trainData.inputs, trainData.length, trainData.outputs)
+    }
+
     let backgroundData = this.compact.GetData(Math.floor(trainData.length * this.backgroundPart))
     let datas = [trainData, backgroundData]
 

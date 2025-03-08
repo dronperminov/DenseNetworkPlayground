@@ -31,6 +31,11 @@
     display: block;
 }
 
+.menu-block svg {
+    width: 100%;
+    height: 250px;
+}
+
 .menu-multiple-block {
     display: grid;
     grid-auto-flow: row;

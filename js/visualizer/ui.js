@@ -67,6 +67,14 @@ Visualizer.prototype.LoadModel = function(data) {
     this.modelManager.Load(data)
 }
 
+Visualizer.prototype.SetTrainerModel = function() {
+    this.modelManager.SetTrainerModel()
+}
+
+Visualizer.prototype.RemoveTrainerModel = function() {
+    this.modelManager.RemoveTrainerModel()
+}
+
 Visualizer.prototype.RemoveDisabledNeurons = function() {
     this.modelManager.RemoveDisabledNeurons()
 }

@@ -1,10 +1,11 @@
 class ModelArchitectureLayer extends EventEmitter {
-    constructor(svg, model) {
+    constructor(svg, model, interactive = true) {
         super()
         this.svg = svg
         this.model = model
         this.mode = "weights"
         this.show = {layer: this.model.layers.length - 1, neuron: 0}
+        this.interactive = interactive
 
         this.Init()
         new ResizeObserver(() => this.Resize()).observe(this.svg)
@@ -97,8 +98,11 @@ class ModelArchitectureLayer extends EventEmitter {
             let size = (i < 0 ? this.model.inputs : this.model.layers[i].outputs)
 
             for (let j = 0; j < size + bias; j++)
-                this.neurons[i].push(this.MakeNeuron(j == size ? "1" : this.GetNeuronName(i, j), i < 0 || j == size))
+                this.neurons[i].push(this.MakeNeuron(j == size ? "1" : this.GetNeuronName(i, j), !this.interactive || i < 0 || j == size))
         }
+
+        if (!this.interactive)
+            return
 
         for (let i = 0; i < this.model.layers.length; i++)
             for (let j = 0; j < this.model.layers[i].outputs; j++)
@@ -126,6 +130,9 @@ class ModelArchitectureLayer extends EventEmitter {
     }
 
     Resize() {
+        if (this.svg.clientWidth == 0 || this.svg.clientHeight == 0)
+            return
+
         let coordinates = this.GetBestCoordinates()
 
         for (let index = -1; index < this.model.layers.length; index++)
@@ -154,7 +161,9 @@ class ModelArchitectureLayer extends EventEmitter {
                 }
 
                 AddClassName(this.neurons[index][i].neuron, "neuron-disabled", layer.disabled[i])
-                AddClassName(this.neurons[index][i].neuron, "neuron-active", index == this.show.layer && i == this.show.neuron)
+
+                if (this.interactive)
+                    AddClassName(this.neurons[index][i].neuron, "neuron-active", index == this.show.layer && i == this.show.neuron)
             }
         }
     }

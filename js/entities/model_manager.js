@@ -3,6 +3,7 @@ class ModelManager extends EventEmitter {
         super()
 
         this.model = model
+        this.trainerModel = null
         this.predictions = {}
     }
 
@@ -35,6 +36,15 @@ class ModelManager extends EventEmitter {
         this.ZeroGradientParams()
         this.emit("change-architecture")
         this.emit("change")
+    }
+
+    SetTrainerModel() {
+        this.trainerModel = new NeuralNetwork(this.model.inputs)
+        this.trainerModel.FromJSON(this.model.ToJSON())
+    }
+
+    RemoveTrainerModel() {
+        this.trainerModel = null
     }
 
     RemoveDisabledNeurons() {

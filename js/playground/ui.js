@@ -4,6 +4,7 @@ Playground.prototype.SetModelInputsCount = function(inputs) {
         return
     }
 
+    this.RemoveTrainerModel()
     this.visualizer.SetDimension(inputs)
 }
 
@@ -49,6 +50,22 @@ Playground.prototype.LoadModel = function(data) {
         alert(error.message)
         return
     }
+}
+
+Playground.prototype.SetTrainerModel = function() {
+    this.visualizer.SetTrainerModel()
+    this.trainerModelBlock.classList.remove("hidden")
+    this.setTrainerModelBtn.classList.add("hidden")
+    this.removeTrainerModelBtn.classList.remove("hidden")
+
+    let architecture = new ModelArchitectureLayer(this.trainerModelSVG, this.visualizer.modelManager.trainerModel, false)
+}
+
+Playground.prototype.RemoveTrainerModel = function() {
+    this.visualizer.RemoveTrainerModel()
+    this.removeTrainerModelBtn.classList.add("hidden")
+    this.setTrainerModelBtn.classList.remove("hidden")
+    this.trainerModelBlock.classList.add("hidden")
 }
 
 Playground.prototype.RemoveDisabledNeurons = function() {

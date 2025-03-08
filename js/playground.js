@@ -106,6 +106,15 @@ class Playground {
         let compactOffset = new NumberInput(this.compactOffset)
         compactOffset.on("change", value => this.SetCompactOffset(value))
 
+        this.trainerModelBlock = document.getElementById("trainer-model-block")
+        this.trainerModelSVG = document.getElementById("trainer-model")
+
+        this.setTrainerModelBtn = document.getElementById("set-trainer-model-btn")
+        this.setTrainerModelBtn.addEventListener("click", () => this.SetTrainerModel())
+
+        this.removeTrainerModelBtn = document.getElementById("remove-trainer-model-btn")
+        this.removeTrainerModelBtn.addEventListener("click", () => this.RemoveTrainerModel())
+
         this.UpdateTrainIcons()
     }
 
