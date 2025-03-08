@@ -45,7 +45,8 @@
     display: table;
     font-size: 0.8em;
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .data-table-tab-hidden {
@@ -76,7 +77,8 @@
     min-width: 50px;
     vertical-align: middle;
     color: var(--data-table-cell-color);
-    border: 1px solid var(--data-table-cell-border-color);
+    border-right: 1px solid var(--data-table-cell-border-color);
+    border-bottom: 1px solid var(--data-table-cell-border-color);
     position: relative;
 }
 

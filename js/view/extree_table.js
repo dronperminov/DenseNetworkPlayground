@@ -14,7 +14,7 @@ class ExTreeTable extends EventEmitter {
     }
 
     Plot() {
-        this.table = MakeElement(this.div, {class: "extree-table-table"})
+        this.table = MakeElement(this.div, {class: "extree-table-table"}, "table")
         this.PlotHeader()
 
         for (let i = 0; i < Math.min(this.leafs.length, this.initialRows); i++)
@@ -22,36 +22,41 @@ class ExTreeTable extends EventEmitter {
     }
 
     PlotHeader() {
-        let names = ["№", "Содержимое"]
-
-        if (this.splits.train)
-            names.push("c<sub>n</sub>(x)<br>train", "h<sub>n</sub>(x)<br>train", "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|<br>train")
-
-        if (this.splits.test)
-            names.push("c<sub>n</sub>(x)<br>test", "h<sub>n</sub>(x)<br>test", "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|<br>test")
-
-        let header = MakeElement(this.table, {class: "extree-table-header"})
-
-        for (let name of names)
-            MakeElement(header, {class: "extree-table-cell", innerHTML: name})
-    }
-
-    PlotRow(index) {
-        let leaf = this.leafs[index]
-
-        let row = MakeElement(this.table, {class: "extree-table-row"})
-        row.addEventListener("click", () => this.ClickRow(row, leaf, index))
-
-        MakeElement(row, {class: "extree-table-cell", innerText: `${index + 1}`})
-        MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafContent(leaf)})
+        let header = MakeElement(this.table, {class: "extree-table-header"}, "tr")
+        MakeElement(header, {class: "extree-table-cell", innerHTML: "№", rowspan: 2}, "th")
+        MakeElement(header, {class: "extree-table-cell", innerHTML: "Содержимое", rowspan: 2}, "th")
 
         for (let name of ["train", "test"]) {
             if (!this.splits[name])
                 continue
 
-            MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafCn(leaf, name)})
-            MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafHn(leaf, name)})
-            MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafDiff(leaf, name)})
+            MakeElement(header, {class: "extree-table-cell", innerHTML: "c<sub>n</sub>(x)"}, "th")
+            MakeElement(header, {class: "extree-table-cell", innerHTML: "h<sub>n</sub>(x)"}, "th")
+            MakeElement(header, {class: "extree-table-cell", innerHTML: "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|"}, "th")
+        }
+
+        let splitsHeader = MakeElement(this.table, {class: "extree-table-header"}, "tr")
+        for (let name of ["train", "test"])
+            if (this.splits[name])
+                MakeElement(splitsHeader, {class: "extree-table-cell", innerHTML: name, colspan: 3}, "th")
+    }
+
+    PlotRow(index) {
+        let leaf = this.leafs[index]
+
+        let row = MakeElement(this.table, {class: "extree-table-row"}, "tr")
+        row.addEventListener("click", () => this.ClickRow(row, leaf, index))
+
+        MakeElement(row, {class: "extree-table-cell", innerText: `${index + 1}`}, "td")
+        MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafContent(leaf)}, "td")
+
+        for (let name of ["train", "test"]) {
+            if (!this.splits[name])
+                continue
+
+            MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafCn(leaf, name)}, "td")
+            MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafHn(leaf, name)}, "td")
+            MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafDiff(leaf, name)}, "td")
         }
 
         this.lastRenderedIndex = index

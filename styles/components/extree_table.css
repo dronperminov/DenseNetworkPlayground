@@ -11,22 +11,28 @@
 }
 
 .extree-table-table {
-    display: table;
     font-size: 0.8em;
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .extree-table-header {
-    display: table-row;
     position: sticky;
-    top: -1px;
     z-index: 1;
     background: var(--extree-table-header-background-color);
+    height: 32px;
+}
+
+.extree-table-header:first-child {
+    top: 0;
+}
+
+.extree-table-header ~ .extree-table-header {
+    top: 32px;
 }
 
 .extree-table-row {
-    display: table-row;
     cursor: pointer;
 }
 
@@ -35,11 +41,11 @@
 }
 
 .extree-table-cell {
-    display: table-cell;
     text-align: center;
     padding: 5px;
     vertical-align: middle;
-    border: 1px solid var(--extree-table-cell-border-color);
+    border-right: 1px solid var(--extree-table-cell-border-color);
+    border-bottom: 1px solid var(--extree-table-cell-border-color);
     color: var(--extree-table-cell-color);
     line-height: 1.4em;
     white-space: nowrap;
@@ -48,6 +54,7 @@
 .extree-table-header .extree-table-cell {
     font-weight: bold;
     border-top: none;
+    padding: 2px 5px;
 }
 
 .extree-table-row:last-child .extree-table-cell {
