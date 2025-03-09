@@ -1,5 +1,5 @@
 class ModelCellsPlot {
-    constructor(viewBox, canvas, model, thresholds, cells, mode = "", size = 100) {
+    constructor(viewBox, canvas, model, thresholds, mode = "", size = 100) {
         this.viewBox = viewBox
         this.canvas = canvas
         this.model = model

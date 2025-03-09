@@ -6,6 +6,8 @@ class TreeExperiment {
 
         this.model = new NeuralNetwork(2)
         this.model.FromJSON(this.visualizer.modelManager.model.ToJSON())
+
+        this.cellExtractor = new CellsExtractor(this.model)
     }
 
     Run(backgroundCount, axisX, axisY, modelOutputMode, modelOutputSize) {
@@ -29,6 +31,7 @@ class TreeExperiment {
             this.dataTable.ChangeData(name, split)
         }
 
+        this.leafs = leafs
         this.SetAxes()
     }
 
@@ -107,6 +110,14 @@ class TreeExperiment {
         let grid = MakeElement(controls, {innerHTML: ""}, "li")
         this.controls["plot-grid"] = MakeCheckbox(grid, "Отображать сетку", true)
         this.controls["plot-grid"].addEventListener("change", () => this.dataPlot.SetGridVisibility(this.controls["plot-grid"].checked))
+
+        let cellsMode = MakeElement(controls, {innerHTML: "Режим отображения ячеек: "}, "li")
+        this.controls["cells-mode"] = MakeElement(cellsMode, {class: "basic-input inline-input"}, "select")
+        MakeElement(this.controls["cells-mode"], {value: "no", innerText: "не показывать"}, "option")
+        MakeElement(this.controls["cells-mode"], {value: "transparent", innerText: "только контуры"}, "option")
+        MakeElement(this.controls["cells-mode"], {value: "colors", innerText: "цвет по hₙ(x)"}, "option")
+        this.controls["cells-mode"].value = "transparent"
+        this.controls["cells-mode"].addEventListener("change", () => this.cellsPlot.SetColorMode(this.controls["cells-mode"].value))
     }
 
     InitDataModelPlot(leafs) {
@@ -121,7 +132,9 @@ class TreeExperiment {
         this.dataPlot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: false})
         this.dataPlot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: false})
 
-        this.modelPlot = new ModelCellsPlot(viewBox, modelPlotCanvas, this.model, this.visualizer.thresholds, leafs, this.controls["model-mode"].value, this.controls["model-size"].value)
+        this.modelPlot = new ModelCellsPlot(viewBox, modelPlotCanvas, this.model, this.visualizer.thresholds, this.controls["model-mode"].value, this.controls["model-size"].value)
+
+        this.cellsPlot = new CellsPlot(viewBox, this.visualizer.thresholds, this.visualizer.compact)
     }
 
     ShowLeafsInfo(leafs) {
@@ -163,6 +176,7 @@ class TreeExperiment {
             }
 
             this.modelPlot.SetCell(leaf, value)
+            this.cellsPlot.SetLeaf(leaf, value)
         })
     }
 
@@ -182,5 +196,8 @@ class TreeExperiment {
 
         this.dataPlot.SetAxes(axisX, axisY)
         this.modelPlot.SetAxes(axisX, axisY)
+
+        let cells = this.cellExtractor.Extract(this.leafs, this.dataPlot.compactLayer.GetLimits(), axisX, axisY)
+        this.cellsPlot.ChangeCells(this.leafs, cells)
     }
 }

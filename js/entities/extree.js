@@ -1,11 +1,14 @@
 class ExTree {
     constructor() {
         this.root = this.MakeNode()
+        this.total = {train: 0, test: 0, background: 0}
     }
 
     Fill(name, data, predictions, signs) {
         for (let i = 0; i < data.length; i++)
             this.AddPoint(name, i, data.outputs[i], predictions[i], signs[i])
+
+        this.total[name] += data.length
     }
 
     GetLeafs() {
@@ -120,7 +123,7 @@ class ExTree {
         let backgroundSumVariance = background.values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0)
         let variance = (dataSumVariance + backgroundSumVariance) / Math.max(total, 1)
 
-        let h = split.labels.reduce((sum, label) => sum + label, 0) / Math.max(total, 1)
+        let h = split.labels.reduce((sum, label) => sum + label, 0) / Math.max(split.total + background.total, 1)
 
         stats.c.mean = mean
         stats.c.variance = variance

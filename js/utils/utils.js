@@ -17,7 +17,7 @@ function SetAttributes(element, attributes) {
 function MakeElement(parent = null, attributes = null, tagName = "div") {
     let element = null
 
-    if (["svg", "path", "g", "circle", "rect", "text"].indexOf(tagName) > -1) {
+    if (["svg", "path", "g", "circle", "rect", "text", "polygon"].indexOf(tagName) > -1) {
         element = document.createElementNS("http://www.w3.org/2000/svg", tagName)
     }
     else {
@@ -32,7 +32,7 @@ function MakeElement(parent = null, attributes = null, tagName = "div") {
     return element
 }
 
-function MakeCheckbox(parent = null, text, checked) {
+function MakeCheckbox(parent, text, checked) {
     let label = MakeElement(parent, {class: "switch-checkbox"}, "label")
     let input = MakeElement(label, {type: "checkbox", autocomplete: "off"}, "input")
     let span = MakeElement(label, {class: "switch-checkbox-text", innerText: text}, "span")
