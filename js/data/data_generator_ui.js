@@ -69,6 +69,26 @@ class DataGeneratorUI {
     }
 
     BuildParam(param, parent) {
+        if (param.type == "vector") {
+            let label = MakeElement(parent, {innerHTML: param.title}, "label")
+            let input = new VectorInput(param.dimension, label)
+
+            if ("value" in param)
+                input.SetValue(param.value)
+
+            return input
+        }
+
+        if (param.type == "matrix") {
+            let label = MakeElement(parent, {innerHTML: param.title}, "label")
+            let input = new MatrixInput(param.dimension, label)
+
+            if ("value" in param)
+                input.SetValue(param.value)
+
+            return input
+        }
+
         let attributes = {type: "number"}
 
         if ("value" in param)

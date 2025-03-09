@@ -119,3 +119,27 @@
 .switch-checkbox input:checked + .switch-checkbox-text:after {
     left: 0.6em;
 }
+
+.vector-input {
+    max-width: 260px;
+    overflow-x: auto;
+}
+
+.vector-input-inputs {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(50px, 1fr);
+    grid-gap: 5px;
+}
+
+.matrix-input {
+    max-width: 260px;
+    overflow-x: auto;
+}
+
+.matrix-input-row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(50px, 1fr);
+    grid-gap: 5px;
+}

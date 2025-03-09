@@ -139,16 +139,21 @@ Playground.prototype.GenerateData = function(replace = true) {
     config.balance = this.dataBalance.GetValue() / 100
     config.error = this.dataError.GetValue() / 100
 
-    let trainData = this.dataGenerator.Generate(trainCount, config)
-    let testData = this.dataGenerator.Generate(testCount, config)
+    try {
+        let trainData = this.dataGenerator.Generate(trainCount, config)
+        let testData = this.dataGenerator.Generate(testCount, config)
 
-    if (replace) {
-        playground.visualizer.SetData("train", trainData)
-        playground.visualizer.SetData("test", testData)
+        if (replace) {
+            playground.visualizer.SetData("train", trainData)
+            playground.visualizer.SetData("test", testData)
+        }
+        else {
+            playground.visualizer.AddData("train", trainData)
+            playground.visualizer.AddData("test", testData)
+        }
     }
-    else {
-        playground.visualizer.AddData("train", trainData)
-        playground.visualizer.AddData("test", testData)
+    catch (error) {
+        alert(`Не удалось сгенерировать данные (${error.message})`)
     }
 }
 

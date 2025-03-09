@@ -215,6 +215,9 @@ class Playground {
     InitDataGenerators() {
         this.dataGenerator = new DataGeneratorUI(document.getElementById("data-generators"))
         this.dataGenerator.Add(new Point2DGenerator())
+
+        for (let dimension = 3; dimension <= 10; dimension++)
+            this.dataGenerator.Add(new MultivariateGenerator(dimension))
     }
 
     Start() {
