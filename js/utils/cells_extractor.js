@@ -9,14 +9,9 @@ class CellsExtractor {
 
         for (let leaf of leafs) {
             let inequalities = this.GetLinesBySigns(leaf.signs, axisX, axisY)
-
-            inequalities.push([1, 0, -limits.xmin, 1])
-            inequalities.push([1, 0, -limits.xmax, -1])
-            inequalities.push([0, 1, -limits.ymin, 1])
-            inequalities.push([0, 1, -limits.ymax, -1])
-
-            let points = this.GetIntersections(inequalities)
+            let points = this.GetIntersections(inequalities, limits)
             let convex = this.ComputeConvexCell(points, inequalities)
+
             cells.push(convex)
         }
 
@@ -31,6 +26,9 @@ class CellsExtractor {
         let layer = this.model.layers[0]
         for (let i = 0; i < layer.outputs; i++) {
             let line = [layer.w[i * layer.inputs + axisX], layer.w[i * layer.inputs + axisY], layer.b[i], signs[neuron++]]
+
+            if (layer.disabled[i])
+                line = [0, 0, 0, 0]
 
             layer2lines[0].push(line)
             lines.push(line)
@@ -59,6 +57,9 @@ class CellsExtractor {
                     line[2] += layer.w[i * layer.inputs + j] * layer2lines[index - 1][j][2] * activation
                 }
 
+                if (layer.disabled[i])
+                    line = [0, 0, 0, 0]
+
                 layer2lines[index].push(line)
                 lines.push(line)
             }
@@ -68,44 +69,69 @@ class CellsExtractor {
     }
 
     ComputeConvexCell(points, inequalities) {
-        let convex = []
-
-        for (let point of points)
-            if (this.IsCorrectPoint(point, inequalities))
-                convex.push(point)
+        let convex = points.filter(point => this.IsCorrectPoint(point, inequalities))
 
         if (convex.length < 3)
             return []
 
-        let center = convex.reduce((sum, p) => [sum[0] + p[0], sum[1] + p[1]], [0, 0]).map(v => v / convex.length)
-        convex.sort((p1, p2) => Math.atan2(p1[1] - center[1], p1[0] - center[0]) - Math.atan2(p2[1] - center[1], p2[0] - center[0]))
+        let cx = 0
+        let cy = 0
+
+        for (let [x, y] of convex) {
+            cx += x
+            cy += y
+        }
+
+        cx /= convex.length
+        cy /= convex.length
+
+        convex.sort((p1, p2) => Math.atan2(p1[1] - cy, p1[0] - cx) - Math.atan2(p2[1] - cy, p2[0] - cx))
         return convex
     }
 
-    GetIntersections(inequalities) {
-        let points = []
-        let set = new Set()
+    GetIntersections(inequalities, limits) {
+        let bbox = [
+            [1, 0, -limits.xmin, 1],
+            [1, 0, -limits.xmax, -1],
+            [0, 1, -limits.ymin, 1],
+            [0, 1, -limits.ymax, -1]
+        ]
+
+        let xmin = limits.xmin - this.eps
+        let xmax = limits.xmax + this.eps
+        let ymin = limits.ymin - this.eps
+        let ymax = limits.ymax + this.eps
+
+        let points = [
+            [limits.xmin, limits.ymin],
+            [limits.xmin, limits.ymax],
+            [limits.xmax, limits.ymax],
+            [limits.xmax, limits.ymin]
+        ]
 
         for (let i = 0; i < inequalities.length; i++) {
-            for (let j = i + 1; j < inequalities.length; j++) {
-                let intersection = this.GetIntersection(inequalities[i], inequalities[j])
-                if (!intersection)
-                    continue
+            let inequality = inequalities[i]
 
-                let key = intersection.join("-")
-                if (!set.has(key)) {
+            for (let j = i + 1; j < inequalities.length; j++) {
+                let intersection = this.GetIntersection(inequality, inequalities[j], xmin, ymin, xmax, ymax)
+                if (intersection)
                     points.push(intersection)
-                    set.add(key)
-                }
+            }
+
+            for (let j = 0; j < bbox.length; j++) {
+                let intersection = this.GetIntersection(inequality, bbox[j], xmin, ymin, xmax, ymax)
+                if (intersection)
+                    points.push(intersection)
             }
         }
 
         return points
     }
 
-    GetIntersection(line1, line2) {
-        let [a1, b1, c1, sign1] = line1
-        let [a2, b2, c2, sign2] = line2
+    GetIntersection(line1, line2, xmin, ymin, xmax, ymax) {
+        let [a1, b1, c1] = line1
+        let [a2, b2, c2] = line2
+
         let det = a1 * b2 - a2 * b1
 
         if (Math.abs(det) < this.eps)
@@ -113,7 +139,11 @@ class CellsExtractor {
 
         let x = (b1 * c2 - b2 * c1) / det
         let y = (a2 * c1 - a1 * c2) / det
-        return [x, y]
+
+        if (xmin <= x && x <= xmax && ymin <= y && y <= ymax)
+            return [x, y]
+
+        return null
     }
 
     IsCorrectPoint(point, inequalities) {
