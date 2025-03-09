@@ -4,6 +4,9 @@ class Playground {
         this.running = false
 
         this.InitMenu()
+
+        this.visualizer.SetDimension(2)
+        this.visualizer.SetDataVisibility("test", false)
     }
 
     InitMenu() {
@@ -105,6 +108,7 @@ class Playground {
         this.compactOffset = document.getElementById("compact-offset")
         let compactOffset = new NumberInput(this.compactOffset)
         compactOffset.on("change", value => this.SetCompactOffset(value))
+        this.SetCompactOffset(compactOffset.GetValue())
 
         this.trainerModelBlock = document.getElementById("trainer-model-block")
         this.trainerModelSVG = document.getElementById("trainer-model")
@@ -155,6 +159,18 @@ class Playground {
     }
 
     InitDataMenu() {
+        this.dataCount = new NumberInput(document.getElementById("data-count"))
+        this.dataBalance = new RangeInput(document.getElementById("data-balance"), document.getElementById("data-balance-label"))
+        this.dataTestPart = new RangeInput(document.getElementById("data-test-part"), document.getElementById("data-test-part-label"))
+        this.dataError = new RangeInput(document.getElementById("data-error"), document.getElementById("data-error-label"))
+
+        let dataGenerateBtn = document.getElementById("data-generate-btn")
+        dataGenerateBtn.addEventListener("click", () => this.GenerateData(true))
+        let dataAddBtn = document.getElementById("data-add-btn")
+        dataAddBtn.addEventListener("click", () => this.GenerateData(false))
+
+        this.InitDataGenerators()
+
         this.trainDatasetValue = document.getElementById("train-dataset-value")
         this.testDatasetValue = document.getElementById("test-dataset-value")
 
@@ -194,6 +210,11 @@ class Playground {
 
         let treeExperimentBtn = document.getElementById("tree-experiment-btn")
         treeExperimentBtn.addEventListener("click", () => this.RunTreeExperiment())
+    }
+
+    InitDataGenerators() {
+        this.dataGenerator = new DataGeneratorUI(document.getElementById("data-generators"))
+        this.dataGenerator.Add(new Point2DGenerator())
     }
 
     Start() {

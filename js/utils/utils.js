@@ -43,6 +43,25 @@ function MakeCheckbox(parent, text, checked) {
     return input
 }
 
+function MakeSelect(parent, text, options, value = null) {
+    let label = MakeElement(parent, {innerHTML: text}, "label")
+    let select = MakeElement(parent, {class: "basic-input"}, "select")
+
+    for (let option of options)
+        MakeElement(select, {value: option.name, innerText: option.title}, "option")
+
+    if (value != null)
+        select.value = value
+
+    return select
+}
+
+function MakeInput(parent, text, attributes) {
+    let label = MakeElement(parent, {innerHTML: text}, "label")
+    let input = MakeElement(label, {class: "basic-input", ...attributes}, "input")
+    return input
+}
+
 function CloneSelect(targetSelect, parent = null) {
     let select = MakeElement(parent, {class: "basic-input inline-input"}, "select")
 

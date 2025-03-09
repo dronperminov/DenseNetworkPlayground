@@ -301,6 +301,44 @@
 
                 <div id="data-menu">
                     <details class="menu-section" open>
+                        <summary>Генератор данных</summary>
+
+                        <div id="data-generators"></div>
+
+                        <div class="menu-block">
+                            <label>Количество данных
+                                <input class="basic-input" type="number" id="data-count" step="1" min="10" max="10000" value="2000">
+                            </label>
+                        </div>
+
+                        <div class="menu-block">
+                             <label>Баланс классов
+                                <input class="basic-input" type="range" id="data-balance" step="1" min="0" max="100" value="50" autocomplete="off">
+                            </label>
+                            <div class="range-label"><span id="data-balance-label">50</span>%</div>
+                        </div>
+
+                        <div class="menu-block">
+                             <label>Доля тестовых данных
+                                <input class="basic-input" type="range" id="data-test-part" step="5" min="0" max="95" value="50" autocomplete="off">
+                            </label>
+                            <div class="range-label"><span id="data-test-part-label">50</span>%</div>
+                        </div>
+
+                        <div class="menu-block">
+                             <label>Ошибка
+                                <input class="basic-input" type="range" id="data-error" step="1" min="0" max="50" value="0" autocomplete="off">
+                            </label>
+                            <div class="range-label"><span id="data-error-label">0</span>%</div>
+                        </div>
+
+                        <div class="menu-block menu-block-grid">
+                            <button class="basic-button" id="data-generate-btn">Создать</button>
+                            <button class="basic-button" id="data-add-btn">Добавить</button>
+                        </div>
+                    </details>
+
+                    <details class="menu-section" open>
                         <summary>Загрузка из файла</summary>
 
                         <div class="menu-block menu-multiple-block">
@@ -551,7 +589,9 @@
 
     <!-- DATA -->
     <script src="js/data/data_generator.js"></script>
+    <script src="js/data/point2d_data_generator.js"></script>
     <script src="js/data/dataset.js"></script>
+    <script src="js/data/data_generator_ui.js"></script>
 
     <!-- MODEL -->
     <script src="js/model/fully_connected_layer.js"></script>
@@ -600,20 +640,9 @@
 
     <script>
         let playground = new Playground()
+
+        playground.GenerateData()
         playground.Run()
-
-        let generator = new DataGenerator()
-        configs = {
-            "spiral": {dimension: 2, dataset: "spiral", params: {h: 1.25, delta: 0.1}},
-            "gaussians3": {dataset: "gaussians", dimension: 3, params: {mean1: [-0.5, -0.4, -0.3], cov1: [[0.1, 0.05, 0], [0.05, 0.1, 0], [0, 0, 0.01]], mean2: [0.4, 0, 0], cov2: [[0.08, -0.06, 0], [-0.06, 0.15, 0], [0, 0, 0.08]]}},
-        }
-
-        playground.visualizer.SetDimension(2)
-        playground.visualizer.SetData("train", generator.Generate(5000, configs.spiral))
-        playground.visualizer.SetData("test", generator.Generate(5000, configs.spiral))
-
-        playground.visualizer.SetDataVisibility("test", false)
-        playground.visualizer.SetCompactOffset(0.5)
     </script>
 </body>
 </html>

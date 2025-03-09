@@ -13,4 +13,8 @@ class RangeInput extends EventEmitter {
         this.label.innerText = value
         this.emit("change", value)
     }
+
+    GetValue() {
+        return +this.input.value
+    }
 }

@@ -1,4 +1,5 @@
 Playground.prototype.HandleChangeDimension = function(dimension) {
+    this.dataGenerator.ChangeDimension(dimension)
     this.UpdateAxisDimension(this.axisX, dimension)
     this.UpdateAxisDimension(this.axisY, dimension)
 
