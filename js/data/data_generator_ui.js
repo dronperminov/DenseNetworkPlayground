@@ -81,7 +81,7 @@ class DataGeneratorUI {
 
         if (param.type == "matrix") {
             let label = MakeElement(parent, {innerHTML: param.title}, "label")
-            let input = new MatrixInput(param.dimension, label)
+            let input = new MatrixInput(param.dimension, param.properties, label)
 
             if ("value" in param)
                 input.SetValue(param.value)

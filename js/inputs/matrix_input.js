@@ -1,5 +1,5 @@
 class MatrixInput {
-    constructor(dimension, parent) {
+    constructor(dimension, properties, parent) {
         this.dimension = dimension
         this.inputs = new Array(dimension[0])
 
@@ -10,9 +10,20 @@ class MatrixInput {
 
             this.inputs[i] = []
             for (let j = 0; j < dimension[1]; j++) {
-                let input = MakeElement(row, {class: "basic-input", type: "number", value: "0"}, "input")
+                let input = MakeElement(row, {class: "basic-input", type: "number", value: "0", "step": "0.001"}, "input")
+
+                if (i == j && properties.has("positive-diagonal"))
+                    input.setAttribute("min", "0")
+
                 this.inputs[i].push(new NumberInput(input))
             }
+        }
+
+        if (properties.has("symmetrical")) {
+            for (let i = 0; i < dimension[0]; i++)
+                for (let j = 0; j < dimension[1]; j++)
+                    if (i != j)
+                        this.inputs[i][j].on("input", (value) => this.inputs[j][i].SetValue(value))
         }
     }
 

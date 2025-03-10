@@ -21,7 +21,7 @@ class MultivariateGenerator extends DataGenerator {
                         type: "matrix",
                         dimension: [this.dimension, this.dimension],
                         value: this.GetCovMatrix(),
-                        properties: ["symmetrical", "positive-diagonal"]
+                        properties: new Set(["symmetrical", "positive-diagonal"])
                     }],
                     [{
                         name: "mean2",
@@ -35,7 +35,7 @@ class MultivariateGenerator extends DataGenerator {
                         type: "matrix",
                         dimension: [this.dimension, this.dimension],
                         value: this.GetCovMatrix(),
-                        properties: ["symmetrical", "positive-diagonal"]
+                        properties: new Set(["symmetrical", "positive-diagonal"])
                     }]
                 ]
             }
