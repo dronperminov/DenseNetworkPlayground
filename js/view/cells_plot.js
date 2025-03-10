@@ -11,15 +11,23 @@ class CellsPlot {
         this.leafs = []
         this.cells = []
         this.polygons = []
+        this.polygonsG = []
+
+        this.layer = 0
+        this.layers = 0
+
         this.selectedIndices = new Set()
 
         this.viewBox.on("scale", scale => this.ChangeViewScale(scale))
         this.viewBox.on("change-view", () => this.ChangeView())
     }
 
-    ChangeCells(leafs, cells) {
+    ChangeCells(leafs, cells, layers) {
         this.leafs = leafs
         this.cells = cells
+        this.layers = layers
+        this.layer = layers - 1
+
         this.BuildPolygons()
         this.Plot()
     }
@@ -40,13 +48,26 @@ class CellsPlot {
         this.UpdateVisibility()
     }
 
+    SetLayer(layer) {
+        this.layer = layer
+        this.UpdateVisibility()
+    }
+
     BuildPolygons() {
         this.g.innerHTML = ""
+        this.polygonsG = []
         this.polygons = []
 
+        for (let i = 0; i < this.layers; i++)
+            this.polygonsG.push(MakeElement(this.g, null, "g"))
+
         for (let cell of this.cells) {
-            let polygon = MakeElement(this.g, {stroke: "#000000", "stroke-width": 0.5, fill: "transparent"}, "polygon")
-            this.polygons.push(polygon)
+            let polygons = []
+
+            for (let i = 0; i < this.layers; i++)
+                polygons[i] = MakeElement(this.polygonsG[i], {stroke: "#000000", "stroke-width": 0.2, fill: "transparent"}, "polygon")
+
+            this.polygons.push(polygons)
         }
     }
 
@@ -54,8 +75,12 @@ class CellsPlot {
         this.ChangeViewScale(this.viewBox.GetScale())
         this.UpdateVisibility()
 
-        for (let i = 0; i < this.polygons.length; i++)
-            this.polygons[i].setAttribute("points", this.cells[i].map(([x, y]) => `${this.viewBox.XtoScreen(x)},${this.viewBox.YtoScreen(y)}`).join(" "))
+        for (let i = 0; i < this.polygons.length; i++) {
+            for (let j = 0; j < this.layers; j++) {
+                let points = this.cells[i][j].map(([x, y]) => `${this.viewBox.XtoScreen(x)},${this.viewBox.YtoScreen(y)}`).join(" ")
+                this.polygons[i][j].setAttribute("points", points)
+            }
+        }
 
         this.UpdateColors()
     }
@@ -77,22 +102,36 @@ class CellsPlot {
                 color = `rgba(${r}, ${g}, ${b}, ${this.opacity})`
             }
 
-            this.polygons[i].setAttribute("fill", color)
+            this.polygons[i][this.layers - 1].setAttribute("fill", color)
         }
     }
 
     UpdateVisibility() {
-        for (let i = 0; i < this.polygons.length; i++) {
-            if (this.selectedIndices.size == 0 || this.selectedIndices.has(i))
-                this.polygons[i].removeAttribute("visibility")
+        if (this.layers < 1)
+            return
+
+        for (let i = 0; i < this.layers; i++)
+            if (this.layer == -1 || i == this.layer)
+                this.polygonsG[i].removeAttribute("visibility")
             else
-                this.polygons[i].setAttribute("visibility", "hidden")
+                this.polygonsG[i].setAttribute("visibility", "hidden")
+
+        for (let i = 0; i < this.polygons.length; i++) {
+            let visible = this.selectedIndices.size == 0 || this.selectedIndices.has(i)
+
+            for (let j = 0; j < this.layers; j++) {
+                if (visible)
+                    this.polygons[i][j].removeAttribute("visibility")
+                else
+                    this.polygons[i][j].setAttribute("visibility", "hidden")
+            }
         }
     }
 
     ChangeViewScale(scale) {
-        for (let polygon of this.polygons)
-            polygon.setAttribute("stroke-width", scale / 5)
+        for (let polygons of this.polygons)
+            for (let polygon of polygons)
+                polygon.setAttribute("stroke-width", scale / 5)
     }
 
     ChangeView() {

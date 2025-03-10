@@ -108,7 +108,7 @@ class TreeExperiment {
         this.controls["plot-background"].addEventListener("change", () => this.dataPlot.SetVisibility("background", this.controls["plot-background"].checked))
 
         let grid = MakeElement(controls, {innerHTML: ""}, "li")
-        this.controls["plot-grid"] = MakeCheckbox(grid, "Отображать сетку", true)
+        this.controls["plot-grid"] = MakeCheckbox(grid, "Отображать сетку", false)
         this.controls["plot-grid"].addEventListener("change", () => this.dataPlot.SetGridVisibility(this.controls["plot-grid"].checked))
 
         let cellsMode = MakeElement(controls, {innerHTML: "Режим отображения ячеек: "}, "li")
@@ -118,6 +118,14 @@ class TreeExperiment {
         MakeElement(this.controls["cells-mode"], {value: "colors", innerText: "цвет по hₙ(x)"}, "option")
         this.controls["cells-mode"].value = "transparent"
         this.controls["cells-mode"].addEventListener("change", () => this.cellsPlot.SetColorMode(this.controls["cells-mode"].value))
+
+        let cellsLayer = MakeElement(controls, {innerHTML: "Слой отображения ячеек: "}, "li")
+        this.controls["cells-layer"] = MakeElement(cellsLayer, {class: "basic-input inline-input"}, "select")
+        for (let i = 0; i < this.model.layers.length; i++)
+            MakeElement(this.controls["cells-layer"], {value: `${i}`, innerText: `${i + 1}`}, "option")
+        MakeElement(this.controls["cells-layer"], {value: "-1", innerText: "все"}, "option")
+        this.controls["cells-layer"].value = this.model.layers.length - 1
+        this.controls["cells-layer"].addEventListener("change", () => this.cellsPlot.SetLayer(+this.controls["cells-layer"].value))
     }
 
     InitDataModelPlot(leafs) {
@@ -131,6 +139,7 @@ class TreeExperiment {
         this.dataPlot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
         this.dataPlot.AddPlot("test", {border: "#000000", colors: ["#2191fb", "#89dd73", "#ba274a"], visible: false})
         this.dataPlot.AddPlot("background", {border: "#ffffff", colors: "#89dd73", visible: false})
+        this.dataPlot.SetGridVisibility(false)
 
         this.modelPlot = new ModelCellsPlot(viewBox, modelPlotCanvas, this.model, this.visualizer.thresholds, this.controls["model-mode"].value, this.controls["model-size"].value)
 
@@ -198,6 +207,6 @@ class TreeExperiment {
         this.modelPlot.SetAxes(axisX, axisY)
 
         let cells = this.cellExtractor.Extract(this.leafs, this.dataPlot.compactLayer.GetLimits(), axisX, axisY)
-        this.cellsPlot.ChangeCells(this.leafs, cells)
+        this.cellsPlot.ChangeCells(this.leafs, cells, this.model.layers.length)
     }
 }

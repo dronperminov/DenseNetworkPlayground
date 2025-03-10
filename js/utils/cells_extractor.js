@@ -5,14 +5,53 @@ class CellsExtractor {
     }
 
     Extract(leafs, limits, axisX = 0, axisY = 1) {
+        let signsSets = []
+        for (let i = 0; i < this.model.layers.length; i++)
+            signsSets.push({})
+
+        let bbox = [
+            [1, 0, -limits.xmin, 1],
+            [1, 0, -limits.xmax, -1],
+            [0, 1, -limits.ymin, 1],
+            [0, 1, -limits.ymax, -1]
+        ]
+
+        let xmin = limits.xmin - this.eps
+        let xmax = limits.xmax + this.eps
+        let ymin = limits.ymin - this.eps
+        let ymax = limits.ymax + this.eps
+
         let cells = []
 
         for (let leaf of leafs) {
-            let inequalities = this.GetLinesBySigns(leaf.signs, axisX, axisY)
-            let points = this.GetIntersections(inequalities, limits)
-            let convex = this.ComputeConvexCell(points, inequalities)
+            let {lines, layer2lines} = this.GetLinesBySigns(leaf.signs, axisX, axisY)
 
-            cells.push(convex)
+            let inequalities = []
+            let convexes = []
+
+            let points = [
+                [limits.xmin, limits.ymin],
+                [limits.xmin, limits.ymax],
+                [limits.xmax, limits.ymax],
+                [limits.xmax, limits.ymin]
+            ]
+
+            for (let i = 0; i < layer2lines.length; i++) {
+                inequalities.push(...layer2lines[i])
+                let key = leaf.signs.slice(0, inequalities.length).join("-")
+
+                if (key in signsSets[i]) {
+                    convexes.push(signsSets[i][key])
+                }
+                else {
+                    this.AddIntersections(inequalities, bbox, xmin, ymin, xmax, ymax, points)
+                    let convex = this.ComputeConvexCell(points, inequalities)
+                    convexes.push(convex)
+                    signsSets[i][key] = convex
+                }
+            }
+
+            cells.push(convexes)
         }
 
         return cells
@@ -65,7 +104,7 @@ class CellsExtractor {
             }
         }
 
-        return lines
+        return {lines, layer2lines}
     }
 
     ComputeConvexCell(points, inequalities) {
@@ -89,61 +128,32 @@ class CellsExtractor {
         return convex
     }
 
-    GetIntersections(inequalities, limits) {
-        let bbox = [
-            [1, 0, -limits.xmin, 1],
-            [1, 0, -limits.xmax, -1],
-            [0, 1, -limits.ymin, 1],
-            [0, 1, -limits.ymax, -1]
-        ]
-
-        let xmin = limits.xmin - this.eps
-        let xmax = limits.xmax + this.eps
-        let ymin = limits.ymin - this.eps
-        let ymax = limits.ymax + this.eps
-
-        let points = [
-            [limits.xmin, limits.ymin],
-            [limits.xmin, limits.ymax],
-            [limits.xmax, limits.ymax],
-            [limits.xmax, limits.ymin]
-        ]
-
+    AddIntersections(inequalities, bbox, xmin, ymin, xmax, ymax, points) {
         for (let i = 0; i < inequalities.length; i++) {
             let inequality = inequalities[i]
 
-            for (let j = i + 1; j < inequalities.length; j++) {
-                let intersection = this.GetIntersection(inequality, inequalities[j], xmin, ymin, xmax, ymax)
-                if (intersection)
-                    points.push(intersection)
-            }
+            for (let j = i + 1; j < inequalities.length; j++)
+                this.AddIntersection(inequality, inequalities[j], xmin, ymin, xmax, ymax, points)
 
-            for (let j = 0; j < bbox.length; j++) {
-                let intersection = this.GetIntersection(inequality, bbox[j], xmin, ymin, xmax, ymax)
-                if (intersection)
-                    points.push(intersection)
-            }
+            for (let j = 0; j < bbox.length; j++)
+                this.AddIntersection(inequality, bbox[j], xmin, ymin, xmax, ymax, points)
         }
-
-        return points
     }
 
-    GetIntersection(line1, line2, xmin, ymin, xmax, ymax) {
+    AddIntersection(line1, line2, xmin, ymin, xmax, ymax, points) {
         let [a1, b1, c1] = line1
         let [a2, b2, c2] = line2
 
         let det = a1 * b2 - a2 * b1
 
         if (Math.abs(det) < this.eps)
-            return null
+            return
 
         let x = (b1 * c2 - b2 * c1) / det
         let y = (a2 * c1 - a1 * c2) / det
 
         if (xmin <= x && x <= xmax && ymin <= y && y <= ymax)
-            return [x, y]
-
-        return null
+            points.push([x, y])
     }
 
     IsCorrectPoint(point, inequalities) {
