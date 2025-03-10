@@ -41,13 +41,16 @@ class CellsExtractor {
                 let key = leaf.signs.slice(0, inequalities.length).join("-")
 
                 if (key in signsSets[i]) {
-                    convexes.push(signsSets[i][key])
+                    convexes.push(signsSets[i][key].convex)
+                    points.push(...signsSets[i][key].points)
                 }
                 else {
-                    this.AddIntersections(inequalities, bbox, xmin, ymin, xmax, ymax, points)
+                    let layerPoints = this.GetIntersections(inequalities, layer2lines[i], bbox, xmin, ymin, xmax, ymax)
+                    points.push(...layerPoints)
+
                     let convex = this.ComputeConvexCell(points, inequalities)
                     convexes.push(convex)
-                    signsSets[i][key] = convex
+                    signsSets[i][key] = {convex: convex, points: layerPoints}
                 }
             }
 
@@ -128,16 +131,22 @@ class CellsExtractor {
         return convex
     }
 
-    AddIntersections(inequalities, bbox, xmin, ymin, xmax, ymax, points) {
-        for (let i = 0; i < inequalities.length; i++) {
-            let inequality = inequalities[i]
+    GetIntersections(inequalities, newInequalities, bbox, xmin, ymin, xmax, ymax) {
+        let points = []
 
-            for (let j = i + 1; j < inequalities.length; j++)
-                this.AddIntersection(inequality, inequalities[j], xmin, ymin, xmax, ymax, points)
+        for (let i = 0; i < inequalities.length - newInequalities.length; i++)
+            for (let j = 0; j < newInequalities.length; j++)
+                this.AddIntersection(inequalities[i], newInequalities[j], xmin, ymin, xmax, ymax, points)
+
+        for (let i = 0; i < newInequalities.length; i++) {
+            for (let j = i + 1; j < newInequalities.length; j++)
+                this.AddIntersection(newInequalities[i], newInequalities[j], xmin, ymin, xmax, ymax, points)
 
             for (let j = 0; j < bbox.length; j++)
-                this.AddIntersection(inequality, bbox[j], xmin, ymin, xmax, ymax, points)
+                this.AddIntersection(newInequalities[i], bbox[j], xmin, ymin, xmax, ymax, points)
         }
+
+        return points
     }
 
     AddIntersection(line1, line2, xmin, ymin, xmax, ymax, points) {
