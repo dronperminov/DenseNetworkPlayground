@@ -19,6 +19,8 @@ class ExTree {
 
     AddPoint(name, index, label, value, signs) {
         let leaf = this.GetLeaf(signs)
+        leaf.data.total++
+
         let split = leaf.data.splits[name]
 
         split.indices.push(index)
@@ -60,6 +62,7 @@ class ExTree {
     MakeLeafData(signs) {
         return {
             signs: signs.slice(),
+            total: 0,
             splits: {
                 train: this.MakeSplit(),
                 test: this.MakeSplit(),

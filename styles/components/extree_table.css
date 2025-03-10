@@ -26,7 +26,6 @@
 
 .extree-table-header:first-child {
     top: 0;
-    cursor: pointer;
 }
 
 .extree-table-header ~ .extree-table-header {
@@ -72,6 +71,10 @@
     border-right: none;
 }
 
+.extree-table-header .extree-table-sortable {
+    cursor: pointer;
+}
+
 .extree-circle {
     display: inline-block;
     border: 1px solid var(--extree-table-cell-color);
@@ -82,8 +85,14 @@
 
 .extree-table-ascending:after, .extree-table-descending:after {
     position: absolute;
-    right: 4px;
+    right: 0;
     font-size: 1.2em;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    height: 100%;
+    width: 15px;
+    top: 0;
 }
 
 .extree-table-ascending:after {
@@ -92,4 +101,8 @@
 
 .extree-table-descending:after {
     content: "↑";
+}
+
+.extree-table-header .extree-table-ascending, .extree-table-header .extree-table-descending {
+    padding-right: 15px;
 }

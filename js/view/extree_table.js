@@ -25,25 +25,20 @@ class ExTreeTable extends EventEmitter {
 
     PlotHeader() {
         let header = MakeElement(this.table, {class: "extree-table-header"}, "tr")
-        let number = MakeElement(header, {class: "extree-table-cell extree-table-ascending", innerHTML: "№", rowspan: 2}, "th")
 
+        let number = MakeElement(header, {class: "extree-table-cell extree-table-sortable extree-table-ascending", innerHTML: "№", rowspan: 2}, "th")
         number.addEventListener("click", () => this.SortByColumn(number, index => index))
 
-        for (let name of ["train", "test", "background"]) {
-            if (!this.splits[name])
-                continue
-
-            let content = MakeElement(header, {class: "extree-table-cell", innerHTML: `Содержимое<br>${name}`, rowspan: 2}, "th")
-            content.addEventListener("click", () => this.SortByColumn(content, index => this.leafs[index].splits[name].total))
-        }
+        let content = MakeElement(header, {class: "extree-table-cell extree-table-sortable", innerHTML: "Содержимое", colspan: Object.keys(this.splits).length}, "th")
+        content.addEventListener("click", () => this.SortByColumn(content, index => this.leafs[index].total))
 
         for (let name of ["train", "test"]) {
             if (!this.splits[name])
                 continue
 
-            let cn = MakeElement(header, {class: "extree-table-cell", innerHTML: "c<sub>n</sub>(x)"}, "th")
-            let hn = MakeElement(header, {class: "extree-table-cell", innerHTML: "h<sub>n</sub>(x)"}, "th")
-            let diff = MakeElement(header, {class: "extree-table-cell", innerHTML: "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|"}, "th")
+            let cn = MakeElement(header, {class: "extree-table-cell extree-table-sortable", innerHTML: "c<sub>n</sub>(x)"}, "th")
+            let hn = MakeElement(header, {class: "extree-table-cell extree-table-sortable", innerHTML: "h<sub>n</sub>(x)"}, "th")
+            let diff = MakeElement(header, {class: "extree-table-cell extree-table-sortable", innerHTML: "|c<sub>n</sub>(x) - h<sub>n</sub>(x)|"}, "th")
 
             cn.addEventListener("click", () => this.SortByColumn(cn, index => Math.abs(this.leafs[index].stats[name].c.mean)))
             hn.addEventListener("click", () => this.SortByColumn(hn, index => Math.abs(this.leafs[index].stats[name].h)))
@@ -51,6 +46,15 @@ class ExTreeTable extends EventEmitter {
         }
 
         let splitsHeader = MakeElement(this.table, {class: "extree-table-header"}, "tr")
+        let name2text = {"train": "обучающие<br>данные", "test": "тестовые<br>данные", "background": "фон"}
+
+        for (let name of ["train", "test", "background"]) {
+            if (!this.splits[name])
+                continue
+
+            let content = MakeElement(splitsHeader, {class: "extree-table-cell extree-table-sortable", innerHTML: `${name2text[name]}`}, "th")
+            content.addEventListener("click", () => this.SortByColumn(content, index => this.leafs[index].splits[name].total))
+        }
 
         if (this.splits.train)
             MakeElement(splitsHeader, {class: "extree-table-cell", innerHTML: "обучающие данные", colspan: 3}, "th")
@@ -144,7 +148,10 @@ class ExTreeTable extends EventEmitter {
     }
 
     GetLeafContent(leaf, name) {
-        return`${name}: ${leaf.splits[name].labels.length} (${this.GetLeafCounts(leaf, name)})`
+        if (leaf.splits[name].labels.length == 0)
+            return "0"
+
+        return `${leaf.splits[name].labels.length} (${this.GetLeafCounts(leaf, name)})`
     }
 
     GetLeafCounts(leaf, name) {
