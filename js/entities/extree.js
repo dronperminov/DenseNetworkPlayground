@@ -14,7 +14,6 @@ class ExTree {
     GetLeafs() {
         let leafs = []
         this.GetLeafsHelper(this.root, leafs)
-        leafs.sort((a, b) => this.CompareLeafs(a, b))
         return leafs
     }
 

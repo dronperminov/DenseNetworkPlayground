@@ -6,6 +6,7 @@ class ExTreeTable extends EventEmitter {
         this.splits = splits
         this.leafs = leafs
         this.indices = Array.from({length: leafs.length}, (_, i) => i)
+        this.selectedIndices = new Set()
 
         this.initialRows = initialRows
         this.lastRenderedIndex = -1
@@ -25,10 +26,16 @@ class ExTreeTable extends EventEmitter {
     PlotHeader() {
         let header = MakeElement(this.table, {class: "extree-table-header"}, "tr")
         let number = MakeElement(header, {class: "extree-table-cell extree-table-ascending", innerHTML: "№", rowspan: 2}, "th")
-        let content = MakeElement(header, {class: "extree-table-cell", innerHTML: "Содержимое", rowspan: 2}, "th")
 
         number.addEventListener("click", () => this.SortByColumn(number, index => index))
-        content.addEventListener("click", () => this.SortByColumn(content, index => this.leafs[index].splits.train.total))
+
+        for (let name of ["train", "test", "background"]) {
+            if (!this.splits[name])
+                continue
+
+            let content = MakeElement(header, {class: "extree-table-cell", innerHTML: `Содержимое<br>${name}`, rowspan: 2}, "th")
+            content.addEventListener("click", () => this.SortByColumn(content, index => this.leafs[index].splits[name].total))
+        }
 
         for (let name of ["train", "test"]) {
             if (!this.splits[name])
@@ -53,13 +60,18 @@ class ExTreeTable extends EventEmitter {
     }
 
     PlotRow(index) {
-        let leaf = this.leafs[this.indices[index]]
-
         let row = MakeElement(this.table, {class: "extree-table-row"}, "tr")
-        row.addEventListener("click", () => this.ClickRow(row, leaf))
+        row.addEventListener("click", () => this.ClickRow(row, this.indices[index]))
 
+        if (this.selectedIndices.has(this.indices[index]))
+            row.classList.add("extree-table-row-selected")
+
+        let leaf = this.leafs[this.indices[index]]
         MakeElement(row, {class: "extree-table-cell", innerText: `${this.indices[index] + 1}`}, "td")
-        MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafContent(leaf)}, "td")
+
+        for (let name of ["train", "test", "background"])
+            if (this.splits[name])
+                MakeElement(row, {class: "extree-table-cell", innerHTML: this.GetLeafContent(leaf, name)}, "td")
 
         for (let name of ["train", "test"]) {
             if (!this.splits[name])
@@ -131,14 +143,8 @@ class ExTreeTable extends EventEmitter {
         }
     }
 
-    GetLeafContent(leaf) {
-        let content  = []
-
-        for (let name of ["train", "test", "background"])
-            if (this.splits[name])
-                content.push(`${name}: ${leaf.splits[name].labels.length} (${this.GetLeafCounts(leaf, name)})`)
-
-        return content.join("<br>")
+    GetLeafContent(leaf, name) {
+        return`${name}: ${leaf.splits[name].labels.length} (${this.GetLeafCounts(leaf, name)})`
     }
 
     GetLeafCounts(leaf, name) {
@@ -167,11 +173,17 @@ class ExTreeTable extends EventEmitter {
         return `${Round(leaf.stats[name].diff, 10000)}`
     }
 
-    ClickRow(row, leaf) {
+    ClickRow(row, index) {
         row.classList.toggle("extree-table-row-selected")
 
         let value = row.classList.contains("extree-table-row-selected") ? true : false
-        let noCells = this.div.querySelector(".extree-table-row-selected") == null
-        this.emit("click-leaf", leaf, value, noCells)
+
+        if (value)
+            this.selectedIndices.add(index)
+        else
+            this.selectedIndices.delete(index)
+
+        let noCells = this.selectedIndices.size == 0
+        this.emit("click-leaf", this.leafs[index], value, noCells)
     }
 }
