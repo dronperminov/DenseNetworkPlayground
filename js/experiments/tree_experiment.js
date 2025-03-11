@@ -62,13 +62,18 @@ class TreeExperiment {
         MakeElement(this.parent, {innerText: "Построение объясняющего дерева (eXTree)"}, "h2")
         let stepsList = MakeElement(this.parent, null, "ul")
 
-        if (datas.train)
-            MakeElement(stepsList, {class: "text", innerText: `${datas.train.length} точек обучающей выборки добавлены в дерево`}, "li")
+        if (datas.train) {
+            let forms = ["точка обучающей выборки добавлена", "точки обучающей выборки добавлены", "точек обучающей выборки добавлены"]
+            MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(datas.train.length, forms)} в дерево`}, "li")
+        }
 
-        if (datas.test)
-            MakeElement(stepsList, {class: "text", innerText: `${datas.test.length} точек тестовой выборки добавлены в дерево`}, "li")
+        if (datas.test) {
+            let forms = ["точка тестовой выборки добавлена", "точки тестовой выборки добавлены", "точек тестовой выборки добавлены"]
+            MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(datas.test.length, forms)} в дерево`}, "li")
+        }
 
-        MakeElement(stepsList, {class: "text", innerText: `Сгенерированы ${datas.background.length} случайных точек на компакте и добавлены в дерево (с меткой 0)`}, "li")
+        let forms = ["случайная точка сгенерирована на компакте и добавлена", "случайные точки сгенерированы на компакте и добавлены", "случайных точек сгенерированы на компакте и добавлены"]
+        MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(datas.background.length, forms)} в дерево (с меткой 0)`}, "li")
     }
 
     InitControls(datas, axisX, axisY, modelOutputMode, modelOutputSize) {
@@ -149,15 +154,15 @@ class TreeExperiment {
     ShowLeafsInfo(leafs) {
         MakeElement(this.parent, {innerText: "Ячейки дерева"}, "h3")
         let info = MakeElement(this.parent, null, "ul")
-        MakeElement(info, {class: "text", innerText: `Заполненное дерево содержит ${leafs.length} ячеек (листьев)`}, "li")
+        MakeElement(info, {class: "text", innerText: `Заполненное дерево содержит ${GetWordForm(leafs.length, ["ячейку (лист)", "ячейки (листа)", "ячеек (листьев)"])}`}, "li")
 
         let trainOneLeafs = leafs.filter(leaf => leaf.splits.train.total == 1 && leaf.splits.background.total == 0).length
         if (trainOneLeafs > 0)
-            MakeElement(info, {class: "text", innerText: `Среди них ${trainOneLeafs} одноэлементных ячеек из обучающих данных (${Round(trainOneLeafs * 100 / leafs.length, 100)}%)`}, "li")
+            MakeElement(info, {class: "text", innerText: `Среди них ${GetWordForm(trainOneLeafs, ["одноэлементная ячейка", "одноэлементных ячейки", "одноэлементных ячеек"])} из обучающих данных (${Round(trainOneLeafs * 100 / leafs.length, 100)}%)`}, "li")
 
         let testOneLeafs = leafs.filter(leaf => leaf.splits.test.total == 1 && leaf.splits.background.total == 0).length
         if (testOneLeafs > 0)
-            MakeElement(info, {class: "text", innerText: `Среди них ${testOneLeafs} одноэлементных ячеек из тестовых данных (${Round(testOneLeafs * 100 / leafs.length, 100)}%)`}, "li")
+            MakeElement(info, {class: "text", innerText: `Среди них ${GetWordForm(testOneLeafs, ["одноэлементная ячейка", "одноэлементных ячейки", "одноэлементных ячеек"])} из тестовых данных (${Round(testOneLeafs * 100 / leafs.length, 100)}%)`}, "li")
 
         MakeElement(info, {class: "text", innerHTML: "<b>c<sub>n</sub>(x)</b> — нейросетевая оценка плотности (среднее значение ± стд. отклонение выхода модели на точках, находящихся внутри ячейки)"}, "li")
         MakeElement(info, {class: "text", innerHTML: "<b>h<sub>n</sub>(x)</b> — гистограммная оценка плотности ячейки"}, "li")
