@@ -72,6 +72,7 @@
 
     --extree-table-header-background-color: #eeeeee;
     --extree-table-selected-background-color: #afe9a8;
+    --extree-table-filter-background-color: #dddddd;
 
     --extree-table-cell-color: var(--text-color);
     --extree-table-cell-border-color: #aaaaaa;

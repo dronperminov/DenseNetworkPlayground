@@ -106,3 +106,27 @@
 .extree-table-header .extree-table-ascending, .extree-table-header .extree-table-descending {
     padding-right: 15px;
 }
+
+.extree-table-filters .extree-table-cell {
+    background: var(--extree-table-filter-background-color);
+}
+
+.extree-table-filters .extree-table-cell:first-child {
+    font-weight: bold;
+    cursor: pointer
+}
+
+.extree-table-filter {
+    font-size: 1em;
+}
+
+.extree-table-filter input {
+    font-size: 1em;
+    width: fit-content;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+.extree-table-filter input:first-child {
+    text-align: right;
+}

@@ -87,7 +87,8 @@ function Round(value, scale = 100) {
             scale = Math.pow(10, 2 - Math.floor(Math.log10(Math.abs(value))))
     }
 
-    return Math.round(value * scale) / scale
+    let sign = Math.sign(value)
+    return sign * Math.round(Math.abs(value) * scale) / scale
 }
 
 function Hide(...elements) {

@@ -26,6 +26,16 @@ class NumberInput extends EventEmitter {
         this.input.value = value
     }
 
+    SetMin() {
+        if (this.min !== null)
+            this.input.value = this.min
+    }
+
+    SetMax() {
+        if (this.max !== null)
+            this.input.value = this.max
+    }
+
     Change() {
         let value = this.GetValue()
         this.input.value = value
