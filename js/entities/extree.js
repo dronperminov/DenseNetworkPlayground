@@ -125,7 +125,7 @@ class ExTree {
         let backgroundSumVariance = background.values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0)
         let variance = (dataSumVariance + backgroundSumVariance) / Math.max(total, 1)
 
-        let alpha = this.total[name] / Math.max(this.total.background, 1)
+        let alpha = this.total.background == 0 ? 1 : this.total[name] / this.total.background
         let h = split.labels.reduce((sum, label) => sum + label, 0) / Math.max(split.total + Math.max(background.total, 1) * alpha, 1)
 
         stats.c.mean = mean
