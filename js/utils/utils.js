@@ -80,6 +80,13 @@ function AddClassName(element, className, condition) {
 }
 
 function Round(value, scale = 100) {
+    if (scale === "auto") {
+        if (Math.abs(value) > 0.001)
+            scale = 1000
+        else
+            scale = Math.pow(10, 2 - Math.floor(Math.log10(Math.abs(value))))
+    }
+
     return Math.round(value * scale) / scale
 }
 

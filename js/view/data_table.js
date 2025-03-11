@@ -9,6 +9,7 @@ class DataTable {
 
         this.labels = MakeElement(div, {class: "data-table-labels"})
         this.tabs = MakeElement(div, {class: "data-table-tabs"})
+        this.covs = MakeElement(div, {class: "data-table-covs"})
         this.tabs.addEventListener("scroll", () => this.Scroll())
 
         this.tables = {}
@@ -19,11 +20,14 @@ class DataTable {
     Add(name, config) {
         let label = MakeElement(this.labels, {class: "data-table-label", innerText: `${config.title}`})
         let tab = MakeElement(this.tabs, {class: "data-table-tab"})
+        let cov = MakeElement(this.covs, {class: "data-table-cov"})
 
         label.addEventListener("click", () => this.SelectTable(name))
 
-        if (Object.keys(this.tables).length > 0)
+        if (Object.keys(this.tables).length > 0) {
             tab.classList.add("data-table-tab-hidden")
+            cov.classList.add("data-table-tab-hidden")
+        }
         else
             label.classList.add("data-table-label-selected")
 
@@ -31,6 +35,7 @@ class DataTable {
             title: config.title,
             colors: config.colors,
             tab: tab,
+            cov: cov,
             label: label,
             data: null
         }
@@ -42,10 +47,12 @@ class DataTable {
 
         for (let table of Object.values(this.tables)) {
             table.tab.classList.add("data-table-tab-hidden")
+            table.cov.classList.add("data-table-tab-hidden")
             table.label.classList.remove("data-table-label-selected")
         }
 
         this.tables[name].tab.classList.remove("data-table-tab-hidden")
+        this.tables[name].cov.classList.remove("data-table-tab-hidden")
         this.tables[name].label.classList.add("data-table-label-selected")
         this.tabs.scroll({top: 0})
     }
@@ -67,12 +74,14 @@ class DataTable {
             table.indices[i] = i
 
         this.RenderTable(table)
+        this.RenderCovariance(table)
     }
 
     ClearData() {
         for (let table of Object.values(this.tables)) {
             table.label.innerText = table.title
             table.tab.innerHTML = ""
+            table.cov.innerHTML = ""
             table.data = null
             table.stats = null
             table.indices = null
@@ -148,6 +157,27 @@ class DataTable {
 
         for (let i = 0; i < table.data.length && i < Math.max(this.initialRows, table.lastRenderedIndex + 1); i++)
             this.RenderTableRow(table, i)
+    }
+
+    RenderCovariance(table) {
+        table.cov.innerHTML = ""
+        MakeElement(table.cov, {innerText: "Ковариация:"}, "label")
+
+        let matrix = MakeElement(table.cov, {class: "covariance-matrix"}, "table")
+
+        let header = MakeElement(matrix, {class: "covariance-matrix-row"}, "tr")
+        MakeElement(header, {class: "covariance-matrix-cell", innerHTML: "cov(x<sub>i</sub>, x<sub>j</sub>)"}, "td")
+        for (let j = 0; j < table.data.dimension; j++)
+            MakeElement(header, {class: "covariance-matrix-cell", innerHTML: `x<sub>${j + 1}</sub>`}, "td")
+
+        let covariance = table.stats !== null ? table.stats.covariance : table.data.GetCovariance()
+        for (let i = 0; i < table.data.dimension; i++) {
+            let row = MakeElement(matrix, {class: "covariance-matrix-row"}, "tr")
+            MakeElement(row, {class: "covariance-matrix-cell", innerHTML: `x<sub>${i + 1}</sub>`}, "td")
+
+            for (let j = 0; j < table.data.dimension; j++)
+                MakeElement(row, {class: "covariance-matrix-cell", innerText: Round(covariance[i * table.data.dimension + j], "auto")}, "td")
+        }
     }
 
     RenderTableHeader(table) {

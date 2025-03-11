@@ -84,8 +84,38 @@ class Data {
 
         let {min, max} = this.GetMinMaxStatistic()
         let {mean, std, variance} = this.GetMeanStdStatistic()
+        let covariance = this.GetCovariance(mean)
         let labels = this.GetLabelsStatistic()
-        return {min, max, mean, std, variance, labels}
+        return {min, max, mean, std, variance, covariance, labels}
+    }
+
+    GetCovariance(mean = null) {
+        let covariance = new Float64Array(this.dimension * this.dimension)
+        let length = Math.max(this.length, 1)
+
+        if (mean === null) {
+            mean = new Float64Array(this.dimension).fill(0)
+
+            for (let i = 0; i < this.length; i++)
+                for (let j = 0; j < this.dimension; j++)
+                    mean[j] += this.inputs[i * this.dimension + j]
+
+            for (let j = 0; j < this.dimension; j++)
+                mean[j] /= length
+        }
+
+        for (let i = 0; i < this.dimension; i++) {
+            for (let j = 0; j < this.dimension; j++) {
+                let cov = 0
+
+                for (let index = 0; index < this.length; index++)
+                    cov += (this.inputs[index * this.dimension + i] - mean[i]) * (this.inputs[index * this.dimension + j] - mean[j])
+
+                covariance[i * this.dimension + j] = cov / length
+            }
+        }
+
+        return covariance
     }
 
     ConcatArrays(array1, array2) {

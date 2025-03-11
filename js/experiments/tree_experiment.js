@@ -13,7 +13,6 @@ class TreeExperiment {
     Run(backgroundCount, axisX, axisY, modelOutputMode, modelOutputSize) {
         let datas = this.InitDatas(backgroundCount)
         let tree = this.InitTree(datas)
-
         let leafs = tree.GetLeafs()
 
         this.ShowSteps(datas)
@@ -25,7 +24,7 @@ class TreeExperiment {
         this.InitDataTable()
 
         for (let [name, data] of Object.entries(datas)) {
-            let split = {data: data, stats: data.GetStatistic()}
+            let split = this.visualizer.dataset.splits[name] ? this.visualizer.dataset.splits[name] : {data: data, stats: data.GetStatistic()}
 
             this.dataPlot.ChangeData(name, split)
             this.dataTable.ChangeData(name, split)

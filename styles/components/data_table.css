@@ -42,6 +42,14 @@
     border-right: 1px solid var(--data-table-border-color);
 }
 
+.data-table-covs {
+    border-top: 1px solid var(--data-table-border-color);
+    border-left: 1px solid var(--data-table-border-color);
+    border-right: 1px solid var(--data-table-border-color);
+    padding: 10px 5px 5px 5px;
+    overflow: auto;
+}
+
 .data-table-tab {
     display: table;
     font-size: 0.8em;
@@ -102,6 +110,33 @@
     width: 1em;
     height: 1em;
     border-radius: 100%;
+}
+
+.data-table-cov label {
+    font-weight: bold;
+}
+
+.data-table-cov .covariance-matrix {
+    border-collapse: collapse;
+    margin-top: 0.5em;
+}
+
+.data-table-cov .covariance-matrix-cell {
+    border: 1px solid var(--data-table-border-color);
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.data-table-cov .covariance-matrix-row:first-child .covariance-matrix-cell, .data-table-cov .covariance-matrix-cell:first-child {
+    font-weight: bold;
+    font-size: 0.8em;
+    background: var(--data-table-header-background-color);
+    white-space: nowrap;
+}
+
+.data-table-cov .covariance-matrix-cell:first-child {
+    text-align: right;
 }
 
 @media (max-width: 579px) {

@@ -24,7 +24,7 @@ class CellsExtractor {
         let cells = []
 
         for (let leaf of leafs) {
-            let {lines, layer2lines} = this.GetLinesBySigns(leaf.signs, axisX, axisY)
+            let layer2lines = this.GetLinesBySigns(leaf.signs, axisX, axisY)
 
             let inequalities = []
             let convexes = []
@@ -61,7 +61,6 @@ class CellsExtractor {
     }
 
     GetLinesBySigns(signs, axisX, axisY) {
-        let lines = []
         let layer2lines = [[]]
         let neuron = 0
 
@@ -73,7 +72,6 @@ class CellsExtractor {
                 line = [0, 0, 0, 0]
 
             layer2lines[0].push(line)
-            lines.push(line)
         }
 
         for (let index = 1; index < this.model.layers.length; index++) {
@@ -103,11 +101,10 @@ class CellsExtractor {
                     line = [0, 0, 0, 0]
 
                 layer2lines[index].push(line)
-                lines.push(line)
             }
         }
 
-        return {lines, layer2lines}
+        return layer2lines
     }
 
     ComputeConvexCell(points, inequalities) {
