@@ -163,6 +163,7 @@ class Playground {
         this.dataBalance = new RangeInput(document.getElementById("data-balance"), document.getElementById("data-balance-label"))
         this.dataTestPart = new RangeInput(document.getElementById("data-test-part"), document.getElementById("data-test-part-label"))
         this.dataError = new RangeInput(document.getElementById("data-error"), document.getElementById("data-error-label"))
+        this.dataUnary = document.getElementById("data-unary")
 
         let dataGenerateBtn = document.getElementById("data-generate-btn")
         dataGenerateBtn.addEventListener("click", () => this.GenerateData(true))

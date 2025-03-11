@@ -138,6 +138,7 @@ Playground.prototype.GenerateData = function(replace = true) {
     let config = this.dataGenerator.GetConfig()
     config.balance = this.dataBalance.GetValue() / 100
     config.error = this.dataError.GetValue() / 100
+    config.unary = this.dataUnary.checked
 
     try {
         let trainData = this.dataGenerator.Generate(trainCount, config)

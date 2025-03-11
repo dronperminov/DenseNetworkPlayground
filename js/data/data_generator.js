@@ -7,6 +7,7 @@ class DataGenerator {
     Generate(count, config) {
         let balance = "balance" in config ? config.balance : 0.5
         let error = "error" in config ? config.error : 0
+        let unary = "unary" in config ? config.unary : false
 
         let errors = new Array(count).fill(false)
         let labels = new Array(count).fill(-1)
@@ -29,6 +30,9 @@ class DataGenerator {
 
             if (errors[i])
                 label = -label
+
+            if (unary)
+                label = 1
 
             for (let j = 0; j < this.dimension; j++)
                 inputs[i * this.dimension + j] = point[j]
