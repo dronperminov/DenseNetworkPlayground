@@ -45,8 +45,17 @@
     margin-bottom: 2em;
 }
 
+#tab-experiments .histogram-plot {
+    margin-bottom: 2em;
+}
+
 @media (max-width: 767px) {
     #tab-experiments .data-plot {
         width: 100%;
+    }
+
+    #tab-experiments .histogram-plot {
+        width: 100%;
+        max-width: 100%;
     }
 }

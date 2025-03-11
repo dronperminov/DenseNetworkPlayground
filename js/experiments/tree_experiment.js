@@ -21,6 +21,7 @@ class TreeExperiment {
         this.InitDataModelPlot(leafs)
         this.ShowLeafsInfo(leafs)
         this.InitTreeCellsTable(datas, leafs)
+        this.InitCellsHistograms(datas, leafs)
         this.InitDataTable()
 
         for (let [name, data] of Object.entries(datas)) {
@@ -186,6 +187,30 @@ class TreeExperiment {
             this.modelPlot.SetCell(leaf, value)
             this.cellsPlot.SetLeaf(leaf, value)
         })
+    }
+
+    InitCellsHistograms(datas, leafs) {
+        let name2text = {
+            "train": "Обучающие данные",
+            "test": "Тестовые данные"
+        }
+
+        MakeElement(this.parent, {innerHTML: "Гистограмма разностей оценок |c<sub>n</sub>(x) - h<sub>n</sub>(x)|"}, "h3")
+
+        for (let name of ["train", "test"]) {
+            if (!datas[name])
+                continue
+
+            MakeElement(this.parent, {class: "text", innerText: `${name2text[name]}:`}, "p")
+
+            let values = leafs.filter(leaf => leaf.splits[name].total > 0).map(leaf => leaf.stats[name].diff)
+            let max = Math.max(...values)
+            let n = Math.floor(max / 0.05)
+
+            let div = MakeElement(this.parent, {class: "histogram-plot"})
+            let histogram = new HistogramPlot(div, {min: 0.05, max: n * 0.05, n: n - 1, color: "#ffc107", border: "#ffffff"})
+            histogram.ChangeData(values)
+        }
     }
 
     InitDataTable() {

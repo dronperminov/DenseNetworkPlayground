@@ -233,7 +233,9 @@ class Playground {
     Stop() {
         this.stopBtn.classList.add("hidden")
         this.startBtn.classList.remove("hidden")
-        this.tabExperimentsInput.removeAttribute("disabled")
+
+        if (this.visualizer.HaveData(["train", "test"]))
+            this.tabExperimentsInput.removeAttribute("disabled")
 
         this.running = false
     }
