@@ -148,8 +148,8 @@ class ExTreeTable extends EventEmitter {
             high: highInput
         })
 
-        lowInput.on("change", () => this.UpdateRenderedRows())
-        highInput.on("change", () => this.UpdateRenderedRows())
+        lowInput.on("change", () => this.ChangeFilters())
+        highInput.on("change", () => this.ChangeFilters())
     }
 
     PlotRow(index) {
@@ -260,6 +260,11 @@ class ExTreeTable extends EventEmitter {
         return true
     }
 
+    ChangeFilters() {
+        this.UpdateRenderedRows()
+        this.emit("update-filters", this.leafs.filter(leaf => this.CheckFilters(leaf)))
+    }
+
     ResetFilters() {
         for (let filter of this.filters) {
             filter.low.SetMin()
@@ -267,6 +272,7 @@ class ExTreeTable extends EventEmitter {
         }
 
         this.UpdateRenderedRows()
+        this.emit("update-filters", this.leafs)
     }
 
     GetLeafContent(leaf, name) {

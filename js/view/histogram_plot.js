@@ -2,9 +2,11 @@ class HistogramPlot {
     constructor(div, config) {
         this.svg = MakeElement(div, null, "svg")
         this.config = config
-        this.bottom = 22
+        this.bottom = 25
 
         this.Init()
+
+        new ResizeObserver(() => this.Resize()).observe(this.svg)
     }
 
     Init() {
@@ -28,8 +30,16 @@ class HistogramPlot {
             this.rects.push(MakeElement(this.svg, {fill: this.config.color, stroke: this.config.border, "stroke-width": 1, rx: 5, ry: 5}, "rect"))
             this.labels.push(MakeElement(this.svg, {textContent: "", class: "histogram-label"}, "text"))
         }
+    }
 
-        new ResizeObserver(() => this.Resize()).observe(this.svg)
+    ChangeConfig(config) {
+        for (let [key, value] of Object.entries(config))
+            this.config[key] = value
+
+        this.svg.innerHTML = ""
+
+        this.Init()
+        this.Resize()
     }
 
     ChangeData(values) {
@@ -45,9 +55,10 @@ class HistogramPlot {
 
     Plot() {
         let height = this.svg.clientHeight - this.bottom
+        let max = Math.max(this.histogramMax, 1)
 
         for (let i = 0; i < this.config.n + 2; i++) {
-            let rectHeight = Math.max(this.histogram[i] / this.histogramMax * height, 0)
+            let rectHeight = Math.max(this.histogram[i] / max * height, 0)
 
             this.rects[i].setAttribute("y", height - rectHeight)
             this.rects[i].setAttribute("height", rectHeight)

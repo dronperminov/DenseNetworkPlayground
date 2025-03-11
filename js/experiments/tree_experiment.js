@@ -187,6 +187,8 @@ class TreeExperiment {
             this.modelPlot.SetCell(leaf, value)
             this.cellsPlot.SetLeaf(leaf, value)
         })
+
+        this.treeTable.on("update-filters", leafs => this.UpdateHistograms(leafs))
     }
 
     InitCellsHistograms(datas, leafs) {
@@ -194,6 +196,8 @@ class TreeExperiment {
             "train": "Обучающие данные",
             "test": "Тестовые данные"
         }
+
+        this.histograms = {}
 
         MakeElement(this.parent, {innerHTML: "Гистограмма разностей оценок |c<sub>n</sub>(x) - h<sub>n</sub>(x)|"}, "h3")
 
@@ -203,14 +207,11 @@ class TreeExperiment {
 
             MakeElement(this.parent, {class: "text", innerText: `${name2text[name]}:`}, "p")
 
-            let values = leafs.filter(leaf => leaf.splits[name].total > 0).map(leaf => leaf.stats[name].diff)
-            let max = Math.max(...values)
-            let n = Math.floor(max / 0.05)
-
             let div = MakeElement(this.parent, {class: "histogram-plot"})
-            let histogram = new HistogramPlot(div, {min: 0.05, max: n * 0.05, n: n - 1, color: "#ffc107", border: "#ffffff"})
-            histogram.ChangeData(values)
+            this.histograms[name] = new HistogramPlot(div, {min: 0.05, max: 1, n: 19, color: "#ffc107", border: "#ffffff"})
         }
+
+        this.UpdateHistograms(leafs)
     }
 
     InitDataTable() {
@@ -232,5 +233,24 @@ class TreeExperiment {
 
         let cells = this.cellExtractor.Extract(this.leafs, this.dataPlot.compactLayer.GetLimits(), axisX, axisY)
         this.cellsPlot.ChangeCells(this.leafs, cells, this.model.layers.length)
+    }
+
+    UpdateHistograms(leafs) {
+        let steps = [2, 2, 2.5]
+
+        for (let [name, histogram] of Object.entries(this.histograms)) {
+            let values = leafs.filter(leaf => leaf.splits[name].total > 0).map(leaf => leaf.stats[name].diff)
+
+            let max = Math.max(...values)
+            let step = 0.1
+
+            for (let i = 0; Math.floor(max / step) < 8 && values.length > 5; i = (i + 1) % 3)
+                step /= steps[i]
+
+            let n = Math.max(2, Math.floor(max / step))
+
+            this.histograms[name].ChangeConfig({min: step, max: n * step, n: n - 1})
+            this.histograms[name].ChangeData(values)
+        }
     }
 }
