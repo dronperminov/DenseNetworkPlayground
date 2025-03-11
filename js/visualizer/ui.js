@@ -25,6 +25,14 @@ Visualizer.prototype.AddData = function(name, data) {
     this.dataPlot.ResetLimits()
 }
 
+Visualizer.prototype.HaveData = function(names) {
+    for (let name of names)
+        if (this.dataset.splits[name] && this.dataset.splits[name].data.length > 0)
+            return true
+
+    return false
+}
+
 Visualizer.prototype.NormalizeData = function(mode) {
     this.dataset.NormalizeData("train", mode)
     this.dataPlot.ResetLimits()

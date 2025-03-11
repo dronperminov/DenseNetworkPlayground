@@ -1,5 +1,5 @@
 Playground.prototype.SetModelInputsCount = function(inputs) {
-    if (!confirm("Вы уверены, что хотите изменить размерность входа модели?")) {
+    if (this.visualizer.HaveData(["train", "test"]) && !confirm("Вы уверены, что хотите изменить размерность входа модели?")) {
         this.modelInputsCount.SetValue(this.visualizer.GetDimension())
         return
     }
