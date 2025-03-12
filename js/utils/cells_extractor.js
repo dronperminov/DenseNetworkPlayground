@@ -38,19 +38,23 @@ class CellsExtractor {
 
             for (let i = 0; i < layer2lines.length; i++) {
                 inequalities.push(...layer2lines[i])
-                let key = leaf.signs.slice(0, inequalities.length).join("-")
 
-                if (key in signsSets[i]) {
-                    convexes.push(signsSets[i][key].convex)
-                    points.push(...signsSets[i][key].points)
+                let key = leaf.signs.slice(0, inequalities.length).join("-")
+                let cache = signsSets[i][key]
+
+                if (cache) {
+                    convexes.push(cache.convex)
+                    points = cache.points
                 }
                 else {
                     let layerPoints = this.GetIntersections(inequalities, layer2lines[i], bbox, xmin, ymin, xmax, ymax)
-                    points.push(...layerPoints)
 
-                    let convex = this.ComputeConvexCell(points, inequalities)
+                    points = points.filter(point => this.IsCorrectPoint(point, layer2lines[i]))
+                    points.push(...layerPoints.filter(point => this.IsCorrectPoint(point, inequalities)))
+
+                    let convex = this.ComputeConvexCell(points)
                     convexes.push(convex)
-                    signsSets[i][key] = {convex: convex, points: layerPoints}
+                    signsSets[i][key] = {convex: convex, points: points}
                 }
             }
 
@@ -107,25 +111,23 @@ class CellsExtractor {
         return layer2lines
     }
 
-    ComputeConvexCell(points, inequalities) {
-        let convex = points.filter(point => this.IsCorrectPoint(point, inequalities))
-
-        if (convex.length < 3)
+    ComputeConvexCell(points) {
+        if (points.length < 3)
             return []
 
         let cx = 0
         let cy = 0
 
-        for (let [x, y] of convex) {
+        for (let [x, y] of points) {
             cx += x
             cy += y
         }
 
-        cx /= convex.length
-        cy /= convex.length
+        cx /= points.length
+        cy /= points.length
 
-        convex.sort((p1, p2) => Math.atan2(p1[1] - cy, p1[0] - cx) - Math.atan2(p2[1] - cy, p2[0] - cx))
-        return convex
+        points.sort((p1, p2) => Math.atan2(p1[1] - cy, p1[0] - cx) - Math.atan2(p2[1] - cy, p2[0] - cx))
+        return points
     }
 
     GetIntersections(inequalities, newInequalities, bbox, xmin, ymin, xmax, ymax) {
