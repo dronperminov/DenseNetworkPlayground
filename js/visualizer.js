@@ -44,6 +44,8 @@ class Visualizer {
         this.dataTable.Add("train", {title: "Обучающие данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
         this.dataTable.Add("test", {title: "Тестовые данные", colors: {"-1": "#2191fb", "1": "#ba274a"}})
 
+        this.cellsPlot = new CellsPlot(viewBox, this.thresholds, this.compact, this.modelManager.model)
+
         let modelView = document.getElementById("model-view")
         let modelPlot = document.getElementById("model-plot")
         let modelSurface = document.getElementById("model-surface")
@@ -74,7 +76,7 @@ class Visualizer {
     }
 
     InitEventHandlers() {
-        this.compact.on("change", () => this.dataPlot.ChangeCompact())
+        this.compact.on("change", () => this.HandleChangeCompact())
 
         this.dataset.on("change", (name, split) => this.HandleChangeData(name, split))
         this.dataset.on("change-dimension", dimension => this.HandleChangeDimension(dimension))

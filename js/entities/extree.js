@@ -61,6 +61,7 @@ class ExTree {
 
     MakeLeafData(signs) {
         return {
+            key: signs.map(sign => sign > 0 ? "+" : "-").join(""),
             signs: signs.slice(),
             total: 0,
             splits: {

@@ -32,6 +32,11 @@ Visualizer.prototype.HandleClearData = function() {
     this.PlotHistograms()
 }
 
+Visualizer.prototype.HandleChangeCompact = function() {
+    this.dataPlot.ChangeCompact()
+    this.cellsPlot.UpdateCells()
+}
+
 Visualizer.prototype.HandleChangeThresholds = function(low, high) {
     this.modelPlot.ChangeThresholds()
     this.UpdateMetrics()
@@ -40,6 +45,8 @@ Visualizer.prototype.HandleChangeThresholds = function(low, high) {
 
 Visualizer.prototype.HandleChangeModel = function() {
     this.modelPlot.ChangeModel()
+    this.cellsPlot.UpdateCells()
+
     this.UpdatePredictions()
 }
 

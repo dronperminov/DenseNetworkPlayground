@@ -39,6 +39,19 @@ Playground.prototype.HandleChangeModelArchitecture = function() {
     this.modelInputsCount.SetValue(model.inputs)
     this.modelLayersCount.SetValue(model.layers.length)
     this.modelLayersSize.SetValue(model.layers[0].outputs)
+
+    this.UpdateCellsLayerInput(model.layers.length)
+}
+
+Playground.prototype.UpdateCellsLayerInput = function(layers) {
+    while (this.cellsLayer.children.length > 2 + layers)
+        this.cellsLayer.lastChild.remove()
+
+    for (let i = this.cellsLayer.children.length - 2; i < layers; i++)
+        MakeElement(this.cellsLayer, {value: `${i}`, innerText: `${i + 1}`}, "option")
+
+    this.cellsLayer.value = `${layers - 1}`
+    this.cellsLayer.dispatchEvent(new Event("change"))
 }
 
 Playground.prototype.UpdateAxisDimension = function(axis, dimension) {

@@ -9,6 +9,7 @@ Visualizer.prototype.GetDimension = function() {
 Visualizer.prototype.SetAxes = function(xAxis, yAxis) {
     this.dataPlot.SetAxes(xAxis, yAxis)
     this.modelPlot.SetAxes(xAxis, yAxis)
+    this.cellsPlot.SetAxes(xAxis, yAxis)
 }
 
 Visualizer.prototype.SetThresholds = function(low, high) {
@@ -109,6 +110,18 @@ Visualizer.prototype.SetModelOutputSurfaceVisibility = function(visible) {
 
 Visualizer.prototype.SetModelOutputPoint = function(point) {
     this.modelPlot.SetPoint(point)
+}
+
+Visualizer.prototype.SetCellsLayer = function(layer) {
+    let visibility = layer != "no"
+
+    if (!this.cellsPlot.IsVisible() && visibility)
+        this.cellsPlot.UpdateCells()
+
+    this.cellsPlot.SetVisibility(visibility)
+
+    if (visibility)
+        this.cellsPlot.SetLayer(+layer)
 }
 
 Visualizer.prototype.SetCriterion = function(name) {

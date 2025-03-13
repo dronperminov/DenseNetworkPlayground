@@ -22,7 +22,7 @@ class FullyConnectedLayer {
             this.w[i] = Random.Normal(0, std)
 
         for (let i = 0; i < this.b.length; i++)
-            this.b[i] = 0
+            this.b[i] = Random.Normal(0, std)
     }
 
     ZeroGradients() {

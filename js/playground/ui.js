@@ -124,6 +124,10 @@ Playground.prototype.SetModelWeightsMode = function(mode) {
     this.visualizer.SetModelWeightsMode(mode)
 }
 
+Playground.prototype.SetCellsLayer = function(layer) {
+    this.visualizer.SetCellsLayer(layer)
+}
+
 Playground.prototype.SetAxes = function() {
     let xAxis = +this.axisX.value
     let yAxis = +this.axisY.value

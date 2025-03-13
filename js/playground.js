@@ -137,6 +137,9 @@ class Playground {
         let modelWeightsMode = document.getElementById("model-weights-mode")
         modelWeightsMode.addEventListener("change", () => this.SetModelWeightsMode(modelWeightsMode.value))
 
+        this.cellsLayer = document.getElementById("cells-layer")
+        this.cellsLayer.addEventListener("change", () => this.SetCellsLayer(this.cellsLayer.value))
+
         this.dataBlock = document.getElementById("data-block")
 
         for (let name of ["train", "test", "background"]) {

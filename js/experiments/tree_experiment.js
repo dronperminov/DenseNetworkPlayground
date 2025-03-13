@@ -11,28 +11,30 @@ class TreeExperiment {
     }
 
     Run(backgroundCount, axisX, axisY, modelOutputMode, modelOutputSize) {
-        let datas = this.InitDatas(backgroundCount)
-        let tree = this.InitTree(datas)
-        let leafs = tree.GetLeafs()
+        this.datas = this.InitDatas(backgroundCount)
+        this.tree = this.InitTree()
+        this.leafs = this.tree.GetLeafs()
 
-        this.ShowSteps(datas)
-        this.InitControls(datas, axisX, axisY, modelOutputMode, modelOutputSize)
+        this.ShowSteps()
+        this.InitControls(axisX, axisY, modelOutputMode, modelOutputSize)
 
-        this.InitDataModelPlot(leafs)
-        this.ShowLeafsInfo(leafs)
-        this.InitTreeCellsTable(datas, leafs)
-        this.InitCellsHistograms(datas, leafs)
+        this.InitDataModelPlot()
+        this.ShowLeafsInfo()
+        this.InitTreeCellsTable()
+        this.InitCellsHistograms()
         this.InitDataTable()
 
-        for (let [name, data] of Object.entries(datas)) {
+        for (let [name, data] of Object.entries(this.datas)) {
             let split = this.visualizer.dataset.splits[name] ? this.visualizer.dataset.splits[name] : {data: data, stats: data.GetStatistic()}
 
             this.dataPlot.ChangeData(name, split)
             this.dataTable.ChangeData(name, split)
         }
 
-        this.leafs = leafs
-        this.SetAxes()
+        this.dataPlot.ResetLimits()
+
+        if (+axisX.value != 0 && axisY.value != 1)
+            this.SetAxes()
     }
 
     InitDatas(backgroundCount) {
@@ -47,10 +49,10 @@ class TreeExperiment {
         return datas
     }
 
-    InitTree(datas) {
+    InitTree() {
         let tree = new ExTree()
 
-        for (let [name, data] of Object.entries(datas)) {
+        for (let [name, data] of Object.entries(this.datas)) {
             let prediction = this.model.PredictWithSignsUnrolled(data.inputs, data.length)
             tree.Fill(name, data, prediction.result, prediction.signs)
         }
@@ -58,25 +60,27 @@ class TreeExperiment {
         return tree
     }
 
-    ShowSteps(datas) {
+    ShowSteps() {
         MakeElement(this.parent, {innerText: "Построение объясняющего дерева (eXTree)"}, "h2")
         let stepsList = MakeElement(this.parent, null, "ul")
 
-        if (datas.train) {
+        if (this.datas.train) {
             let forms = ["точка обучающей выборки добавлена", "точки обучающей выборки добавлены", "точек обучающей выборки добавлены"]
-            MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(datas.train.length, forms)} в дерево`}, "li")
+            MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(this.datas.train.length, forms)} в дерево`}, "li")
         }
 
-        if (datas.test) {
+        if (this.datas.test) {
             let forms = ["точка тестовой выборки добавлена", "точки тестовой выборки добавлены", "точек тестовой выборки добавлены"]
-            MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(datas.test.length, forms)} в дерево`}, "li")
+            MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(this.datas.test.length, forms)} в дерево`}, "li")
         }
 
-        let forms = ["случайная точка сгенерирована на компакте и добавлена", "случайные точки сгенерированы на компакте и добавлены", "случайных точек сгенерированы на компакте и добавлены"]
-        MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(datas.background.length, forms)} в дерево (с меткой 0)`}, "li")
+        if (this.datas.background.length > 0) {
+            let forms = ["случайная точка сгенерирована на компакте и добавлена", "случайные точки сгенерированы на компакте и добавлены", "случайных точек сгенерированы на компакте и добавлены"]
+            MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(this.datas.background.length, forms)} в дерево (с меткой 0)`}, "li")
+        }
     }
 
-    InitControls(datas, axisX, axisY, modelOutputMode, modelOutputSize) {
+    InitControls(axisX, axisY, modelOutputMode, modelOutputSize) {
         MakeElement(this.parent, {innerText: "Управление"}, "h3")
         let controls = MakeElement(this.parent, null, "ul")
 
@@ -96,13 +100,13 @@ class TreeExperiment {
         this.controls["axis-y"] = CloneSelect(axisY, y)
         this.controls["axis-y"].addEventListener("change", () => this.SetAxes())
 
-        if (datas.train) {
+        if (this.datas.train) {
             let train = MakeElement(controls, {innerHTML: ""}, "li")
             this.controls["plot-train"] = MakeCheckbox(train, "Отображать обучающие точки", true)
             this.controls["plot-train"].addEventListener("change", () => this.dataPlot.SetVisibility("train", this.controls["plot-train"].checked))
         }
 
-        if (datas.test) {
+        if (this.datas.test) {
             let test = MakeElement(controls, {innerHTML: ""}, "li")
             this.controls["plot-test"] = MakeCheckbox(test, "Отображать тестовые точки", false)
             this.controls["plot-test"].addEventListener("change", () => this.dataPlot.SetVisibility("test", this.controls["plot-test"].checked))
@@ -118,7 +122,6 @@ class TreeExperiment {
 
         let cellsMode = MakeElement(controls, {innerHTML: "Режим отображения ячеек: "}, "li")
         this.controls["cells-mode"] = MakeElement(cellsMode, {class: "basic-input inline-input"}, "select")
-        MakeElement(this.controls["cells-mode"], {value: "no", innerText: "не показывать"}, "option")
         MakeElement(this.controls["cells-mode"], {value: "transparent", innerText: "только контуры"}, "option")
         MakeElement(this.controls["cells-mode"], {value: "colors", innerText: "цвет по hₙ(x)"}, "option")
         this.controls["cells-mode"].value = "transparent"
@@ -126,14 +129,15 @@ class TreeExperiment {
 
         let cellsLayer = MakeElement(controls, {innerHTML: "Слой отображения ячеек: "}, "li")
         this.controls["cells-layer"] = MakeElement(cellsLayer, {class: "basic-input inline-input"}, "select")
+        MakeElement(this.controls["cells-layer"], {value: "no", innerText: "не показывать"}, "option")
+        MakeElement(this.controls["cells-layer"], {value: "-1", innerText: "все"}, "option")
         for (let i = 0; i < this.model.layers.length; i++)
             MakeElement(this.controls["cells-layer"], {value: `${i}`, innerText: `${i + 1}`}, "option")
-        MakeElement(this.controls["cells-layer"], {value: "-1", innerText: "все"}, "option")
-        this.controls["cells-layer"].value = this.model.layers.length - 1
-        this.controls["cells-layer"].addEventListener("change", () => this.cellsPlot.SetLayer(+this.controls["cells-layer"].value))
+        this.controls["cells-layer"].value = `${this.model.layers.length - 1}`
+        this.controls["cells-layer"].addEventListener("change", () => this.SetCellsLayer(this.controls["cells-layer"].value))
     }
 
-    InitDataModelPlot(leafs) {
+    InitDataModelPlot() {
         let dataPlotDiv = MakeElement(this.parent, {class: "data-plot"})
         let modelPlotCanvas = MakeElement(dataPlotDiv, null, "canvas")
         let dataPlotSVG = MakeElement(dataPlotDiv, null, "svg")
@@ -148,41 +152,46 @@ class TreeExperiment {
 
         this.modelPlot = new ModelCellsPlot(viewBox, modelPlotCanvas, this.model, this.visualizer.thresholds, this.controls["model-mode"].value, this.controls["model-size"].value)
 
-        this.cellsPlot = new CellsPlot(viewBox, this.visualizer.thresholds, this.visualizer.compact)
+        this.cellsPlot = new CellsPlot(viewBox, this.visualizer.thresholds, this.visualizer.compact, this.model)
+        this.cellsPlot.UpdateCells()
+        this.cellsPlot.SetLeafs(this.leafs)
     }
 
-    ShowLeafsInfo(leafs) {
+    ShowLeafsInfo() {
+        let cells = Object.keys(this.cellsPlot.cells[this.model.layers.length - 1]).length
+        let cellsText = this.model.inputs == 2 ? ` из ${GetWordForm(cells, ["ячейки", "ячеек", "ячеек"])} (на компакте)` : ""
+
         MakeElement(this.parent, {innerText: "Ячейки дерева"}, "h3")
         let info = MakeElement(this.parent, null, "ul")
-        MakeElement(info, {class: "text", innerText: `Заполненное дерево содержит ${GetWordForm(leafs.length, ["ячейку (лист)", "ячейки (листа)", "ячеек (листьев)"])}`}, "li")
+        MakeElement(info, {class: "text", innerText: `Точки в дереве заполнили ${GetWordForm(this.leafs.length, ["ячейку", "ячейки", "ячеек"])}${cellsText}`}, "li")
 
-        let trainOneLeafs = leafs.filter(leaf => leaf.splits.train.total == 1 && leaf.splits.background.total == 0).length
+        let trainOneLeafs = this.leafs.filter(leaf => leaf.splits.train.total == 1 && leaf.splits.background.total == 0).length
         if (trainOneLeafs > 0)
-            MakeElement(info, {class: "text", innerText: `Среди них ${GetWordForm(trainOneLeafs, ["одноэлементная ячейка", "одноэлементных ячейки", "одноэлементных ячеек"])} из обучающих данных (${Round(trainOneLeafs * 100 / leafs.length, 100)}%)`}, "li")
+            MakeElement(info, {class: "text", innerText: `Среди них ${GetWordForm(trainOneLeafs, ["одноэлементная ячейка", "одноэлементных ячейки", "одноэлементных ячеек"])} из обучающих данных (${Round(trainOneLeafs * 100 / this.leafs.length, 100)}%)`}, "li")
 
-        let testOneLeafs = leafs.filter(leaf => leaf.splits.test.total == 1 && leaf.splits.background.total == 0).length
+        let testOneLeafs = this.leafs.filter(leaf => leaf.splits.test.total == 1 && leaf.splits.background.total == 0).length
         if (testOneLeafs > 0)
-            MakeElement(info, {class: "text", innerText: `Среди них ${GetWordForm(testOneLeafs, ["одноэлементная ячейка", "одноэлементных ячейки", "одноэлементных ячеек"])} из тестовых данных (${Round(testOneLeafs * 100 / leafs.length, 100)}%)`}, "li")
+            MakeElement(info, {class: "text", innerText: `Среди них ${GetWordForm(testOneLeafs, ["одноэлементная ячейка", "одноэлементных ячейки", "одноэлементных ячеек"])} из тестовых данных (${Round(testOneLeafs * 100 / this.leafs.length, 100)}%)`}, "li")
 
         MakeElement(info, {class: "text", innerHTML: "<b>c<sub>n</sub>(x)</b> — нейросетевая оценка плотности (среднее значение ± стд. отклонение выхода модели на точках, находящихся внутри ячейки)"}, "li")
         MakeElement(info, {class: "text", innerHTML: "<b>h<sub>n</sub>(x)</b> — гистограммная оценка плотности ячейки"}, "li")
         MakeElement(info, {class: "text", innerHTML: "<b>|c<sub>n</sub>(x) - h<sub>n</sub>(x)|</b> — модуль разности среднего значения нейросетевой оценки и гистограммной оценки"}, "li")
     }
 
-    InitTreeCellsTable(datas, leafs) {
+    InitTreeCellsTable() {
         MakeElement(this.parent, {class: "text", innerText: "Нажмите на строку таблицы, чтобы отобразить выбранную ячейку. Нажмите на заголовочный столбец, чтобы отсортировать ячейки по возрастанию значения (нажмите ещё раз для сортировки по убыванию)."}, "p")
         let treeTableDiv = MakeElement(this.parent, {class: "extree-table"})
 
-        this.treeTable = new ExTreeTable(treeTableDiv, datas, leafs)
+        this.treeTable = new ExTreeTable(treeTableDiv, this.datas, this.leafs)
         this.treeTable.Plot()
 
         let masks = {}
 
-        for (let [name, data] of Object.entries(datas))
+        for (let [name, data] of Object.entries(this.datas))
             masks[name] = new Array(data.length).fill(false)
 
         this.treeTable.on("click-leaf", (leaf, value, noCells) => {
-            for (let [name, data] of Object.entries(datas)) {
+            for (let [name, data] of Object.entries(this.datas)) {
                 for (let index of leaf.splits[name].indices)
                     masks[name][index] = value
 
@@ -190,13 +199,13 @@ class TreeExperiment {
             }
 
             this.modelPlot.SetCell(leaf, value)
-            this.cellsPlot.SetLeaf(leaf, value)
+            this.cellsPlot.SetCell(leaf.key, value)
         })
 
         this.treeTable.on("update-filters", leafs => this.UpdateHistograms(leafs))
     }
 
-    InitCellsHistograms(datas, leafs) {
+    InitCellsHistograms() {
         let name2text = {
             "train": "Обучающие данные",
             "test": "Тестовые данные"
@@ -207,7 +216,7 @@ class TreeExperiment {
         MakeElement(this.parent, {innerHTML: "Гистограмма разностей оценок |c<sub>n</sub>(x) - h<sub>n</sub>(x)|"}, "h3")
 
         for (let name of ["train", "test"]) {
-            if (!datas[name])
+            if (!this.datas[name])
                 continue
 
             MakeElement(this.parent, {class: "text", innerText: `${name2text[name]}:`}, "p")
@@ -216,7 +225,7 @@ class TreeExperiment {
             this.histograms[name] = new HistogramPlot(div, {min: 0.05, max: 1, n: 19, color: "#ffc107", border: "#ffffff"})
         }
 
-        this.UpdateHistograms(leafs)
+        this.UpdateHistograms(this.leafs)
     }
 
     InitDataTable() {
@@ -235,9 +244,15 @@ class TreeExperiment {
 
         this.dataPlot.SetAxes(axisX, axisY)
         this.modelPlot.SetAxes(axisX, axisY)
+        this.cellsPlot.SetAxes(axisX, axisY)
+    }
 
-        let cells = this.cellExtractor.Extract(this.leafs, this.dataPlot.compactLayer.GetLimits(), axisX, axisY)
-        this.cellsPlot.ChangeCells(this.leafs, cells, this.model.layers.length)
+    SetCellsLayer(layer) {
+        let visibility = layer != "no"
+        this.cellsPlot.SetVisibility(visibility)
+
+        if (visibility)
+            this.cellsPlot.SetLayer(+layer)
     }
 
     UpdateHistograms(leafs) {

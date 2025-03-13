@@ -1,170 +1,142 @@
 class CellsExtractor {
-    constructor(model, eps = 1e-10) {
+    constructor(model) {
         this.model = model
-        this.eps = eps
     }
 
-    Extract(leafs, limits, axisX = 0, axisY = 1) {
-        let signsSets = []
-        for (let i = 0; i < this.model.layers.length; i++)
-            signsSets.push({})
-
-        let bbox = [
-            [1, 0, -limits.xmin, 1],
-            [1, 0, -limits.xmax, -1],
-            [0, 1, -limits.ymin, 1],
-            [0, 1, -limits.ymax, -1]
+    ExtractAll(limits, axisX, axisY) {
+        let polygon = [
+            [limits.xmin, limits.ymin],
+            [limits.xmin, limits.ymax],
+            [limits.xmax, limits.ymax],
+            [limits.xmax, limits.ymin]
         ]
 
-        let xmin = limits.xmin - this.eps
-        let xmax = limits.xmax + this.eps
-        let ymin = limits.ymin - this.eps
-        let ymax = limits.ymax + this.eps
+        let lines = this.GetFirstLayerLines(axisX, axisY)
+        let tree = this.SplitPolygonByLines(polygon, lines, [])
+        let layer2polygons = []
 
-        let cells = []
+        for (let i = 0; i < this.model.layers.length; i++)
+            layer2polygons.push({})
 
-        for (let leaf of leafs) {
-            let layer2lines = this.GetLinesBySigns(leaf.signs, axisX, axisY)
+        this.ExtractPolygons(1, [lines], tree, axisX, axisY, layer2polygons)
 
-            let inequalities = []
-            let convexes = []
-
-            let points = [
-                [limits.xmin, limits.ymin],
-                [limits.xmin, limits.ymax],
-                [limits.xmax, limits.ymax],
-                [limits.xmax, limits.ymin]
-            ]
-
-            for (let i = 0; i < layer2lines.length; i++) {
-                inequalities.push(...layer2lines[i])
-
-                let key = leaf.signs.slice(0, inequalities.length).join("-")
-                let cache = signsSets[i][key]
-
-                if (cache) {
-                    convexes.push(cache.convex)
-                    points = cache.points
-                }
-                else {
-                    let layerPoints = this.GetIntersections(inequalities, layer2lines[i], bbox, xmin, ymin, xmax, ymax)
-
-                    points = points.filter(point => this.IsCorrectPoint(point, layer2lines[i]))
-                    points.push(...layerPoints.filter(point => this.IsCorrectPoint(point, inequalities)))
-
-                    let convex = this.ComputeConvexCell(points)
-                    convexes.push(convex)
-                    signsSets[i][key] = {convex: convex, points: points}
-                }
-            }
-
-            cells.push(convexes)
-        }
-
-        return cells
+        return layer2polygons
     }
 
-    GetLinesBySigns(signs, axisX, axisY) {
-        let layer2lines = [[]]
-        let neuron = 0
+    ExtractPolygons(index, layer2lines, tree, axisX, axisY, layer2polygons) {
+        for (let node of tree)
+            layer2polygons[index - 1][node.key.join("")] = node.polygon
 
+        if (index == this.model.layers.length)
+            return
+
+        for (let node of tree) {
+            for (let i = 0; i < node.signs.length; i++)
+                layer2lines[index - 1][i][3] = node.signs[i]
+
+            layer2lines[index] = this.GetLayerLines(index, layer2lines[index - 1], axisX, axisY)
+
+            let layerTree = this.SplitPolygonByLines(node.polygon, layer2lines[index], node.key)
+            this.ExtractPolygons(index + 1, layer2lines, layerTree, axisX, axisY, layer2polygons)
+        }
+    }
+
+    GetFirstLayerLines(axisX, axisY) {
         let layer = this.model.layers[0]
+        let lines = []
+
+        for (let i = 0; i < layer.outputs; i++)
+            lines.push(layer.disabled[i] ? [0, 0, 0, 0] : [layer.w[i * layer.inputs + axisX], layer.w[i * layer.inputs + axisY], layer.b[i], 0])
+
+        return lines
+    }
+
+    GetLayerLines(index, prevLines, axisX, axisY) {
+        let layer = this.model.layers[index]
+        let lines = []
+
         for (let i = 0; i < layer.outputs; i++) {
-            let line = [layer.w[i * layer.inputs + axisX], layer.w[i * layer.inputs + axisY], layer.b[i], signs[neuron++]]
+            let line = [0, 0, layer.b[i], 0]
+
+            for (let j = 0; j < layer.inputs; j++) {
+                let sign = prevLines[j][3]
+                let activation = 1
+
+                if (this.model.layers[index - 1].activation == "abs")
+                    activation = sign >= 0 ? 1 : -1
+                else if (this.model.layers[index - 1].activation == "relu")
+                    activation = sign >= 0 ? 1 : 0
+                else if (this.model.layers[index - 1].activation == "leaky-relu")
+                    activation = sign >= 0 ? 1 : 0.01
+
+                line[0] += layer.w[i * layer.inputs + j] * prevLines[j][0] * activation
+                line[1] += layer.w[i * layer.inputs + j] * prevLines[j][1] * activation
+                line[2] += layer.w[i * layer.inputs + j] * prevLines[j][2] * activation
+            }
 
             if (layer.disabled[i])
                 line = [0, 0, 0, 0]
 
-            layer2lines[0].push(line)
+            lines.push(line)
         }
 
-        for (let index = 1; index < this.model.layers.length; index++) {
-            layer = this.model.layers[index]
-            layer2lines[index] = []
+        return lines
+    }
 
-            for (let i = 0; i < layer.outputs; i++) {
-                let line = [0, 0, layer.b[i], signs[neuron++]]
+    SplitPolygonByLines(polygon, lines, key) {
+        let tree = [{signs: [], key: key, polygon: polygon}]
 
-                for (let j = 0; j < layer.inputs; j++) {
-                    let sign = layer2lines[index - 1][j][3]
-                    let activation = 1
+        for (let line of lines) {
+            let splitted = []
 
-                    if (this.model.layers[index - 1].activation == "abs")
-                        activation = sign >= 0 ? 1 : -1
-                    else if (this.model.layers[index - 1].activation == "relu")
-                        activation = sign >= 0 ? 1 : 0
-                    else if (this.model.layers[index - 1].activation == "leaky-relu")
-                        activation = sign >= 0 ? 1 : 0.01
+            for (let node of tree) {
+                let [lower, upper] = this.SplitPolygon(node.polygon, line)
 
-                    line[0] += layer.w[i * layer.inputs + j] * layer2lines[index - 1][j][0] * activation
-                    line[1] += layer.w[i * layer.inputs + j] * layer2lines[index - 1][j][1] * activation
-                    line[2] += layer.w[i * layer.inputs + j] * layer2lines[index - 1][j][2] * activation
-                }
+                if (upper.length > 2)
+                    splitted.push({key: node.key.concat("+"), signs: node.signs.concat(1), polygon: upper})
 
-                if (layer.disabled[i])
-                    line = [0, 0, 0, 0]
-
-                layer2lines[index].push(line)
+                if (lower.length > 2)
+                    splitted.push({key: node.key.concat("-"), signs: node.signs.concat(-1), polygon: lower})
             }
+
+            tree = splitted
         }
 
-        return layer2lines
+        return tree
     }
 
-    ComputeConvexCell(points) {
-        if (points.length < 3)
-            return []
+    SplitPolygon(polygon, line) {
+        let [a, b, c] = line
 
-        let cx = 0
-        let cy = 0
+        if (a == 0 && b == 0 && c == 0)
+            return [polygon, []]
 
-        for (let [x, y] of points) {
-            cx += x
-            cy += y
+        let polygon1 = []
+        let polygon2 = []
+
+        for (let i = 0; i < polygon.length; i++) {
+            let [x1, y1] = polygon[i]
+            let [x2, y2] = polygon[(i + 1) % polygon.length]
+
+            let sign1 = a * x1 + b * y1 + c
+            let sign2 = a * x2 + b * y2 + c
+
+            if (sign1 <= 0)
+                polygon1.push(polygon[i])
+
+            if (sign1 >= 0)
+                polygon2.push(polygon[i])
+
+            if (sign1 * sign2 >= 0)
+                continue
+
+            let t = sign1 / (sign1 - sign2)
+            let p = [x1 + t * (x2 - x1), y1 + t * (y2 - y1)]
+
+            polygon1.push(p)
+            polygon2.push(p)
         }
 
-        cx /= points.length
-        cy /= points.length
-
-        points.sort((p1, p2) => Math.atan2(p1[1] - cy, p1[0] - cx) - Math.atan2(p2[1] - cy, p2[0] - cx))
-        return points
-    }
-
-    GetIntersections(inequalities, newInequalities, bbox, xmin, ymin, xmax, ymax) {
-        let points = []
-
-        for (let i = 0; i < inequalities.length - newInequalities.length; i++)
-            for (let j = 0; j < newInequalities.length; j++)
-                this.AddIntersection(inequalities[i], newInequalities[j], xmin, ymin, xmax, ymax, points)
-
-        for (let i = 0; i < newInequalities.length; i++) {
-            for (let j = i + 1; j < newInequalities.length; j++)
-                this.AddIntersection(newInequalities[i], newInequalities[j], xmin, ymin, xmax, ymax, points)
-
-            for (let j = 0; j < bbox.length; j++)
-                this.AddIntersection(newInequalities[i], bbox[j], xmin, ymin, xmax, ymax, points)
-        }
-
-        return points
-    }
-
-    AddIntersection(line1, line2, xmin, ymin, xmax, ymax, points) {
-        let [a1, b1, c1] = line1
-        let [a2, b2, c2] = line2
-
-        let det = a1 * b2 - a2 * b1
-
-        if (Math.abs(det) < this.eps)
-            return
-
-        let x = (b1 * c2 - b2 * c1) / det
-        let y = (a2 * c1 - a1 * c2) / det
-
-        if (xmin <= x && x <= xmax && ymin <= y && y <= ymax)
-            points.push([x, y])
-    }
-
-    IsCorrectPoint(point, inequalities) {
-        return inequalities.every(([a, b, c, sign]) => sign * (a * point[0] + b * point[1] + c) >= -this.eps)
+        return [polygon1, polygon2]
     }
 }

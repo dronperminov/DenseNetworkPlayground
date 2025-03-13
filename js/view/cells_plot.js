@@ -1,33 +1,57 @@
 class CellsPlot {
-    constructor(viewBox, thresholds) {
+    constructor(viewBox, thresholds, compact, model) {
         this.viewBox = viewBox
         this.thresholds = thresholds
+        this.compact = compact
+        this.cellsExtractor = new CellsExtractor(model)
+        this.axes = [0, 1]
 
         this.mode = "transparent"
-        this.opacity = 1
+        this.visibility = true
 
         this.g = MakeElement(viewBox.svg, null, "g")
 
-        this.leafs = []
+        this.leafs = {}
         this.cells = []
         this.polygons = []
         this.polygonsG = []
+        this.layer = null
 
-        this.layer = 0
-        this.layers = 0
-
-        this.selectedIndices = new Set()
+        this.selectedCells = new Set()
 
         this.viewBox.on("scale", scale => this.ChangeViewScale(scale))
         this.viewBox.on("change-view", () => this.ChangeView())
+        this.viewBox.on("change-limits", () => this.ChangeLimits())
     }
 
-    ChangeCells(leafs, cells, layers) {
-        this.leafs = leafs
-        this.cells = cells
-        this.layers = layers
-        this.layer = layers - 1
+    SetAxes(axisX, axisY) {
+        this.axes[0] = axisX
+        this.axes[1] = axisY
 
+        this.UpdateCells()
+    }
+
+    SetLayer(layer) {
+        this.layer = layer
+        this.UpdateLayerVisibility()
+    }
+
+    SetVisibility(visibility) {
+        this.visibility = visibility
+        this.UpdateVisibility()
+    }
+
+    IsVisible() {
+        return this.visibility
+    }
+
+    UpdateCells() {
+        if (!this.visibility)
+            return
+
+        this.cells = this.GetCells()
+
+        this.BuildPolygonGraphics()
         this.BuildPolygons()
         this.Plot()
     }
@@ -37,104 +61,148 @@ class CellsPlot {
         this.UpdateColors()
     }
 
-    SetLeaf(leaf, selected) {
-        let index = this.leafs.indexOf(leaf)
-
-        if (selected)
-            this.selectedIndices.add(index)
-        else
-            this.selectedIndices.delete(index)
-
-        this.UpdateVisibility()
+    SetLeafs(leafs) {
+        this.leafs = leafs
+        this.UpdateColors()
     }
 
-    SetLayer(layer) {
-        this.layer = layer
-        this.UpdateVisibility()
+    SetCell(key, selected) {
+        let size = 0
+        for (let i = 0; i < this.cellsExtractor.model.layers.length; i++) {
+            size += this.cellsExtractor.model.layers[i].outputs
+
+            let cellKey = key.substr(0, size)
+
+            if (selected)
+                this.selectedCells.add(cellKey)
+            else
+                this.selectedCells.delete(cellKey)
+        }
+
+        this.UpdatePolygonsVisibility()
+    }
+
+    BuildPolygonGraphics() {
+        while (this.polygonsG.length > this.cells.length) {
+            this.polygons.pop()
+            this.polygonsG.pop().remove()
+        }
+
+        while (this.polygonsG.length < this.cells.length) {
+            this.polygonsG.push(MakeElement(this.g, null, "g"))
+            this.polygons.push({})
+        }
     }
 
     BuildPolygons() {
-        this.g.innerHTML = ""
-        this.polygonsG = []
-        this.polygons = []
+        for (let i = 0; i < this.cells.length; i++) {
+            for (let [key, polygon] of Object.entries(this.polygons[i])) {
+                if (!this.cells[i][key]) {
+                    polygon.remove()
+                    delete this.polygons[i][key]
+                }
+            }
 
-        for (let i = 0; i < this.layers; i++)
-            this.polygonsG.push(MakeElement(this.g, null, "g"))
-
-        for (let cell of this.cells) {
-            let polygons = []
-
-            for (let i = 0; i < this.layers; i++)
-                polygons[i] = MakeElement(this.polygonsG[i], {stroke: "#000000", "stroke-width": 0.2, fill: "transparent"}, "polygon")
-
-            this.polygons.push(polygons)
+            for (let key of Object.keys(this.cells[i]))
+                if (!this.polygons[i][key])
+                    this.polygons[i][key] = MakeElement(this.polygonsG[i], {stroke: "#000000", "stroke-width": 0.2, fill: "transparent"}, "polygon")
         }
     }
 
     Plot() {
+        if (this.cells.length == 0)
+            return
+
         this.ChangeViewScale(this.viewBox.GetScale())
         this.UpdateVisibility()
-
-        for (let i = 0; i < this.polygons.length; i++) {
-            for (let j = 0; j < this.layers; j++) {
-                let points = this.cells[i][j].map(([x, y]) => `${this.viewBox.XtoScreen(x)},${this.viewBox.YtoScreen(y)}`).join(" ")
-                this.polygons[i][j].setAttribute("points", points)
-            }
-        }
-
+        this.UpdateLayerVisibility()
+        this.UpdatePolygonsVisibility()
+        this.UpdatePoints()
         this.UpdateColors()
     }
 
     UpdateColors() {
-        if (this.mode == "no") {
+        let layer = this.cells.length - 1
+
+        for (let key of Object.keys(this.cells[layer]))
+            this.polygons[layer][key].setAttribute("fill", this.mode == "colors" ? "#000000" : "transparent")
+
+        if (this.mode != "colors")
+            return
+
+        for (let leaf of this.leafs) {
+            let [r, g, b] = this.thresholds.GetOutputColor(leaf.stats.train.h)
+
+            if (this.polygons[layer][leaf.key])
+                this.polygons[layer][leaf.key].setAttribute("fill", `rgb(${r}, ${g}, ${b})`)
+        }
+    }
+
+    UpdateVisibility() {
+        if (!this.visibility || this.cells.length < 1) {
             this.g.setAttribute("visibility", "hidden")
             return
         }
 
         this.g.removeAttribute("visibility")
-
-        for (let i = 0; i < this.polygons.length; i++) {
-            let color = "transparent"
-
-            if (this.mode == "colors") {
-                let hn = this.leafs[i].stats.train.h
-                let [r, g, b] = this.thresholds.GetOutputColor(hn)
-                color = `rgba(${r}, ${g}, ${b}, ${this.opacity})`
-            }
-
-            this.polygons[i][this.layers - 1].setAttribute("fill", color)
-        }
     }
 
-    UpdateVisibility() {
-        if (this.layers < 1)
-            return
+    UpdateLayerVisibility() {
+        if (this.layer === null)
+            this.layer = this.cells.length - 1
 
-        for (let i = 0; i < this.layers; i++)
+        for (let i = 0; i < this.cells.length; i++) {
             if (this.layer == -1 || i == this.layer)
                 this.polygonsG[i].removeAttribute("visibility")
             else
                 this.polygonsG[i].setAttribute("visibility", "hidden")
+        }
+    }
 
-        for (let i = 0; i < this.polygons.length; i++) {
-            let visible = this.selectedIndices.size == 0 || this.selectedIndices.has(i)
-
-            for (let j = 0; j < this.layers; j++) {
-                if (visible)
-                    this.polygons[i][j].removeAttribute("visibility")
+    UpdatePolygonsVisibility() {
+        for (let i = 0; i < this.cells.length; i++) {
+            for (let [key, polygon] of Object.entries(this.polygons[i])) {
+                if (this.selectedCells.size == 0 || this.selectedCells.has(key))
+                    polygon.removeAttribute("visibility")
                 else
-                    this.polygons[i][j].setAttribute("visibility", "hidden")
+                    polygon.setAttribute("visibility", "hidden")
             }
         }
     }
 
+    UpdatePoints() {
+        for (let i = 0; i < this.cells.length; i++)
+            for (let [key, polygon] of Object.entries(this.cells[i]))
+                this.polygons[i][key].setAttribute("points", polygon.map(([x, y]) => `${this.viewBox.XtoScreen(x)},${this.viewBox.YtoScreen(y)}`).join(" "))
+    }
+
+    GetCellsLimits() {
+        if (this.compact.IsInitialized()) {
+            let x = this.compact.GetLimits(this.axes[0])
+            let y = this.compact.GetLimits(this.axes[1])
+            return {xmin: x.min, xmax: x.max, ymin: y.min, ymax: y.max}
+        }
+
+        return this.viewBox.GetLimits()
+    }
+
+    GetCells() {
+        let limits = this.GetCellsLimits()
+        return this.cellsExtractor.ExtractAll(limits, this.axes[0], this.axes[1])
+    }
+
     ChangeViewScale(scale) {
         for (let polygons of this.polygons)
-            for (let polygon of polygons)
-                polygon.setAttribute("stroke-width", scale / 5)
+            for (let polygon of Object.values(polygons))
+                polygon.setAttribute("stroke-width", scale / 4)
     }
 
     ChangeView() {
         this.Plot()
+    }
+
+    ChangeLimits() {
+        if (!this.compact.IsInitialized())
+            this.UpdateCells()
     }
 }
