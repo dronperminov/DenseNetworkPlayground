@@ -5,6 +5,7 @@ class Point2DGenerator extends DataGenerator {
         this.datasets["spiral"] = this.SpiralPoint
         this.datasets["circle"] = this.CirclePoint
         this.datasets["moons"] = this.MoonsPoint
+        this.datasets["cross"] = this.CrossPoint
         this.datasets["gaussians"] = this.GaussiansPoint
 
         this.config = [
@@ -44,6 +45,16 @@ class Point2DGenerator extends DataGenerator {
                         {name: "rx2", title: "R<sub>x<sub>max</sub></sub>", step: 0.01, min: 0, value: 0.5},
                         {name: "ry1", title: "R<sub>y<sub>min</sub></sub>", step: 0.01, min: 0, value: 0.9},
                         {name: "ry2", title: "R<sub>y<sub>max</sub></sub>", step: 0.01, min: 0, value: 1.2},
+                    ]
+                ]
+            },
+            {
+                name: "cross",
+                title: "cross",
+                params: [
+                    [
+                        {name: "dx", title: "d<sub>x</sub>", step: 0.01, min: 0.01, value: 1},
+                        {name: "dy", title: "d<sub>y</sub>", step: 0.01, min: 0.01, value: 1},
                     ]
                 ]
             },
@@ -103,6 +114,16 @@ class Point2DGenerator extends DataGenerator {
             t += Math.PI
 
         return [x0 + rx * Math.sin(t), y0 + ry * Math.cos(t)]
+    }
+
+    CrossPoint(params, label) {
+        let x = Random.Uniform(-params.dx, params.dx)
+        let y = Random.Uniform(-params.dy, params.dy)
+
+        if ((label == 1) ^ (x * y > 0))
+            return [x, y]
+
+        return [x, -y]
     }
 
     GaussiansPoint(params, label) {
