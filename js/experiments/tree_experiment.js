@@ -10,7 +10,7 @@ class TreeExperiment {
         this.cellExtractor = new CellsExtractor(this.model)
     }
 
-    Run(backgroundCount, axisX, axisY, modelOutputMode, modelOutputSize) {
+    Run(backgroundCount, build3DHistogram, axisX, axisY, modelOutputMode, modelOutputSize) {
         this.datas = this.InitDatas(backgroundCount)
         this.tree = this.InitTree()
         this.leafs = this.tree.GetLeafs()
@@ -22,6 +22,10 @@ class TreeExperiment {
         this.ShowLeafsInfo()
         this.InitTreeCellsTable()
         this.InitCellsHistograms()
+
+        if (build3DHistogram)
+            this.Init3dPlots()
+
         this.InitDataTable()
 
         for (let [name, data] of Object.entries(this.datas)) {
@@ -229,6 +233,73 @@ class TreeExperiment {
         }
 
         this.UpdateHistograms(this.leafs)
+    }
+
+    Init3dPlots() {
+        MakeElement(this.parent, {innerHTML: "Гистограммная оценка h<sub>n</sub> в 3D"}, "h3")
+
+        let histogram3D = MakeElement(this.parent)
+
+        let data = this.GetPolygonsMeshData()
+        let layout = {margin: {l: 0, r: 0, b: 0, t: 0}, autosize: true, height: 450}
+        Plotly.newPlot(histogram3D, data, layout, {displayModeBar: false, responsive: true})
+    }
+
+    GetPolygonsMeshData() {
+        let data = []
+
+        for (let leaf of this.leafs) {
+            let [r, g, b] = this.visualizer.thresholds.GetOutputColor(leaf.stats.train.h)
+            let polygon = this.cellsPlot.cells[this.model.layers.length - 1][leaf.key]
+
+            let x = []
+            let y = []
+            let z = []
+
+            for (let [px, py] of polygon) {
+                x.push(px)
+                y.push(py)
+                z.push(0)
+            }
+
+            for (let [px, py] of polygon) {
+                x.push(px)
+                y.push(py)
+                z.push(leaf.stats.train.h)
+            }
+
+            let i = []
+            let j = []
+            let k = []
+
+            for (let index = 0; index < polygon.length; index++) {
+                let currDown = index
+                let nextDown = (index + 1) % polygon.length
+
+                let currUp = polygon.length + index
+                let nextUp = polygon.length + (index + 1) % polygon.length
+
+                i.push(currDown, nextUp)
+                j.push(nextDown, currUp)
+                k.push(currUp, nextDown)
+            }
+
+            for (let index = 2; index < polygon.length; index++) {
+                i.push(0, polygon.length)
+                j.push(index - 1, polygon.length + index - 1)
+                k.push(index, polygon.length + index)
+            }
+
+            data.push({
+                opacity: 1,
+                type: "mesh3d",
+                color: `rgb(${r}, ${g}, ${b})`,
+                x: x, y: y, z: z,
+                i: i, j: j, k: k
+            })
+        }
+
+        return data
     }
 
     InitDataTable() {

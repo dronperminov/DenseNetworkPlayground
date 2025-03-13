@@ -208,6 +208,7 @@ class Playground {
     InitExperimentsMenu() {
         this.syntheticDataBackgroundCount = new NumberInput(document.getElementById("synthetic-data-background-count"))
         this.treeBackgroundCount = new NumberInput(document.getElementById("tree-background-count"))
+        this.treeBuild3DHistogram = document.getElementById("tree-build-3d-histogram")
 
         let syntheticDataGenerateBtn = document.getElementById("synthetic-data-generate-btn")
         syntheticDataGenerateBtn.addEventListener("click", () => this.RunSyntheticDataExperiment())
