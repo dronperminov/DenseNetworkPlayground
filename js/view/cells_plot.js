@@ -11,7 +11,7 @@ class CellsPlot {
 
         this.g = MakeElement(viewBox.svg, null, "g")
 
-        this.leafs = {}
+        this.leafs = []
         this.cells = []
         this.polygons = []
         this.polygonsG = []

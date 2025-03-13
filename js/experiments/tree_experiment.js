@@ -173,8 +173,8 @@ class TreeExperiment {
         if (testOneLeafs > 0)
             MakeElement(info, {class: "text", innerText: `Среди них ${GetWordForm(testOneLeafs, ["одноэлементная ячейка", "одноэлементных ячейки", "одноэлементных ячеек"])} из тестовых данных (${Round(testOneLeafs * 100 / this.leafs.length, 100)}%)`}, "li")
 
-        MakeElement(info, {class: "text", innerHTML: "<b>c<sub>n</sub>(x)</b> — нейросетевая оценка плотности (среднее значение ± стд. отклонение выхода модели на точках, находящихся внутри ячейки)"}, "li")
-        MakeElement(info, {class: "text", innerHTML: "<b>h<sub>n</sub>(x)</b> — гистограммная оценка плотности ячейки"}, "li")
+        MakeElement(info, {class: "text", innerHTML: "<b>c<sub>n</sub>(x)</b> — нейросетевая оценка апостериорной вероятности (среднее значение ± стд. отклонение выхода модели на точках, находящихся внутри ячейки)"}, "li")
+        MakeElement(info, {class: "text", innerHTML: "<b>h<sub>n</sub>(x)</b> — гистограммная оценка апостериорной вероятности ячейки"}, "li")
         MakeElement(info, {class: "text", innerHTML: "<b>|c<sub>n</sub>(x) - h<sub>n</sub>(x)|</b> — модуль разности среднего значения нейросетевой оценки и гистограммной оценки"}, "li")
     }
 
@@ -202,7 +202,10 @@ class TreeExperiment {
             this.cellsPlot.SetCell(leaf.key, value)
         })
 
-        this.treeTable.on("update-filters", leafs => this.UpdateHistograms(leafs))
+        this.treeTable.on("update-filters", leafs => {
+            this.cellsPlot.SetLeafs(leafs)
+            this.UpdateHistograms(leafs)
+        })
     }
 
     InitCellsHistograms() {
