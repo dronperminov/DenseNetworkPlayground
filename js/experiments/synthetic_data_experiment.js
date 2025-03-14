@@ -6,7 +6,7 @@ class SyntheticDataExperiment {
     }
 
     Run(backgroundCount, axisX, axisY) {
-        let data = this.visualizer.GenerateSyntheticData(backgroundCount)
+        let {background, data} = this.GenerateSyntheticData(backgroundCount)
         let split = {data: data, stats: data.GetStatistic()}
 
         this.ShowSteps(backgroundCount, data)
@@ -23,7 +23,40 @@ class SyntheticDataExperiment {
         this.dataTable.ChangeData("train", this.visualizer.dataset.splits.train)
         this.dataPlot.ChangeData("train", this.visualizer.dataset.splits.train)
 
+        this.histogram.ChangeData(background.outputs.filter(v => !this.visualizer.thresholds.IsInside(v)))
+
         this.SetAxes()
+    }
+
+    GenerateSyntheticData(count) {
+        let background = this.visualizer.compact.GetData(count)
+        let dimension = background.dimension
+        let indices = []
+        let labels = []
+
+        this.visualizer.modelManager.model.PredictUnrolled(background.inputs, count, background.outputs)
+
+        for (let i = 0; i < count; i++) {
+            let label = this.visualizer.thresholds.GetLabel(background.outputs[i])
+
+            if (label != 0 && Math.random() < Math.abs(background.outputs[i])) {
+                indices.push(i)
+                labels.push(label)
+            }
+        }
+
+        let inputs = new Float64Array(dimension * indices.length)
+        let outputs = new Float64Array(indices.length)
+        let data = new Data(inputs, outputs, dimension)
+
+        for (let i = 0; i < indices.length; i++) {
+            for (let j = 0; j < dimension; j++)
+                data.inputs[i * dimension + j] = background.inputs[indices[i] * dimension + j]
+
+            data.outputs[i] = labels[i]
+        }
+
+        return {background, data}
     }
 
     ShowSteps(count, data) {
@@ -69,13 +102,19 @@ class SyntheticDataExperiment {
     InitDataPlot() {
         let dataPlotDiv = MakeElement(this.parent, {class: "data-plot"})
         let dataPlotSVG = MakeElement(dataPlotDiv, null, "svg")
-        let dataTableDiv = MakeElement(this.parent, {class: "data-table"})
-
         let viewBox = new ViewBox(dataPlotSVG)
+
+        MakeElement(this.parent, {innerHTML: "Гистограмма предсказаний модели на фоне"}, "h3")
+        MakeElement(this.parent, {class: "text", innerText: "Учитываются только точки со значением предсказания выше порогов доверия (до вероятностного прореживания)"}, "p")
+        let histogramDiv = MakeElement(this.parent, {class: "histogram-plot"})
+
+        let dataTableDiv = MakeElement(this.parent, {class: "data-table"})
 
         this.dataPlot = new DataPlot(dataPlotDiv, viewBox, this.visualizer.compact)
         this.dataPlot.AddPlot("synthetic", {border: "#000000", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
         this.dataPlot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: false})
+
+        this.histogram = new HistogramPlot(histogramDiv, {min: -1, max: 1, n: 20, color: "#89dd73", border: "#ffffff"})
 
         this.dataTable = new DataTable(dataTableDiv)
         this.dataTable.Add("synthetic", {title: "Синтетические данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
