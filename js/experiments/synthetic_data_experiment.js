@@ -20,6 +20,9 @@ class SyntheticDataExperiment {
         this.dataTable.ChangeData("synthetic", split)
         this.dataPlot.ChangeData("synthetic", split)
 
+        this.dataTable.ChangeData("train", this.visualizer.dataset.splits.train)
+        this.dataPlot.ChangeData("train", this.visualizer.dataset.splits.train)
+
         this.SetAxes()
     }
 
@@ -54,6 +57,10 @@ class SyntheticDataExperiment {
         this.controls["axis-y"] = CloneSelect(axisY, y)
         this.controls["axis-y"].addEventListener("change", () => this.SetAxes())
 
+        let trainData = MakeElement(controls, {innerHTML: ""}, "li")
+        this.controls["plot-train-data"] = MakeCheckbox(trainData, "Отображать обучающие данные", false)
+        this.controls["plot-train-data"].addEventListener("change", () => this.dataPlot.SetVisibility("train", this.controls["plot-train-data"].checked))
+
         let grid = MakeElement(controls, {innerHTML: ""}, "li")
         this.controls["plot-grid"] = MakeCheckbox(grid, "Отображать сетку", true)
         this.controls["plot-grid"].addEventListener("change", () => this.dataPlot.SetGridVisibility(this.controls["plot-grid"].checked))
@@ -67,10 +74,12 @@ class SyntheticDataExperiment {
         let viewBox = new ViewBox(dataPlotSVG)
 
         this.dataPlot = new DataPlot(dataPlotDiv, viewBox, this.visualizer.compact)
-        this.dataPlot.AddPlot("synthetic", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
+        this.dataPlot.AddPlot("synthetic", {border: "#000000", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: true})
+        this.dataPlot.AddPlot("train", {border: "#ffffff", colors: ["#2191fb", "#89dd73", "#dd7373"], visible: false})
 
         this.dataTable = new DataTable(dataTableDiv)
         this.dataTable.Add("synthetic", {title: "Синтетические данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
+        this.dataTable.Add("train", {title: "Обучающие данные", colors: {"-1": "#2191fb", "1": "#dd7373"}})
     }
 
     SetAxes() {
