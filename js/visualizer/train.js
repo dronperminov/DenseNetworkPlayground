@@ -7,6 +7,7 @@ Visualizer.prototype.Reset = function(disabled) {
 
 Visualizer.prototype.GetTrainData = function() {
     let trainData = this.dataset.splits.train.data
+    let dimension = trainData.dimension
 
     if (this.modelManager.trainerModel) {
         trainData = this.compact.GetData(trainData.length)
@@ -16,8 +17,8 @@ Visualizer.prototype.GetTrainData = function() {
     let backgroundData = this.compact.GetData(Math.floor(trainData.length * this.backgroundPart))
     let datas = [trainData, backgroundData]
 
-    let length = trainData.length + backgroundData.length
-    let inputs = new Float64Array(length * trainData.dimension)
+    let length = datas.reduce((sum, data) => sum + data.length, 0)
+    let inputs = new Float64Array(length * dimension)
     let outputs = new Float64Array(length)
 
     let indices = []
@@ -32,14 +33,14 @@ Visualizer.prototype.GetTrainData = function() {
         let data = datas[indices[i][0]]
         let index = indices[i][1]
 
-        for (let j = 0; j < data.dimension; j++)
-            inputs[i * data.dimension + j] = data.inputs[index * data.dimension + j]
+        for (let j = 0; j < dimension; j++)
+            inputs[i * dimension + j] = data.inputs[index * dimension + j]
 
         outputs[i] = data.outputs[index]
     }
 
     return {
-        train: new Data(inputs, outputs, trainData.dimension),
+        train: new Data(inputs, outputs, dimension),
         background: backgroundData
     }
 }
