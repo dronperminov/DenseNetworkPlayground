@@ -114,14 +114,17 @@ Visualizer.prototype.SetModelOutputPoint = function(point) {
 
 Visualizer.prototype.SetCellsLayer = function(layer) {
     let visibility = layer != "no"
-
-    if (!this.cellsPlot.IsVisible() && visibility)
-        this.cellsPlot.UpdateCells()
+    let isVisible = this.cellsPlot.IsVisible()
 
     this.cellsPlot.SetVisibility(visibility)
 
-    if (visibility)
-        this.cellsPlot.SetLayer(+layer)
+    if (!visibility)
+        return
+
+    if (!isVisible)
+        this.cellsPlot.UpdateCells()
+
+    this.cellsPlot.SetLayer(+layer)
 }
 
 Visualizer.prototype.SetCriterion = function(name) {
