@@ -27,7 +27,7 @@ class SyntheticDataExperiment {
         MakeElement(this.parent, {innerText: "Генерация синтетических данных"}, "h2")
         let stepsList = MakeElement(this.parent, null, "ul")
 
-        MakeElement(stepsList, {class: "text", innerText: `Сгенерированы ${GetWordForm(count, ["случайная точка", "случайные точки", "случайных точек"])} на компакте`}, "li")
+        MakeElement(stepsList, {class: "text", innerText: `${GetWordForm(count, ["случайная точка сгенерирована", "случайные точки сгенерированы", "случайных точек сгенерированы"])} на компакте`}, "li")
         MakeElement(stepsList, {class: "text", innerHTML: "Для каждой сгенерированной точки x<sub>i</sub> получено предсказание модели y<sub>i</sub>"}, "li")
 
         let thresholds = this.visualizer.thresholds
@@ -39,7 +39,7 @@ class SyntheticDataExperiment {
         if (data.length == 0)
             MakeElement(stepsList, {class: "text", innerText: "В результате все сгенерированные точки были отвергнуты"}, "li")
         else
-            MakeElement(stepsList, {class: "text", innerHTML: `В результате были отобраны ${GetWordForm(data.length, ["точка", "точки", "точек"])} (${Round(data.length * 100 / count, 10)}%)`}, "li")
+            MakeElement(stepsList, {class: "text", innerHTML: `В результате ${GetWordForm(data.length, ["точка была отобрана", "точки были отобраны", "точек были отобраны"])} (${Round(data.length * 100 / count, 10)}%)`}, "li")
     }
 
     InitControls(axisX, axisY) {
