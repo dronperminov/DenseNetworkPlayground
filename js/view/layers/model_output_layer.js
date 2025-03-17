@@ -232,7 +232,12 @@ class ModelOutputLayer {
         if (this.point.length == this.model.inputs)
             return
 
-        this.point = new Float64Array(this.model.inputs).fill(0)
+        let point = new Float64Array(this.model.inputs).fill(0)
+
+        for (let i = 0; i < this.point.length && i < point.length; i++)
+            point[i] = this.point[i]
+
+        this.point = point
     }
 
     Resize() {

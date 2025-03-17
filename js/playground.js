@@ -150,6 +150,9 @@ class Playground {
         let plotGrid = document.getElementById("plot-grid")
         plotGrid.addEventListener("change", () => this.visualizer.SetDataGridVisibility(plotGrid.checked))
 
+        this.point = new PointInput(document.getElementById("point-input"))
+        this.point.on("change", point => this.visualizer.SetModelOutputPoint(point))
+
         this.axisX = document.getElementById("axis-x")
         this.axisY = document.getElementById("axis-y")
 

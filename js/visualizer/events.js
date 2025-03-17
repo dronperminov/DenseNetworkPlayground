@@ -54,6 +54,8 @@ Visualizer.prototype.HandleChangeModelArchitecture = function() {
     let model = this.modelManager.model
 
     this.modelPlot.ChangeModelArchitecture()
+    this.cellsPlot.ChangeModelArchitecture()
+
     this.SetModelShowNeuron(model.layers.length - 1, 0)
 
     if (model.inputs != this.dataset.dimension)

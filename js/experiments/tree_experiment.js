@@ -37,7 +37,7 @@ class TreeExperiment {
 
         this.dataPlot.ResetLimits()
 
-        if (+axisX.value != 0 && axisY.value != 1)
+        if (axisX.value != "0" || axisY.value != "1")
             this.SetAxes()
     }
 

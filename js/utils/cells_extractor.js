@@ -3,7 +3,7 @@ class CellsExtractor {
         this.model = model
     }
 
-    ExtractAll(limits, axisX, axisY) {
+    ExtractAll(limits, axisX, axisY, point) {
         let polygon = [
             [limits.xmin, limits.ymin],
             [limits.xmin, limits.ymax],
@@ -11,7 +11,7 @@ class CellsExtractor {
             [limits.xmax, limits.ymin]
         ]
 
-        let lines = this.GetFirstLayerLines(axisX, axisY)
+        let lines = this.GetFirstLayerLines(axisX, axisY, point)
         let tree = this.SplitPolygonByLines(polygon, lines, [])
         let layer2polygons = []
 
@@ -41,12 +41,19 @@ class CellsExtractor {
         }
     }
 
-    GetFirstLayerLines(axisX, axisY) {
+    GetFirstLayerLines(axisX, axisY, point) {
         let layer = this.model.layers[0]
         let lines = []
 
-        for (let i = 0; i < layer.outputs; i++)
-            lines.push(layer.disabled[i] ? [0, 0, 0, 0] : [layer.w[i * layer.inputs + axisX], layer.w[i * layer.inputs + axisY], layer.b[i], 0])
+        for (let i = 0; i < layer.outputs; i++) {
+            let b = layer.b[i]
+
+            for (let j = 0; j < layer.inputs; j++)
+                if (j != axisX && j != axisY)
+                    b += layer.w[i * layer.inputs + j] * point[j]
+
+            lines.push(layer.disabled[i] ? [0, 0, 0, 0] : [layer.w[i * layer.inputs + axisX], layer.w[i * layer.inputs + axisY], b, 0])
+        }
 
         return lines
     }

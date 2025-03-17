@@ -110,6 +110,7 @@ Visualizer.prototype.SetModelOutputSurfaceVisibility = function(visible) {
 
 Visualizer.prototype.SetModelOutputPoint = function(point) {
     this.modelPlot.SetPoint(point)
+    this.cellsPlot.SetPoint(point)
 }
 
 Visualizer.prototype.SetCellsLayer = function(layer) {

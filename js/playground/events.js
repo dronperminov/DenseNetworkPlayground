@@ -6,6 +6,7 @@ Playground.prototype.HandleChangeDimension = function(dimension) {
     if (dimension > 1)
         this.axisY.value = 1
 
+    this.point.SetDimension(dimension)
     this.SetAxes()
 }
 

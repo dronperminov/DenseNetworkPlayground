@@ -5,6 +5,7 @@ class CellsPlot {
         this.compact = compact
         this.cellsExtractor = new CellsExtractor(model)
         this.axes = [0, 1]
+        this.point = new Float64Array(model.inputs).fill(0)
 
         this.mode = "transparent"
         this.visibility = true
@@ -28,6 +29,11 @@ class CellsPlot {
         this.axes[0] = axisX
         this.axes[1] = axisY
 
+        this.UpdateCells()
+    }
+
+    SetPoint(point) {
+        this.point = point
         this.UpdateCells()
     }
 
@@ -188,7 +194,7 @@ class CellsPlot {
 
     GetCells() {
         let limits = this.GetCellsLimits()
-        return this.cellsExtractor.ExtractAll(limits, this.axes[0], this.axes[1])
+        return this.cellsExtractor.ExtractAll(limits, this.axes[0], this.axes[1], this.point)
     }
 
     ChangeViewScale(scale) {
@@ -204,5 +210,17 @@ class CellsPlot {
     ChangeLimits() {
         if (!this.compact.IsInitialized())
             this.UpdateCells()
+    }
+
+    ChangeModelArchitecture() {
+        if (this.point.length == this.cellsExtractor.model.inputs)
+            return
+
+        let point = new Float64Array(this.cellsExtractor.model.inputs).fill(0)
+
+        for (let i = 0; i < this.point.length && i < point.length; i++)
+            point[i] = this.point[i]
+
+        this.point = point
     }
 }

@@ -131,6 +131,8 @@ Playground.prototype.SetCellsLayer = function(layer) {
 Playground.prototype.SetAxes = function() {
     let xAxis = +this.axisX.value
     let yAxis = +this.axisY.value
+
+    this.point.SetAxes(xAxis, yAxis)
     this.visualizer.SetAxes(xAxis, yAxis)
 }
 
