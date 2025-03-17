@@ -52,7 +52,7 @@ class CellsPlot {
     }
 
     UpdateCells() {
-        if (!this.visibility)
+        if (!this.visibility || this.axes[0] >= this.cellsExtractor.model.inputs || this.axes[1] >= this.cellsExtractor.model.inputs)
             return
 
         this.cells = this.GetCells()

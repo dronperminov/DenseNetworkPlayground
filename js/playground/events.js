@@ -1,12 +1,17 @@
 Playground.prototype.HandleChangeDimension = function(dimension) {
     this.dataGenerator.ChangeDimension(dimension)
+    this.point.SetDimension(dimension)
+
     this.UpdateAxisDimension(this.axisX, dimension)
     this.UpdateAxisDimension(this.axisY, dimension)
 
-    if (dimension > 1)
+    if (dimension == 2) {
+        this.axisX.value = 0
+        this.axisY.value = 1
+    }
+    else if (dimension > 1)
         this.axisY.value = 1
 
-    this.point.SetDimension(dimension)
     this.SetAxes()
 }
 
@@ -56,11 +61,16 @@ Playground.prototype.UpdateCellsLayerInput = function(layers) {
 }
 
 Playground.prototype.UpdateAxisDimension = function(axis, dimension) {
+    let value = +axis.value
+
     while (axis.children.length > dimension)
         axis.removeChild(axis.lastChild)
 
     for (let i = axis.children.length; i < dimension; i++)
         MakeElement(axis, {value: i, innerText: `x${NumberToIndex(i + 1)}`}, "option")
+
+    if (value >= dimension)
+        axis.value = dimension - 1
 }
 
 Playground.prototype.UpdateTrainButtons = function(disabled) {
