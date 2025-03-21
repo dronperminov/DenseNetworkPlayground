@@ -29,7 +29,7 @@ class TreeExperiment {
         this.InitDataTable()
 
         for (let [name, data] of Object.entries(this.datas)) {
-            let split = this.visualizer.dataset.splits[name] ? this.visualizer.dataset.splits[name] : {data: data, stats: data.GetStatistic()}
+            let split = ["train", "test"].indexOf(name) > -1 ? this.visualizer.dataset.splits[name] : {data: data, stats: data.GetStatistic()}
 
             this.dataPlot.ChangeData(name, split)
             this.dataTable.ChangeData(name, split)
