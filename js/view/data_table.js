@@ -140,10 +140,11 @@ class DataTable {
     }
 
     GetColumnValue(table, row, column) {
-        if (column < table.data.dimension)
-            return table.data.inputs[row * table.data.dimension + column]
+        if (column >= table.data.dimension)
+            return table.data.outputs[row]
 
-        return table.data.outputs[row]
+        let value = table.data.inputs[row * table.data.dimension + column]
+        return isNaN(value) ? Infinity : value
     }
 
     RenderTable(table) {
@@ -207,6 +208,9 @@ class DataTable {
                 for (let key of ["min", "max", "mean", "variance"])
                     if (key in table.stats)
                         stats.push(`<b>${this.stats2title[key]}</b>: ${Round(table.stats[key][i], 10000)}`)
+
+                if ("nans" in table.stats && table.stats.nans[i] > 0)
+                    stats.push(`<b>пропуски</b>: ${table.stats.nans[i]}`)
             }
             else {
                 for (let [key, value] of Object.entries(table.stats.labels))
@@ -220,8 +224,10 @@ class DataTable {
     RenderTableRow(table, index) {
         let row = MakeElement(table.tab, {class: "data-table-tab-row"})
 
-        for (let i = 0; i < table.data.dimension; i++)
-            MakeElement(row, {class: "data-table-tab-cell", innerHTML: Round(table.data.inputs[table.indices[index] * table.data.dimension + i], 10000)})
+        for (let i = 0; i < table.data.dimension; i++) {
+            let value = table.data.inputs[table.indices[index] * table.data.dimension + i]
+            MakeElement(row, {class: "data-table-tab-cell", innerHTML: isNaN(value) ? "" : Round(value, 10000)})
+        }
 
         MakeElement(row, {class: "data-table-tab-cell", innerHTML: table.data.outputs[table.indices[index]]})
         table.lastRenderedIndex = index

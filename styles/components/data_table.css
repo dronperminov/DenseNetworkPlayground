@@ -8,6 +8,7 @@
     background: var(--data-table-background-color);
     border-bottom: 1px solid var(--data-table-border-color);
     white-space: nowrap;
+    overflow-x: auto;
 }
 
 .data-table-label {

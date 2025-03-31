@@ -65,7 +65,7 @@ class Dataset extends EventEmitter {
             }
             else if (mode == "mean-offset") {
                 div = (stats.max[i] - stats.min[i]) * 2
-                sub[i] = stats.mean[i]
+                sub[i] = stats.mean[i] - 0.5 * div
             }
 
             if (Math.abs(div) < eps)

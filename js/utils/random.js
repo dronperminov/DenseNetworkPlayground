@@ -79,6 +79,12 @@ class Random {
         }
     }
 
+    static SampleIndices(size, count = 1) {
+        let indices = Array.from({length: size}, (_, i) => i)
+        Random.Shuffle(indices)
+        return indices.slice(0, count)
+    }
+
     static UniformArrays(length, count, min = 0, max = 1) {
         let arrays = []
 

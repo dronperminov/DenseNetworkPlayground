@@ -397,7 +397,7 @@
                                     <select class="basic-input" id="data-normalization-mode" autocomplete="off">
                                         <option value="min-max">min &rarr; 0, max &rarr; 1</option>
                                         <option value="mean-std" selected>&mu; &rarr; 0, &sigma; &rarr; 1</option>
-                                        <option value="mean-offset">&mu; &rarr; 0, |max-min| &rarr; 0.5</option>
+                                        <option value="mean-offset">&mu; &rarr; 0.5, |max-min| &rarr; 0.5</option>
                                     </select>
                                 </label>
 
@@ -445,6 +445,28 @@
 
                         <div class="menu-block">
                             <button class="basic-button" id="tree-experiment-btn">Построить</button>
+                        </div>
+                    </details>
+
+                    <details class="menu-section" open>
+                        <summary>Данные с пропусками</summary>
+
+                        <div class="menu-block">
+                            <label>Доля пропущенных строк
+                                <input class="basic-input" type="range" id="missed-rows-part" step="5" min="5" max="95" value="40" autocomplete="off">
+                            </label>
+                            <div class="range-label"><span id="missed-rows-part-label">40</span>%</div>
+                        </div>
+
+                        <div class="menu-block">
+                            <label>Доля пропущенных столбцов
+                                <input class="basic-input" type="range" id="missed-columns-part" step="5" min="5" max="80" value="10" autocomplete="off">
+                            </label>
+                            <div class="range-label"><span id="missed-columns-part-label">10</span>%</div>
+                        </div>
+
+                        <div class="menu-block">
+                            <button class="basic-button" id="missed-data-experiment-btn">Запустить</button>
                         </div>
                     </details>
                 </div>
@@ -671,6 +693,7 @@
     <!-- EXPERIMENTS -->
     <script src="js/experiments/synthetic_data_experiment.js"></script>
     <script src="js/experiments/tree_experiment.js"></script>
+    <script src="js/experiments/missed_data_experiment.js"></script>
 
     <!-- PLAYGROUND -->
     <script src="js/playground.js"></script>

@@ -15,3 +15,12 @@ Playground.prototype.RunTreeExperiment = function() {
     let experiment = new TreeExperiment(this.tabExperiments, this.visualizer)
     experiment.Run(count, build3DHistogram, this.axisX, this.axisY, this.modelOutputMode, this.modelOutputSize)
 }
+
+Playground.prototype.RunMissedDataExperiment = function() {
+    this.tabExperiments.innerHTML = ""
+
+    let rowsPart = this.missedRowsPart.GetValue() / 100
+    let columnsPart = this.missedColumnsPart.GetValue() / 100
+    let experiment = new MissedDataExperiment(this.tabExperiments, this.visualizer)
+    experiment.Run(rowsPart, columnsPart)
+}

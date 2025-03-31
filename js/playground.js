@@ -209,15 +209,25 @@ class Playground {
     }
 
     InitExperimentsMenu() {
+        // SYNTHETIC DATA EXPERIMENT
         this.syntheticDataBackgroundCount = new NumberInput(document.getElementById("synthetic-data-background-count"))
-        this.treeBackgroundCount = new NumberInput(document.getElementById("tree-background-count"))
-        this.treeBuild3DHistogram = document.getElementById("tree-build-3d-histogram")
 
         let syntheticDataGenerateBtn = document.getElementById("synthetic-data-generate-btn")
         syntheticDataGenerateBtn.addEventListener("click", () => this.RunSyntheticDataExperiment())
 
+        // TREE EXPERIMENT
+        this.treeBackgroundCount = new NumberInput(document.getElementById("tree-background-count"))
+        this.treeBuild3DHistogram = document.getElementById("tree-build-3d-histogram")
+
         let treeExperimentBtn = document.getElementById("tree-experiment-btn")
         treeExperimentBtn.addEventListener("click", () => this.RunTreeExperiment())
+
+        // MISSED DATA EXPERIMENT
+        this.missedRowsPart = new RangeInput(document.getElementById("missed-rows-part"), document.getElementById("missed-rows-part-label"))
+        this.missedColumnsPart = new RangeInput(document.getElementById("missed-columns-part"), document.getElementById("missed-columns-part-label"))
+
+        let missedDataExperimentBtn = document.getElementById("missed-data-experiment-btn")
+        missedDataExperimentBtn.addEventListener("click", () => this.RunMissedDataExperiment())
     }
 
     InitDataGenerators() {
