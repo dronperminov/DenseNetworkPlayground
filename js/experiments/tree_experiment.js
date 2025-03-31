@@ -252,6 +252,9 @@ class TreeExperiment {
             let [r, g, b] = this.visualizer.thresholds.GetOutputColor(leaf.stats.train.h)
             let polygon = this.cellsPlot.cells[this.model.layers.length - 1][leaf.key]
 
+            if (!polygon)
+                continue
+
             let x = []
             let y = []
             let z = []
