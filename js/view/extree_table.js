@@ -104,7 +104,7 @@ class ExTreeTable extends EventEmitter {
             max = Math.max(max, leaf.stats[name].c.mean)
         }
 
-        this.AddFilter(filters, Round(min - 0.001, 10000), Round(max + 0.001, 10000), 0.001, leaf => leaf.stats[name].c.mean)
+        this.AddFilter(filters, Round(min - 0.001, "auto"), Round(max + 0.001, "auto"), 0.001, leaf => leaf.stats[name].c.mean)
     }
 
     AddHnFilter(filters, name) {
@@ -116,7 +116,7 @@ class ExTreeTable extends EventEmitter {
             max = Math.max(max, leaf.stats[name].h)
         }
 
-        this.AddFilter(filters, Round(min - 0.001, 10000), Round(max + 0.001, 10000), 0.001, leaf => leaf.stats[name].h)
+        this.AddFilter(filters, Round(min - 0.001, "auto"), Round(max + 0.001, "auto"), 0.001, leaf => leaf.stats[name].h)
     }
 
     AddDiffFilter(filters, name) {

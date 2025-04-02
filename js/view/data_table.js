@@ -176,8 +176,10 @@ class DataTable {
             let row = MakeElement(matrix, {class: "covariance-matrix-row"}, "tr")
             MakeElement(row, {class: "covariance-matrix-cell", innerHTML: `x<sub>${i + 1}</sub>`}, "td")
 
-            for (let j = 0; j < table.data.dimension; j++)
-                MakeElement(row, {class: "covariance-matrix-cell", innerText: Round(covariance[i * table.data.dimension + j], "auto")}, "td")
+            for (let j = 0; j < table.data.dimension; j++) {
+                let value = covariance[i * table.data.dimension + j]
+                MakeElement(row, {class: "covariance-matrix-cell", innerText: isNaN(value) ? "" : Round(value, "auto")}, "td")
+            }
         }
     }
 
