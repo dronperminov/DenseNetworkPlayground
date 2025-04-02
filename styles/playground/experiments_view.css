@@ -49,6 +49,25 @@
     margin-bottom: 2em;
 }
 
+#tab-experiments .train-block {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-gap: 1em;
+}
+
+#tab-experiments .train-buttons {
+    display: grid;
+    grid-template-columns: 100px 100px 100px 1fr;
+    grid-gap: 5px;
+    align-items: center;
+}
+
+#tab-experiments .metrics-plot {
+    grid-auto-flow: column;
+    height: 230px;
+}
+
 @media (max-width: 767px) {
     #tab-experiments .data-plot {
         width: 100%;

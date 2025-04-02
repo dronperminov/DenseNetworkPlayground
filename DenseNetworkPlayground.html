@@ -397,7 +397,7 @@
                                     <select class="basic-input" id="data-normalization-mode" autocomplete="off">
                                         <option value="min-max">min &rarr; 0, max &rarr; 1</option>
                                         <option value="mean-std" selected>&mu; &rarr; 0, &sigma; &rarr; 1</option>
-                                        <option value="mean-offset">&mu; &rarr; 0.5, |max-min| &rarr; 0.5</option>
+                                        <option value="mean-offset">&mu; &rarr; 0, |max-min| &rarr; 2/3</option>
                                     </select>
                                 </label>
 
@@ -460,9 +460,9 @@
 
                         <div class="menu-block">
                             <label>Доля пропущенных столбцов
-                                <input class="basic-input" type="range" id="missed-columns-part" step="5" min="5" max="80" value="10" autocomplete="off">
+                                <input class="basic-input" type="range" id="missed-columns-part" step="5" min="5" max="95" value="95" autocomplete="off">
                             </label>
-                            <div class="range-label"><span id="missed-columns-part-label">10</span>%</div>
+                            <div class="range-label"><span id="missed-columns-part-label">95</span>%</div>
                         </div>
 
                         <div class="menu-block">

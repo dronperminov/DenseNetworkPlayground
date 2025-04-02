@@ -201,6 +201,16 @@ class NeuralNetwork {
         this.layers[layer].ToggleNeuron(neuron)
     }
 
+    Clone(config) {
+        let network = new NeuralNetwork(this.inputs)
+        network.FromJSON(this.ToJSON())
+
+        if (config.reset)
+            network.Reset()
+
+        return network
+    }
+
     ToJSON() {
         return {
             inputs: this.inputs,

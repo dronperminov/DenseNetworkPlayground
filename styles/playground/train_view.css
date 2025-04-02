@@ -17,23 +17,23 @@
         "model model metrics";
 }
 
-.data-plot {
+#tab-train .data-plot {
     grid-area: data;
 }
 
-.surface-plot {
+#tab-train .surface-plot {
     grid-area: surface;
 }
 
-.histograms-plot {
+#tab-train .histograms-plot {
     grid-area: histograms;
 }
 
-.model-plot {
+#tab-train .model-plot {
     grid-area: model;
 }
 
-.metrics-plot {
+#tab-train .metrics-plot {
     grid-area: metrics;
 }
 

@@ -228,25 +228,25 @@ function GetOptimizer(name, config = null) {
 
     let learningRate = config.learningRate || 0.01
 
-    if (name == "sgd")
+    if (name == "sgd" || name == "SGD")
         return new SGD(learningRate, config)
 
-    if (name == "momentum-sgd")
+    if (name == "momentum-sgd" || name == "SGDm")
         return new MomentumSGD(learningRate, config)
 
-    if (name == "adam")
+    if (name == "adam" || name == "Adam")
         return new Adam(learningRate, config)
 
-    if (name == "adamax")
+    if (name == "adamax" || name == "Adamax")
         return new Adamax(learningRate, config)
 
-    if (name == "adadelta")
+    if (name == "adadelta" || name == "Adadelta")
         return new Adadelta(learningRate, config)
 
-    if (name == "adagrad")
+    if (name == "adagrad" || name == "Adagrad")
         return new Adagrad(learningRate, config)
 
-    if (name == "rmsprop")
+    if (name == "rmsprop" || name == "RMSprop")
         return new RMSprop(learningRate, config)
 
     throw new Error(`Unknown optimizer name "${name}"`)

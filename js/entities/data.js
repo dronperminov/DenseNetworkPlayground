@@ -59,6 +59,41 @@ class Data {
         }
     }
 
+    GetUniqueLabels(sorted = true) {
+        let labels = Array.from(new Set(this.outputs))
+
+        if (sorted)
+            labels.sort()
+
+        return labels
+    }
+
+    GetByLabel(label, targetLabel) {
+        let indices = []
+
+        for (let i = 0; i < this.length; i++)
+            if (this.outputs[i] == label)
+                indices.push(i)
+
+        let inputs = new Float64Array(indices.length * this.dimension)
+        let outputs = new Float64Array(indices.length).fill(targetLabel)
+
+        for (let i = 0; i < indices.length; i++)
+            for (let j = 0; j < this.dimension; j++)
+                inputs[i * this.dimension + j] = this.inputs[indices[i] * this.dimension + j]
+
+        return new Data(inputs, outputs, this.dimension)
+    }
+
+    Copy() {
+        let inputs = new Float64Array(this.length * this.dimension)
+        let outputs = new Float64Array(this.length)
+
+        inputs.set(this.inputs)
+        outputs.set(this.outputs)
+        return new Data(inputs, outputs, this.dimension)
+    }
+
     Normalize(sub, mul) {
         for (let i = 0; i < this.length; i++)
             for (let j = 0; j < this.dimension; j++)
@@ -203,7 +238,7 @@ class Data {
                     }
                 }
 
-                covariance[i * this.dimension + j] = cov / Math.max(total, 1) - mean[i] * mean[j]
+                covariance[i * this.dimension + j] = total > 0 ? cov / total - mean[i] * mean[j] : NaN
             }
         }
 
@@ -245,5 +280,9 @@ class Data {
         }
 
         return new Data(inputs, outputs, dimension)
+    }
+
+    static Empty(dimension) {
+        return new Data(new Float64Array(0), new Float64Array(0), dimension)
     }
 }
